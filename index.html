@@ -5982,6 +5982,14 @@ const mo=new MutationObserver(()=>{const svg=gate.querySelector('svg.demi-word-o
  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
  const TAU=Math.PI*2;
  let w=0,h=0,dpr=1,raf=0,last=0,time=0,core=[],ring=[],dust=[];
+ /* Performance only: per-particle working data lives in buffers that are built once per cloud and reused every frame,
+    so drawing allocates no per-particle objects. Particle counts, maths, draw order and output are unchanged. */
+ let coreN=0,coreX,coreY,coreZ,coreSeedTau,coreSize,sPX,sPY,sDepth,sP,sLight,sIdx;
+ let ringN=0,rA,rR,rK,rSize,rAlpha,rPre,rPX,rPY,rDepth,rP,rBehind,rIdx;
+ let cr=1,sr=0,ct=1,st=0,pX=0,pY=0,pD=0,pP=1;
+ let haloG=null,haloW=-1,haloH=-1,glowG=null,glowScale=-1;
+ const BAND_STROKES=['rgba(128,128,128,.22)','rgba(160,160,160,.20)','rgba(255,255,255,.12)','rgba(96,96,96,.18)'];
+ const RING_EDGES=[1.39,1.72,2.08,2.59];
  const rand=(a,b)=>a+Math.random()*(b-a);
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
  function makeCloud(){
@@ -5989,76 +5997,91 @@ const mo=new MutationObserver(()=>{const svg=gate.querySelector('svg.demi-word-o
    core=Array.from({length:coreCount},()=>{const y=rand(-1,1),a=rand(0,TAU),r=Math.sqrt(Math.max(0,1-y*y));return{x:r*Math.cos(a),y,z:r*Math.sin(a),seed:Math.random(),size:rand(.35,1.3)}});
    ring=Array.from({length:ringCount},()=>({a:rand(0,TAU),r:Math.sqrt(rand(1.38*1.38,2.62*2.62)),seed:Math.random(),size:rand(.35,1.15),band:Math.random()}));
    dust=Array.from({length:dustCount},()=>({x:rand(-1,1),y:rand(-1,1),z:rand(.2,1),seed:Math.random(),size:rand(.25,.75)}));
+   // Reusable buffers (same particles, same values — only stored once instead of recomputed or re-allocated every frame).
+   coreN=core.length;coreX=new Float64Array(coreN);coreY=new Float64Array(coreN);coreZ=new Float64Array(coreN);coreSeedTau=new Float64Array(coreN);coreSize=new Float64Array(coreN);
+   sPX=new Float64Array(coreN);sPY=new Float64Array(coreN);sDepth=new Float64Array(coreN);sP=new Float64Array(coreN);sLight=new Float64Array(coreN);sIdx=Array.from({length:coreN},(_,i)=>i);
+   for(let i=0;i<coreN;i++){const q=core[i];coreX[i]=q.x;coreY[i]=q.y;coreZ[i]=q.z;coreSeedTau[i]=q.seed*TAU;coreSize[i]=q.size}
+   const vis=[];
+   for(const q of ring){const lane=Math.abs(Math.sin(q.r*5.1+q.seed*1.4));if(lane<.075&&q.seed<.83)continue;vis.push(q)}
+   ringN=vis.length;rA=new Float64Array(ringN);rR=new Float64Array(ringN);rK=new Float64Array(ringN);rSize=new Float64Array(ringN);rAlpha=new Float64Array(ringN);rPre=new Array(ringN);
+   rPX=new Float64Array(ringN);rPY=new Float64Array(ringN);rDepth=new Float64Array(ringN);rP=new Float64Array(ringN);rBehind=new Uint8Array(ringN);rIdx=Array.from({length:ringN},(_,i)=>i);
+   for(let i=0;i<ringN;i++){const q=vis[i];rA[i]=q.a;rR[i]=q.r;rK[i]=.45+q.band*.12;rSize[i]=q.size;const brightness=.48+q.seed*.52;rAlpha[i]=.30+brightness*.66;const g=Math.round(112+q.seed*70);rPre[i]=q.band>.93?'rgba(255,255,255,':'rgba('+g+','+g+','+g+','}
  }
  function resize(){
    w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,2);
    canvas.width=Math.max(1,Math.round(w*dpr));canvas.height=Math.max(1,Math.round(h*dpr));
    canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);makeCloud();
  }
- function project(x,y,z,cx,cy,scale,tilt,roll){
-   const cr=Math.cos(roll),sr=Math.sin(roll),xt=x*cr-y*sr,yt=x*sr+y*cr;
-   const ct=Math.cos(tilt),st=Math.sin(tilt),yp=yt*ct-z*st,zp=yt*st+z*ct;
+ // Writes the projected point to pX,pY,pD,pP (no object per call). cr,sr,ct,st are set once per frame from roll and tilt.
+ function project(x,y,z,cx,cy,scale){
+   const xt=x*cr-y*sr,yt=x*sr+y*cr;
+   const yp=yt*ct-z*st,zp=yt*st+z*ct;
    const perspective=1/(1+zp*.12);
-   return {x:cx+xt*scale*perspective,y:cy+yp*scale*perspective,depth:zp,p:perspective};
+   pX=cx+xt*scale*perspective;pY=cy+yp*scale*perspective;pD=zp;pP=perspective;
  }
+ // Depth order with an index tie-break: identical to the previous stable depth sort, and cheap on the nearly-sorted order left by the last frame.
+ const sphereOrder=(a,b)=>{const d=sDepth[a]-sDepth[b];return d!==0?d:a-b};
+ const ringOrder=(a,b)=>{const d=rDepth[a]-rDepth[b];return d!==0?d:a-b};
  function draw(now){
    if(document.hidden){raf=requestAnimationFrame(draw);return;}
    const dt=Math.min(.045,(now-last)/1000||.016);last=now;if(!reduce)time+=dt;
    ctx.clearRect(0,0,w,h);
    // Deep, restrained black-gold atmosphere; no full-screen wash over page content.
    const cx=w*.5,cy=h*.49,scale=Math.min(w,h)*(w<h?.275:.285);
-   const halo=ctx.createRadialGradient(cx,cy,scale*.08,cx,cy,scale*3.25);
-   halo.addColorStop(0,'rgba(255,255,255,.12)');halo.addColorStop(.28,'rgba(128,128,128,.075)');halo.addColorStop(1,'rgba(0,0,0,0)');
-   ctx.fillStyle=halo;ctx.fillRect(0,0,w,h);
+   if(!haloG||haloW!==w||haloH!==h){
+     haloG=ctx.createRadialGradient(cx,cy,scale*.08,cx,cy,scale*3.25);
+     haloG.addColorStop(0,'rgba(255,255,255,.12)');haloG.addColorStop(.28,'rgba(128,128,128,.075)');haloG.addColorStop(1,'rgba(0,0,0,0)');haloW=w;haloH=h;
+   }
+   ctx.fillStyle=haloG;ctx.fillRect(0,0,w,h);
    const spin=reduce?-.18:time*.12,tilt=.43,roll=-.11;
+   cr=Math.cos(roll);sr=Math.sin(roll);ct=Math.cos(tilt);st=Math.sin(tilt);
    // Very faint distant stars to give the object separation without clutter.
    for(const d of dust){const x=(d.x*w*.5)+cx,y=(d.y*h*.5)+cy;const pulse=.35+.35*Math.sin(time*.7+d.seed*TAU);ctx.fillStyle=`rgba(255,255,255,${reduce?.16:pulse*.22})`;ctx.fillRect(x,y,d.size,d.size);}
    // Saturn's far ring arc is rendered behind the sphere.
-   const ringPoint=(r,a)=>{const aa=a+spin;return project(Math.cos(aa)*r,Math.sin(aa)*r,0,cx,cy,scale,tilt,roll)};
+   const ringPoint=(r,a)=>{const aa=a+spin;project(Math.cos(aa)*r,Math.sin(aa)*r,0,cx,cy,scale)};
    ctx.save();ctx.globalCompositeOperation='lighter';
    for(let band=0;band<4;band++){
-     ctx.beginPath();const r0=1.4+band*.29;for(let i=0;i<=240;i++){const a=Math.PI+(i/240)*Math.PI;const p=ringPoint(r0,a);if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)}
-     ctx.strokeStyle=['rgba(128,128,128,.22)','rgba(160,160,160,.20)','rgba(255,255,255,.12)','rgba(96,96,96,.18)'][band];ctx.lineWidth=scale*(.026-band*.003);ctx.stroke();
+     ctx.beginPath();const r0=1.4+band*.29;for(let i=0;i<=240;i++){const a=Math.PI+(i/240)*Math.PI;ringPoint(r0,a);if(i===0)ctx.moveTo(pX,pY);else ctx.lineTo(pX,pY)}
+     ctx.strokeStyle=BAND_STROKES[band];ctx.lineWidth=scale*(.026-band*.003);ctx.stroke();
    }
    // Particle sphere, shaded by the view-facing hemisphere and subtly animated.
-   const sphere=[];
-   for(const q of core){
-     const wobble=reduce?0:Math.sin(time*.55+q.seed*TAU)*.012;
-     const x=q.x*Math.cos(spin)-q.z*Math.sin(spin),z=q.x*Math.sin(spin)+q.z*Math.cos(spin);
-     const p=project(x,q.y,z+wobble,cx,cy,scale,tilt,roll);
-     const light=clamp(.48+.43*(x*-.48+q.y*.32+z*.72),.12,1);
-     sphere.push({p,light,size:q.size,seed:q.seed});
+   const cs=Math.cos(spin),sn=Math.sin(spin);
+   for(let i=0;i<coreN;i++){
+     const wobble=reduce?0:Math.sin(time*.55+coreSeedTau[i])*.012;
+     const x=coreX[i]*cs-coreZ[i]*sn,z=coreX[i]*sn+coreZ[i]*cs;
+     project(x,coreY[i],z+wobble,cx,cy,scale);
+     sPX[i]=pX;sPY[i]=pY;sDepth[i]=pD;sP[i]=pP;
+     sLight[i]=clamp(.48+.43*(x*-.48+coreY[i]*.32+z*.72),.12,1);
    }
-   sphere.sort((a,b)=>a.p.depth-b.p.depth);
-   for(const q of sphere){const alpha=(.32+q.light*.66)*(reduce?.9:1);ctx.beginPath();ctx.arc(q.p.x,q.p.y,Math.max(.35,q.size*scale*.0055*q.p.p),0,TAU);ctx.fillStyle=`rgba(${Math.round(112+q.light*118)},${Math.round(112+q.light*118)},${Math.round(112+q.light*118)},${alpha})`;ctx.fill();}
+   sIdx.sort(sphereOrder);
+   for(let k=0;k<coreN;k++){const i=sIdx[k];const light=sLight[i];const alpha=(.32+light*.66)*(reduce?.9:1);const g=Math.round(112+light*118);ctx.beginPath();ctx.arc(sPX[i],sPY[i],Math.max(.35,coreSize[i]*scale*.0055*sP[i]),0,TAU);ctx.fillStyle=`rgba(${g},${g},${g},${alpha})`;ctx.fill();}
    // Crisp luminous limb and a few fine atmospheric latitude bands.
    ctx.save();ctx.translate(cx,cy);ctx.rotate(-.09);ctx.scale(1,.91);
-   const sphereGlow=ctx.createRadialGradient(-scale*.27,-scale*.25,scale*.04,0,0,scale*1.05);
-   sphereGlow.addColorStop(0,'rgba(255,255,255,.12)');sphereGlow.addColorStop(.58,'rgba(128,128,128,.045)');sphereGlow.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=sphereGlow;ctx.beginPath();ctx.arc(0,0,scale,0,TAU);ctx.fill();
+   if(!glowG||glowScale!==scale){
+     glowG=ctx.createRadialGradient(-scale*.27,-scale*.25,scale*.04,0,0,scale*1.05);
+     glowG.addColorStop(0,'rgba(255,255,255,.12)');glowG.addColorStop(.58,'rgba(128,128,128,.045)');glowG.addColorStop(1,'rgba(0,0,0,0)');glowScale=scale;
+   }
+   ctx.fillStyle=glowG;ctx.beginPath();ctx.arc(0,0,scale,0,TAU);ctx.fill();
    ctx.restore();
    // Front ring particles: dense, layered, broken into elegant orbital lanes.
-   const sorted=[];
-   for(const q of ring){
-     const a=q.a+spin*(.45+q.band*.12);const x=Math.cos(a)*q.r,z=Math.sin(a)*q.r;
-     // Natural, sparse divisions in the rings, rather than a uniform flat disk.
-     const lane=Math.abs(Math.sin(q.r*5.1+q.seed*1.4));if(lane<.075&&q.seed<.83)continue;
-     const p=project(x,0,z,cx,cy,scale,tilt,roll);sorted.push({p,q,a});
-   }
-   sorted.sort((a,b)=>a.p.depth-b.p.depth);
-   for(const item of sorted){
-     const {p,q,a}=item;
+   for(let i=0;i<ringN;i++){
+     const a=rA[i]+spin*rK[i];const x=Math.cos(a)*rR[i],z=Math.sin(a)*rR[i];
+     project(x,0,z,cx,cy,scale);
+     rPX[i]=pX;rPY[i]=pY;rDepth[i]=pD;rP[i]=pP;
      // Hide particles behind the planet to create a genuine front/back ring pass.
-     const localX=Math.cos(a)*q.r,localZ=Math.sin(a)*q.r;
-     const behindSphere=(p.depth<.03&&Math.hypot(localX,localZ)<1.05);
-     if(behindSphere)continue;
-     const brightness=.48+q.seed*.52;const alpha=clamp((.30+brightness*.66)*p.p,.10,.88);
-     const radius=Math.max(.3,q.size*scale*.0062*p.p);
-     ctx.beginPath();ctx.arc(p.x,p.y,radius,0,TAU);
-     ctx.fillStyle=q.band>.93?`rgba(255,255,255,${alpha})`:`rgba(${Math.round(112+q.seed*70)},${Math.round(112+q.seed*70)},${Math.round(112+q.seed*70)},${alpha})`;ctx.fill();
+     rBehind[i]=(pD<.03&&Math.hypot(x,z)<1.05)?1:0;
+   }
+   rIdx.sort(ringOrder);
+   for(let k=0;k<ringN;k++){
+     const i=rIdx[k];if(rBehind[i])continue;
+     const alpha=clamp(rAlpha[i]*rP[i],.10,.88);
+     const radius=Math.max(.3,rSize[i]*scale*.0062*rP[i]);
+     ctx.beginPath();ctx.arc(rPX[i],rPY[i],radius,0,TAU);
+     ctx.fillStyle=rPre[i]+alpha+')';ctx.fill();
    }
    // Delicate ring-edge filaments give the orbit definition without a neon outline.
-   for(const r of [1.39,1.72,2.08,2.59]){
-     ctx.beginPath();for(let i=0;i<=300;i++){const a=i/300*TAU,p=ringPoint(r,a);if(i===0)ctx.moveTo(p.x,p.y);else ctx.lineTo(p.x,p.y)}
+   for(const r of RING_EDGES){
+     ctx.beginPath();for(let i=0;i<=300;i++){const a=i/300*TAU;ringPoint(r,a);if(i===0)ctx.moveTo(pX,pY);else ctx.lineTo(pX,pY)}
      ctx.strokeStyle='rgba(155,211,255,.22)';ctx.lineWidth=.65;ctx.stroke();
    }
    ctx.restore();
