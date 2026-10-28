@@ -1,6 +1,6 @@
 import { createAvatar } from '@bible-strong/avatar-react'
 import '@bible-strong/avatar-react/styles.css'
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import definition from '../strobi.avatar.json'
 import './widget.css'
 
@@ -29,14 +29,6 @@ const ANIMATIONS: AnimationName[] = [
   'listening',
   'happy',
   'proud',
-]
-
-const DOCK_CLASSES = [
-  'dock-br',
-  'dock-bl',
-  'dock-tr',
-  'dock-tl',
-  'dock-br',
 ]
 
 function getGuideSections(): HTMLElement[] {
@@ -76,7 +68,6 @@ function getSectionTitle(section: HTMLElement): string {
 }
 
 function getSectionText(section: HTMLElement): string {
-  // Avoid reading the Cat conversation, editable content or password areas.
   if (
     section.querySelector(
       'textarea, [contenteditable="true"], input[type="password"], [role="log"]'
@@ -85,7 +76,6 @@ function getSectionText(section: HTMLElement): string {
     return ''
   }
 
-  // Clone the section so content used for the request does not alter the page.
   const clone = section.cloneNode(true) as HTMLElement
 
   clone.querySelectorAll(
@@ -94,7 +84,6 @@ function getSectionText(section: HTMLElement): string {
     '[role="dialog"], #strobi-widget-root, #strobi-widget'
   ).forEach(element => element.remove())
 
-  // innerText excludes text hidden by the page's CSS.
   return (clone.innerText || '')
     .replace(/\s+/g, ' ')
     .trim()
@@ -111,7 +100,6 @@ function createFallbackCue(section: HTMLElement): Cue {
     : sections[0] || section
 
   const title = getSectionTitle(section)
-  const animationIndex = Math.max(0, index) % ANIMATIONS.length
 
   return {
     message:
@@ -123,19 +111,21 @@ function createFallbackCue(section: HTMLElement): Cue {
         ? 'Back to top'
         : 'Read this section',
     target: targetSection.id,
-    animation: ANIMATIONS[animationIndex],
+    animation: ANIMATIONS[Math.max(0, index) % ANIMATIONS.length],
   }
 }
 
 function getSafePosition(x: number, y: number): Position {
-  const margin = 8
-  const width = Math.min(110, window.innerWidth - margin * 2)
-  const height = Math.min(210, window.innerHeight - margin * 2)
+  const margin = 12
+  const width = Math.min(110, Math.max(0, window.innerWidth - margin * 2))
+  const height = Math.min(210, Math.max(0, window.innerHeight - margin * 2))
 
   let left = x - width / 2
-  let top = y - height - 14
+  let top = y - height - 16
 
-  if (top < margin) top = y + 14
+  if (top < margin) {
+    top = y + 16
+  }
 
   left = Math.max(
     margin,
@@ -162,34 +152,29 @@ export default function StrobiGuide() {
   const [hidden, setHidden] = useState(false)
   const [animation, setAnimation] =
     useState<AnimationName>('playful')
-  const [dock, setDock] = useState('dock-br')
   const [quiet, setQuiet] = useState(false)
   const [position, setPosition] = useState<Position | null>(null)
   const [thinking, setThinking] = useState(false)
 
-  const widgetRef = useRef<HTMLDivElement | null>(null) 
+  const widgetRef = useRef<HTMLDivElement | null>(null)
   const seenSections = useRef(new Set<string>())
   const tipCache = useRef(new Map<string, Cue>())
   const activeSectionRef = useRef<string>('archive-home')
   const introShown = useRef(false)
   const manualHiddenRef = useRef(false)
   const lastActivity = useRef(Date.now())
-
   const requestId = useRef(0)
   const activeRequest = useRef<AbortController | null>(null)
   const activeRequestSection = useRef<string | null>(null)
-
   const inactivityTimer = useRef<number | undefined>(undefined)
   const sectionTimer = useRef<number | undefined>(undefined)
   const intersectionRatios = useRef(new Map<HTMLElement, number>())
 
   const cancelInFlight = useCallback(() => {
     requestId.current += 1
-
     activeRequest.current?.abort()
     activeRequest.current = null
     activeRequestSection.current = null
-
     setThinking(false)
   }, [])
 
@@ -229,7 +214,6 @@ export default function StrobiGuide() {
     activeSectionRef.current = sectionId
     seenSections.current.add(sectionId)
 
-    // If this exact section is already being processed, do not restart it.
     if (
       activeRequest.current &&
       activeRequestSection.current === sectionId
@@ -241,12 +225,12 @@ export default function StrobiGuide() {
     cancelInFlight()
 
     const baseCue = createFallbackCue(section)
+
     setAnimation(baseCue.animation)
     setBubbleOpen(true)
     setHidden(false)
     setQuiet(false)
 
-    // Reuse a successful answer instead of requesting it again.
     const cachedCue = tipCache.current.get(sectionId)
 
     if (cachedCue) {
@@ -256,7 +240,6 @@ export default function StrobiGuide() {
 
     const sectionText = getSectionText(section)
 
-    // Sections with no suitable visible text still get a normal hint.
     if (!sectionText) {
       setCue(baseCue)
       tipCache.current.set(sectionId, baseCue)
@@ -268,8 +251,8 @@ export default function StrobiGuide() {
 
     activeRequest.current = controller
     activeRequestSection.current = sectionId
-
     setThinking(true)
+
     setCue({
       ...baseCue,
       message: welcome
@@ -309,7 +292,6 @@ export default function StrobiGuide() {
 
       const data: { reply?: unknown } = await response.json()
 
-      // Ignore replies from old requests or a hidden widget.
       if (
         currentRequest !== requestId.current ||
         controller.signal.aborted ||
@@ -334,7 +316,6 @@ export default function StrobiGuide() {
         currentRequest === requestId.current &&
         !manualHiddenRef.current
       ) {
-        // The page remains usable even if AI is unavailable.
         setCue(baseCue)
       }
     } finally {
@@ -348,7 +329,6 @@ export default function StrobiGuide() {
 
   const scrollToTarget = useCallback((target: string) => {
     const element = document.getElementById(target)
-
     if (!element) return
 
     element.scrollIntoView({
@@ -364,6 +344,11 @@ export default function StrobiGuide() {
     setBubbleOpen(false)
     registerActivity()
   }, [cancelInFlight, registerActivity])
+
+  const moveNearPoint = useCallback((x: number, y: number) => {
+    const nextPosition = getSafePosition(x, y)
+    setPosition(nextPosition)
+  }, [])
 
   useEffect(() => {
     const observedSections = new WeakSet<HTMLElement>()
@@ -398,16 +383,8 @@ export default function StrobiGuide() {
 
       activeSectionRef.current = currentSection.id
 
-      const availableSections = getRenderableSections()
-      const sectionIndex = availableSections.findIndex(
-        section => section.id === currentSection.id
-      )
-
-      setDock(
-        DOCK_CLASSES[
-          Math.max(0, sectionIndex) % DOCK_CLASSES.length
-        ]
-      )
+      // Do not change the widget's dock on every section change.
+      // Its position is controlled by the smooth position state.
 
       if (!introShown.current || manualHiddenRef.current) return
       if (seenSections.current.has(currentSection.id)) return
@@ -418,7 +395,6 @@ export default function StrobiGuide() {
 
       const sectionId = currentSection.id
 
-      // Wait briefly so the widget does not interrupt quick scrolling.
       sectionTimer.current = window.setTimeout(() => {
         const mostVisible = Array.from(
           intersectionRatios.current.entries()
@@ -442,7 +418,6 @@ export default function StrobiGuide() {
 
     observeNewSections(observer)
 
-    // Also discover sections added later by the page.
     const mutationObserver = new MutationObserver(() => {
       observeNewSections(observer)
     })
@@ -485,7 +460,6 @@ export default function StrobiGuide() {
 
       const target = event.target
 
-      // Never intercept interactive controls or Strobi itself.
       if (target.closest(
         '#strobi-widget-root, #strobi-widget, .restore-strobi,' +
         'button, a, input, textarea, select, label, summary,' +
@@ -498,8 +472,8 @@ export default function StrobiGuide() {
       if (manualHiddenRef.current) return
 
       registerActivity()
+      moveNearPoint(event.clientX, event.clientY)
 
-      // Find the closest section Strobi knows how to explain.
       let candidate = target.closest<HTMLElement>(
         'section[id], [data-strobi-section][id]'
       )
@@ -522,7 +496,6 @@ export default function StrobiGuide() {
         return
       }
 
-      // Clicking elsewhere reopens a useful hint for the current section.
       const currentSection = getGuideSections().find(
         section => section.id === activeSectionRef.current
       )
@@ -535,7 +508,17 @@ export default function StrobiGuide() {
       }
     }
 
+    const onResize = () => {
+      if (!position) return
+
+      setPosition(getSafePosition(
+        position.left + 55,
+        position.top + 105
+      ))
+    }
+
     document.addEventListener('pointerdown', onPagePointerDown, true)
+    window.addEventListener('resize', onResize)
     registerActivity()
 
     return () => {
@@ -558,8 +541,15 @@ export default function StrobiGuide() {
         onPagePointerDown,
         true
       )
+      window.removeEventListener('resize', onResize)
     }
-  }, [cancelInFlight, registerActivity, showSmartTip])
+  }, [
+    cancelInFlight,
+    registerActivity,
+    showSmartTip,
+    moveNearPoint,
+    position,
+  ])
 
   const toggleAvatar = () => {
     registerActivity()
@@ -591,15 +581,20 @@ export default function StrobiGuide() {
     <>
       {!hidden && (
         <div
+          ref={widgetRef}
           id="strobi-widget"
-          className={`strobi-widget ${dock} ${quiet ? 'is-quiet' : ''}`}
+          className={`strobi-widget ${quiet ? 'is-quiet' : ''} ${position ? 'is-positioned' : ''}`}
           aria-label="Strobi website guide"
-          style={position ? {
-            left: `${position.left}px`,
-            top: `${position.top}px`,
-            right: 'auto',
-            bottom: 'auto',
-          } : undefined}
+          style={{
+            ...(position ? {
+              position: 'fixed',
+              left: `${position.left}px`,
+              top: `${position.top}px`,
+              right: 'auto',
+              bottom: 'auto',
+            } : {}),
+            transition: 'left 420ms ease, top 420ms ease',
+          }}
         >
           {bubbleOpen && (
             <section
