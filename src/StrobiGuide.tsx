@@ -51,15 +51,21 @@ export default function StrobiGuide() {
   }, [])
 
   const scrollToTarget = useCallback((target: string) => {
-    const element = document.getElementById(target)
-    if (element) {
-      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-      element.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' })
-      setActiveSection(target)
-      const index = Math.max(0, sectionOrder.indexOf(target))
-      setDock(dockClasses[index % dockClasses.length])
-    }
-  }, [])
+  const element = document.getElementById(target);
+
+  if (element) {
+    element.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    });
+    setActiveSection(target);
+  } else {
+    window.scrollBy({
+      top: window.innerHeight * 0.8,
+      behavior: 'smooth',
+    });
+  }
+}, []);
 
   const registerActivity = useCallback(() => {
     lastActivity.current = Date.now()
