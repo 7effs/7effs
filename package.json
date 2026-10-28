@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "npm run build:widget && tsc --noEmit && vite build"
-    "build:widget": "vite build --config vite.widget.config.ts",
+    "build": "npm run build:widget && tsc --noEmit && vite build",
+"build:widget": "vite build --config vite.widget.config.ts",
     "build:all": "npm run build && npm run build:widget"
   },
   "dependencies": {
