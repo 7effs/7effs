@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: system-ui, sans-serif;
+  background: #0b1020;
+  color: #ffffff;
+}
+
+.demo {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.demo h1 {
+  color: #8ca8ff;
+  margin-bottom: 8px;
+}
+
+.demo p {
+  color: #c5cbe0;
+}
