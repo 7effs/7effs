@@ -24,7 +24,9 @@ export default defineConfig({
         mkdirSync(outDir, { recursive: true });
 
         for (const item of ROOT_STATIC) {
-          const source = resolve(item);
+          const source = item.startsWith("strobi-widget")
+  ? resolve("dist-widget", item)
+  : resolve(item);
           if (!existsSync(source)) continue;
 
           cpSync(source, resolve(outDir, item), {
