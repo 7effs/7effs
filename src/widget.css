@@ -1,4 +1,4 @@
-/* Strobi: compact, smooth and viewport-aware */
+/* Baew Tips — compact floating guide, draggable and viewport-aware. */
 
 .strobi-widget,
 .restore-strobi {
@@ -19,25 +19,40 @@
   top: auto;
   right: 8px;
   bottom: 8px;
-  width: min(188px, calc(100vw - 20px));
+  width: min(204px, calc(100vw - 16px));
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
   pointer-events: none;
-  transition: left 520ms cubic-bezier(.22, 1, .36, 1),
-              top 520ms cubic-bezier(.22, 1, .36, 1),
-              opacity .25s ease;
+  transition: left 180ms cubic-bezier(.22, 1, .36, 1),
+              top 180ms cubic-bezier(.22, 1, .36, 1),
+              opacity .22s ease;
   will-change: left, top;
+}
+
+.strobi-widget.is-positioned {
+  right: auto;
+  bottom: auto;
+}
+
+.strobi-widget.is-dragging {
+  transition: none !important;
+}
+
+.strobi-widget.is-dragging .strobi-mascot {
+  animation: none !important;
+  cursor: grabbing;
 }
 
 .strobi-mascot-wrap {
   position: relative;
-  width: 68px;
+  width: 72px;
   display: flex;
   align-items: center;
   flex-direction: column;
   pointer-events: auto;
+  flex: 0 0 auto;
 }
 
 .strobi-mascot {
@@ -49,24 +64,40 @@
   padding: 0 !important;
   margin: 0 !important;
   background: transparent !important;
-  cursor: pointer;
-  opacity: .94;
+  color: inherit !important;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  opacity: .96;
   filter: drop-shadow(0 4px 9px #0005);
   isolation: isolate;
-  animation: strobi-float 4s ease-in-out infinite;
-  transition: opacity .2s ease, filter .2s ease;
+  animation: strobi-float 4.5s ease-in-out infinite;
+  transition: opacity .2s ease, filter .2s ease, transform .18s ease;
+}
+
+.strobi-mascot:active {
+  cursor: grabbing;
 }
 
 .strobi-mascot:hover,
 .strobi-mascot:focus-visible {
   opacity: 1;
   filter: drop-shadow(0 5px 12px #0007);
+  outline: none;
+}
+
+.strobi-mascot:focus-visible .mascot-avatar {
+  outline: 2px solid #b8adff;
+  outline-offset: 3px;
+  border-radius: 50%;
 }
 
 .mascot-avatar {
   position: absolute;
   inset: 0;
   display: block;
+  pointer-events: none;
   transition: transform .25s ease;
 }
 
@@ -81,13 +112,14 @@
   border-radius: 50%;
   background: #8278ff33;
   filter: blur(9px);
+  pointer-events: none;
 }
 
 .hide-strobi {
   position: absolute;
   z-index: 2;
-  right: -1px;
-  top: -4px;
+  right: 2px;
+  top: -3px;
   width: 19px;
   height: 19px;
   border-radius: 50%;
@@ -98,6 +130,8 @@
   opacity: 0;
   padding: 0 !important;
   line-height: 1;
+  pointer-events: auto;
+  transition: opacity .15s ease;
 }
 
 .strobi-mascot-wrap:hover .hide-strobi,
@@ -107,33 +141,38 @@
 
 .tap-label {
   display: block;
+  max-width: 110px;
+  margin-top: 1px;
   font-size: 8px;
+  line-height: 1.25;
+  text-align: center;
   color: #dfe0f0;
   background: #171925e8;
   border: 1px solid #39384e;
   border-radius: 99px;
   padding: 3px 6px;
   white-space: nowrap;
-  opacity: .9;
+  opacity: .92;
+  pointer-events: none;
 }
 
-/* Bubble width stays compact; long tips scroll inside it. */
+/* The bubble is deliberately short; its content can scroll without leaving the viewport. */
 .strobi-bubble {
   position: relative;
   flex: 0 1 auto;
   pointer-events: auto;
   width: 100%;
-  max-width: calc(100vw - 20px);
-  max-height: min(220px, calc(100dvh - 100px));
+  max-width: calc(100vw - 16px);
+  max-height: min(250px, calc(100dvh - 82px));
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   overflow-wrap: anywhere;
   margin: 0;
   padding: 10px;
-  background: rgba(19, 20, 33, .96);
+  background: rgba(19, 20, 33, .97);
   border: 1px solid #4b456a;
-  border-radius: 12px;
+  border-radius: 13px;
   box-shadow: 0 8px 22px #0005;
   animation: strobi-bubble-in .2s ease-out;
   backdrop-filter: blur(12px);
@@ -145,7 +184,7 @@
   content: "";
   position: absolute;
   bottom: -6px;
-  right: 22px;
+  right: 26px;
   width: 10px;
   height: 10px;
   background: #20202d;
@@ -166,15 +205,23 @@
   line-height: 1;
   padding: 0 2px !important;
   cursor: pointer;
+  pointer-events: auto;
+}
+
+.bubble-heading-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 7px;
+  padding-right: 15px;
 }
 
 .bubble-label {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding-right: 16px;
   color: #b8adff;
-  font: 500 9px ui-monospace, SFMono-Regular, Menlo, monospace;
+  font: 600 9px ui-monospace, SFMono-Regular, Menlo, monospace;
   letter-spacing: .08em;
 }
 
@@ -187,19 +234,49 @@
   box-shadow: 0 0 8px #9c8aff9c;
 }
 
+.bubble-modes {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.mode-pill {
+  border: 1px solid #46435f !important;
+  border-radius: 99px;
+  background: #232336 !important;
+  color: #bab8d0 !important;
+  padding: 4px 7px !important;
+  font-size: 9px;
+  line-height: 1.1;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.mode-pill.is-active {
+  background: #a99bff !important;
+  color: #171327 !important;
+  border-color: #a99bff !important;
+  font-weight: 750;
+}
+
 .strobi-bubble p {
   font-size: 11px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: #eeedf8;
-  margin: 7px 0 9px;
+  margin: 8px 0 9px;
   padding: 0;
 }
 
-.bubble-actions {
+.bubble-actions,
+.quick-help-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 5px;
+}
+
+.quick-help-actions {
+  align-items: stretch;
 }
 
 .bubble-primary {
@@ -210,8 +287,13 @@
   padding: 7px 8px !important;
   font-size: 9px;
   line-height: 1.4;
-  font-weight: 700;
+  font-weight: 750;
   cursor: pointer;
+  pointer-events: auto;
+}
+
+.quick-help-actions .bubble-primary {
+  flex: 1 1 42%;
 }
 
 .bubble-primary span {
@@ -222,17 +304,27 @@
   border: 0 !important;
   background: transparent !important;
   color: #b1b2c3 !important;
-  padding: 6px 2px !important;
+  padding: 6px 3px !important;
   font-size: 9px;
   cursor: pointer;
+  pointer-events: auto;
 }
 
-.bubble-secondary:hover {
-  color: #fff !important;
+.bubble-secondary:hover,
+.bubble-primary:hover {
+  filter: brightness(1.08);
+}
+
+.bubble-context {
+  display: block;
+  margin-top: 7px;
+  color: #8f90a8;
+  font-size: 8px;
+  line-height: 1.35;
 }
 
 .strobi-widget.is-quiet {
-  opacity: .72;
+  opacity: .76;
 }
 
 .strobi-widget.is-quiet .mascot-avatar {
@@ -255,6 +347,7 @@
   font-size: 10px;
   cursor: pointer;
   box-shadow: 0 6px 18px #0004;
+  font-family: Inter, system-ui, sans-serif;
 }
 
 .restore-dot {
@@ -267,21 +360,21 @@
 
 @keyframes strobi-float {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  50% { transform: translateY(-3px); }
 }
 
 @keyframes strobi-bubble-in {
-  from { opacity: 0; transform: translateY(4px) scale(.98); }
+  from { opacity: 0; transform: translateY(4px) scale(.985); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @media (max-width: 760px) {
   .strobi-widget {
-    width: min(172px, calc(100vw - 20px));
+    width: min(188px, calc(100vw - 16px));
   }
 
   .strobi-mascot-wrap {
-    width: 62px;
+    width: 64px;
   }
 
   .strobi-mascot {
@@ -290,14 +383,14 @@
   }
 
   .strobi-bubble {
-    max-height: min(200px, calc(100dvh - 90px));
-    padding: 8px;
+    max-height: min(230px, calc(100dvh - 76px));
+    padding: 9px;
   }
 
   .strobi-bubble p {
     font-size: 10px;
-    line-height: 1.4;
-    margin: 6px 0 7px;
+    line-height: 1.45;
+    margin: 7px 0 8px;
   }
 
   .bubble-label {
@@ -305,7 +398,8 @@
   }
 
   .bubble-primary,
-  .bubble-secondary {
+  .bubble-secondary,
+  .mode-pill {
     font-size: 9px;
   }
 
