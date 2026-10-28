@@ -1,0 +1,31 @@
+name: Build Strobi Widget
+
+'on':
+  workflow_dispatch:
+  push:
+    paths:
+      - "src/**"
+      - "strobi.avatar.json"
+      - "package.json"
+      - "vite.widget.config.ts"
+      - ".github/workflows/build-strobi.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install packages
+        run: npm install
+      - name: Build widget
+        run: npm run build:widget
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: strobi-widget
+          path: dist-widget/
