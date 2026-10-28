@@ -346,3 +346,44 @@
     gap: 5px;
   }
 }
+
+/* Advanced mobile-safe Strobi positioning */
+#strobi-widget {
+  max-width: calc(100vw - 16px);
+  transition: left .25s ease, top .25s ease, opacity .3s ease;
+}
+
+#strobi-widget .strobi-bubble {
+  width: min(185px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  overflow-wrap: anywhere;
+}
+
+#strobi-widget .strobi-bubble p {
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+#strobi-widget .strobi-mascot-wrap {
+  max-width: 100%;
+}
+
+@media (max-width: 760px) {
+  #strobi-widget .strobi-bubble {
+    padding: 8px;
+  }
+
+  #strobi-widget .strobi-bubble p {
+    font-size: 10px;
+    margin: 6px 0 8px;
+  }
+
+  #strobi-widget .bubble-actions {
+    gap: 4px;
+  }
+
+  #strobi-widget .bubble-primary,
+  #strobi-widget .bubble-secondary {
+    font-size: 9px;
+  }
+}
