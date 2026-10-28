@@ -320,3 +320,29 @@
     align-self: flex-end;
   }
 }
+
+/* Compact Strobi bubble on mobile */
+@media (max-width: 760px) {
+  .strobi-widget .strobi-bubble {
+    width: min(185px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    padding: 8px;
+    align-self: flex-end;
+  }
+
+  .strobi-widget .strobi-bubble p {
+    font-size: 10px;
+    line-height: 1.4;
+    margin: 6px 0 8px;
+  }
+
+  .strobi-widget .bubble-primary,
+  .strobi-widget .bubble-secondary {
+    font-size: 9px;
+    padding: 6px 8px !important;
+  }
+
+  .strobi-widget .bubble-actions {
+    gap: 5px;
+  }
+}
