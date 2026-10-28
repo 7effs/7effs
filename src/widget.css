@@ -1,7 +1,9 @@
-/* Strobi floating guide — compact, subtle, right-side dock */
+/* Strobi Advanced UI — smooth, compact, viewport-safe */
+
 .strobi-widget,
 .restore-strobi {
-  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   line-height: 1.4;
   box-sizing: border-box;
 }
@@ -14,28 +16,23 @@
 .strobi-widget {
   position: fixed;
   z-index: 2147483000;
-  width: 110px;
+  width: 84px;
+  right: 8px;
+  bottom: 8px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 5px;
   pointer-events: none;
-  transition: top .6s ease, bottom .6s ease, opacity .3s ease;
+  transition:
+    left 0.7s cubic-bezier(.22, 1, .36, 1),
+    top 0.7s cubic-bezier(.22, 1, .36, 1),
+    opacity 0.25s ease;
+  will-change: left, top;
 }
 
-/* Keep Strobi on the right side */
-.strobi-widget.dock-br,
-.strobi-widget.dock-bl,
-.strobi-widget.dock-tr,
-.strobi-widget.dock-tl {
-  left: auto;
-  right: 8px;
-}
-
-.strobi-widget.dock-br { bottom: 10px; top: auto; }
-.strobi-widget.dock-tr { top: 80px; bottom: auto; }
-.strobi-widget.dock-bl { bottom: 10px; top: auto; }
-.strobi-widget.dock-tl { top: 80px; bottom: auto; }
+/* The TypeScript position logic controls the actual corners.
+   These classes control bubble order and alignment only. */
 
 .strobi-widget.dock-tr,
 .strobi-widget.dock-tl {
@@ -44,7 +41,7 @@
 
 .strobi-mascot-wrap {
   position: relative;
-  width: 92px;
+  width: 68px;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -52,54 +49,55 @@
 }
 
 .strobi-mascot {
-  animation: strobi-float 3.8s ease-in-out infinite;
   position: relative;
   display: block;
-  width: 78px;
-  height: 78px;
+  width: 48px;
+  height: 48px;
   border: 0 !important;
   padding: 0 !important;
   margin: 0 !important;
   background: transparent !important;
   cursor: pointer;
-  opacity: .78;
-  filter: drop-shadow(0 7px 16px #0006);
+  opacity: .9;
+  filter: drop-shadow(0 4px 9px #0005);
   isolation: isolate;
-  transition: opacity .25s ease, transform .25s ease;
+  animation: strobi-float 4s ease-in-out infinite;
+  transition: opacity .2s ease, filter .2s ease;
 }
 
 .strobi-mascot:hover,
 .strobi-mascot:focus-visible {
   opacity: 1;
+  filter: drop-shadow(0 5px 12px #0007);
 }
 
 .mascot-avatar {
   position: absolute;
   inset: 0;
   display: block;
-  transition: transform .25s;
+  transition: transform .25s ease;
 }
 
 .strobi-mascot:hover .mascot-avatar {
-  transform: scale(1.04) rotate(-3deg);
+  transform: scale(1.04);
 }
 
 .mascot-glow {
   position: absolute;
-  inset: 20px;
+  inset: 12px;
   border-radius: 50%;
-  background: #8278ff44;
-  filter: blur(14px);
+  background: #8278ff33;
+  filter: blur(9px);
   z-index: -1;
 }
 
 .hide-strobi {
   position: absolute;
   z-index: 2;
-  right: 0;
-  top: -2px;
-  width: 23px;
-  height: 23px;
+  right: -1px;
+  top: -4px;
+  width: 19px;
+  height: 19px;
   border-radius: 50%;
   border: 1px solid #3b3b51 !important;
   background: #171925 !important;
@@ -117,66 +115,89 @@
 
 .tap-label {
   display: block;
-  font-size: 9px;
+  font-size: 8px;
   color: #dfe0f0;
-  background: #171925d9;
+  background: #171925e8;
   border: 1px solid #39384e;
   border-radius: 99px;
-  padding: 5px 8px;
+  padding: 3px 6px;
   white-space: nowrap;
-  opacity: .86;
+  opacity: .9;
 }
 
+/* Compact bubble with limited height and internal scrolling */
 .strobi-bubble {
   position: relative;
+  flex: 0 1 auto;
   pointer-events: auto;
-  width: min(235px, calc(100vw - 24px));
+  width: min(188px, calc(100vw - 24px));
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 100px);
+  max-height: max(80px, min(220px, calc(100dvh - 100px)));
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  overflow-wrap: anywhere;
   margin: 0;
-  padding: 12px;
-  background: rgba(19, 20, 33, .86);
+  padding: 9px;
+  background: rgba(19, 20, 33, .95);
   border: 1px solid #4b456a;
-  border-radius: 14px;
-  box-shadow: 0 12px 32px #0006;
-  animation: strobi-bubble-in .24s ease-out;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  border-radius: 12px;
+  box-shadow: 0 8px 22px #0005;
+  animation: strobi-bubble-in .2s ease-out;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #eeedf8;
 }
 
-.strobi-bubble:after {
-  content: '';
+/* Right-side corners: keep the bubble's right edge on-screen */
+.dock-br .strobi-bubble,
+.dock-tr .strobi-bubble {
+  align-self: flex-end;
+}
+
+/* Left-side corners: keep the bubble's left edge on-screen */
+.dock-bl .strobi-bubble,
+.dock-tl .strobi-bubble {
+  align-self: flex-start;
+}
+
+/* Bubble tail */
+.strobi-bubble::after {
+  content: "";
   position: absolute;
-  bottom: -7px;
-  right: 32px;
-  width: 13px;
-  height: 13px;
-  background: #20202de8;
+  bottom: -6px;
+  right: 22px;
+  width: 10px;
+  height: 10px;
+  background: #20202d;
   border-right: 1px solid #4b456a;
   border-bottom: 1px solid #4b456a;
   transform: rotate(45deg);
+  pointer-events: none;
 }
 
-.dock-bl .strobi-bubble:after,
-.dock-tl .strobi-bubble:after {
-  left: auto;
-  right: 32px;
+.dock-bl .strobi-bubble::after,
+.dock-tl .strobi-bubble::after {
+  left: 22px;
+  right: auto;
 }
 
-.dock-tr .strobi-bubble:after,
-.dock-tl .strobi-bubble:after {
-  top: -7px;
+.dock-tr .strobi-bubble::after,
+.dock-tl .strobi-bubble::after {
+  top: -6px;
   bottom: auto;
   transform: rotate(225deg);
 }
 
 .bubble-close {
   position: absolute;
-  top: 7px;
-  right: 8px;
+  top: 5px;
+  right: 6px;
   border: 0 !important;
   background: none !important;
   color: #a5a7ba !important;
-  font-size: 19px;
+  font-size: 17px;
   line-height: 1;
   padding: 0 2px !important;
   cursor: pointer;
@@ -185,60 +206,69 @@
 .bubble-label {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
+  padding-right: 16px;
   color: #b8adff;
-  font: 500 10px ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .1em;
+  font: 500 9px ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: .08em;
 }
 
 .bubble-pulse {
+  flex: 0 0 5px;
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: #9c8aff;
-  box-shadow: 0 0 10px #9c8aff9c;
+  box-shadow: 0 0 8px #9c8aff9c;
 }
 
 .strobi-bubble p {
-  font-size: 12px;
-  line-height: 1.55;
+  font-size: 11px;
+  line-height: 1.45;
   color: #eeedf8;
-  margin: 9px 0 11px;
-  padding-right: 3px;
+  margin: 7px 0 9px;
+  padding: 0;
 }
 
 .bubble-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 5px;
 }
 
 .bubble-primary {
   border: 0 !important;
-  border-radius: 8px;
+  border-radius: 7px;
   background: #a99bff !important;
   color: #171327 !important;
-  padding: 9px 10px !important;
-  font-size: 10px;
+  padding: 7px 8px !important;
+  font-size: 9px;
+  line-height: 1.4;
   font-weight: 700;
   cursor: pointer;
 }
 
-.bubble-primary span { margin-left: 6px; }
+.bubble-primary span {
+  margin-left: 4px;
+}
 
 .bubble-secondary {
   border: 0 !important;
   background: transparent !important;
   color: #b1b2c3 !important;
-  padding: 8px 0 !important;
-  font-size: 10px;
+  padding: 6px 2px !important;
+  font-size: 9px;
   cursor: pointer;
 }
 
-.bubble-secondary:hover { color: #fff !important; }
+.bubble-secondary:hover {
+  color: #fff !important;
+}
 
-.strobi-widget.is-quiet { opacity: .72; }
+.strobi-widget.is-quiet {
+  opacity: .72;
+}
 
 .strobi-widget.is-quiet .mascot-avatar {
   filter: saturate(.6);
@@ -248,57 +278,92 @@
   position: fixed;
   z-index: 2147483000;
   right: 8px;
-  bottom: 10px;
+  bottom: 8px;
   border-radius: 999px;
   border: 1px solid #4b456a !important;
-  background: #171725e8 !important;
+  background: #171725ed !important;
   color: #eceaf9 !important;
-  padding: 9px 12px !important;
+  padding: 7px 10px !important;
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 11px;
+  gap: 7px;
+  font-size: 10px;
   cursor: pointer;
-  box-shadow: 0 8px 25px #0005;
+  box-shadow: 0 6px 18px #0004;
 }
 
 .restore-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background: #a99bff;
-  box-shadow: 0 0 12px #a99bff;
+  box-shadow: 0 0 9px #a99bff;
 }
 
 @keyframes strobi-float {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-8px) rotate(-2deg); }
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
 }
 
 @keyframes strobi-bubble-in {
-  from { opacity: 0; transform: translateY(6px) scale(.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(4px) scale(.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (max-width: 760px) {
-  .strobi-widget { width: 100px; }
-  .strobi-mascot-wrap { width: 82px; }
-  .strobi-mascot { width: 68px; height: 68px; }
-
-  .strobi-bubble {
-    width: min(220px, calc(100vw - 20px));
-    padding: 10px;
+  .strobi-widget {
+    width: 76px;
   }
 
-  .strobi-widget.dock-br,
-  .strobi-widget.dock-bl { right: 5px; bottom: 6px; }
+  .strobi-mascot-wrap {
+    width: 62px;
+  }
 
-  .strobi-widget.dock-tr,
-  .strobi-widget.dock-tl { right: 5px; top: 75px; }
+  .strobi-mascot {
+    width: 44px;
+    height: 44px;
+  }
 
-  .strobi-bubble p { font-size: 11px; }
-  .hide-strobi { opacity: 1; }
-  .tap-label { font-size: 9px; }
+  .strobi-bubble {
+    width: min(172px, calc(100vw - 20px));
+    max-width: calc(100vw - 20px);
+    padding: 8px;
+    max-height: max(80px, min(200px, calc(100dvh - 90px)));
+  }
+
+  .strobi-bubble p {
+    font-size: 10px;
+    line-height: 1.4;
+    margin: 6px 0 7px;
+  }
+
+  .bubble-label {
+    font-size: 8px;
+  }
+
+  .bubble-primary,
+  .bubble-secondary {
+    font-size: 9px;
+  }
+
+  .hide-strobi {
+    opacity: 1;
+  }
+
+  .tap-label {
+    font-size: 8px;
+    padding: 3px 5px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -307,83 +372,5 @@
   .restore-strobi {
     animation: none !important;
     transition: none !important;
-  }
-}
-
-/* Mobile bubble position fix */
-@media (max-width: 760px) {
-  .strobi-widget .strobi-bubble {
-    width: min(220px, calc(100vw - 24px));
-    max-width: calc(100vw - 24px);
-    margin-left: auto;
-    margin-right: 0;
-    align-self: flex-end;
-  }
-}
-
-/* Compact Strobi bubble on mobile */
-@media (max-width: 760px) {
-  .strobi-widget .strobi-bubble {
-    width: min(185px, calc(100vw - 24px));
-    max-width: calc(100vw - 24px);
-    padding: 8px;
-    align-self: flex-end;
-  }
-
-  .strobi-widget .strobi-bubble p {
-    font-size: 10px;
-    line-height: 1.4;
-    margin: 6px 0 8px;
-  }
-
-  .strobi-widget .bubble-primary,
-  .strobi-widget .bubble-secondary {
-    font-size: 9px;
-    padding: 6px 8px !important;
-  }
-
-  .strobi-widget .bubble-actions {
-    gap: 5px;
-  }
-}
-
-/* Advanced mobile-safe Strobi positioning */
-#strobi-widget {
-  max-width: calc(100vw - 16px);
-  transition: left .25s ease, top .25s ease, opacity .3s ease;
-}
-
-#strobi-widget .strobi-bubble {
-  width: min(185px, calc(100vw - 24px));
-  max-width: calc(100vw - 24px);
-  overflow-wrap: anywhere;
-}
-
-#strobi-widget .strobi-bubble p {
-  font-size: 11px;
-  line-height: 1.4;
-}
-
-#strobi-widget .strobi-mascot-wrap {
-  max-width: 100%;
-}
-
-@media (max-width: 760px) {
-  #strobi-widget .strobi-bubble {
-    padding: 8px;
-  }
-
-  #strobi-widget .strobi-bubble p {
-    font-size: 10px;
-    margin: 6px 0 8px;
-  }
-
-  #strobi-widget .bubble-actions {
-    gap: 4px;
-  }
-
-  #strobi-widget .bubble-primary,
-  #strobi-widget .bubble-secondary {
-    font-size: 9px;
   }
 }
