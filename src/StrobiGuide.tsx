@@ -167,6 +167,7 @@ export default function StrobiGuide() {
   const [position, setPosition] = useState<Position | null>(null)
   const [thinking, setThinking] = useState(false)
 
+  const widgetRef = useRef<HTMLDivElement | null>(null) 
   const seenSections = useRef(new Set<string>())
   const tipCache = useRef(new Map<string, Cue>())
   const activeSectionRef = useRef<string>('archive-home')
