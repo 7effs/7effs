@@ -24,15 +24,26 @@ export default defineConfig({
         mkdirSync(outDir, { recursive: true });
 
         for (const item of ROOT_STATIC) {
-          const source = item.startsWith("strobi-widget")
-  ? resolve("dist-widget", item)
-  : resolve(item);
+          const isWidget = item.startsWith("strobi-widget");
+          // Widget files: prefer the fresh dist-widget build, fall back to the
+          // root copy that build:widget keeps in sync. Always overwrite so a
+          // stale file can never survive in dist/.
+          const freshWidget = resolve("dist-widget", item);
+          const source =
+            isWidget && existsSync(freshWidget) ? freshWidget : resolve(item);
           if (!existsSync(source)) continue;
 
           cpSync(source, resolve(outDir, item), {
             recursive: true,
-            force: false,
+            force: isWidget,
           });
+        }
+
+        // Fail the build instead of shipping a "Ready" deploy with no widget.
+        for (const file of ["strobi-widget.js", "strobi-widget.css"]) {
+          if (!existsSync(resolve(outDir, file))) {
+            throw new Error(`Baew widget asset missing from dist: ${file}`);
+          }
         }
       },
     },
