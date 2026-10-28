@@ -14,31 +14,78 @@ type Cue = {
   animation: AnimationName
 }
 
-// Match these IDs and targets to the sections on the real website.
 const cues: Record<string, Cue> = {
-  home: { message: 'Hey! I’m Strobi. I can help you find your way around this page.', action: 'Take the tour', target: 'features', animation: 'excited' },
-  features: { message: 'Here’s the useful stuff, all in one place. Want to see how it works?', action: 'Show me', target: 'how-it-works', animation: 'playful' },
-  'how-it-works': { message: 'Three simple steps. I’ll point you to the next one when you’re ready.', action: 'Get started', target: 'get-started', animation: 'listening' },
-  faq: { message: 'Questions? The quick answers are right here.', action: 'See next step', target: 'get-started', animation: 'happy' },
-  'get-started': { message: 'You made it! Tap me any time for another pointer or hint.', action: 'Back to top', target: 'home', animation: 'proud' },
+  home: {
+    message: 'Hey! I’m Strobi. Tap any section and I’ll help you explore it.',
+    action: 'Take the tour',
+    target: 'features',
+    animation: 'excited',
+  },
+  features: {
+    message: 'Explore the features here. Want me to show you how they work?',
+    action: 'How it works',
+    target: 'how-it-works',
+    animation: 'playful',
+  },
+  'how-it-works': {
+    message: 'Here’s how it works. Ready for the next section?',
+    action: 'Next section',
+    target: 'get-started',
+    animation: 'listening',
+  },
+  faq: {
+    message: 'Have a question? I can help you find the right information.',
+    action: 'Get started',
+    target: 'get-started',
+    animation: 'happy',
+  },
+  'get-started': {
+    message: 'You made it! Tap me whenever you need another hint.',
+    action: 'Back to top',
+    target: 'home',
+    animation: 'proud',
+  },
 }
+
 const sectionOrder = ['home', 'features', 'how-it-works', 'faq', 'get-started']
-const dockClasses = ['dock-br', 'dock-bl', 'dock-tr', 'dock-br', 'dock-tl']
+const dockClasses = ['dock-br', 'dock-bl', 'dock-tr', 'dock-tl', 'dock-br']
+
+type Position = { left: number; top: number }
+
+function getSafePosition(x: number, y: number): Position {
+  const margin = 8
+  const widgetWidth = Math.min(110, window.innerWidth - margin * 2)
+  const widgetHeight = Math.min(210, window.innerHeight - margin * 2)
+
+  let left = x - widgetWidth / 2
+  let top = y - widgetHeight - 14
+
+  if (top < margin) top = y + 14
+  if (top + widgetHeight > window.innerHeight - margin) {
+    top = window.innerHeight - widgetHeight - margin
+  }
+
+  left = Math.max(margin, Math.min(left, window.innerWidth - widgetWidth - margin))
+  top = Math.max(margin, Math.min(top, window.innerHeight - widgetHeight - margin))
+
+  return { left, top }
+}
 
 export default function StrobiGuide() {
   const [activeSection, setActiveSection] = useState('home')
-  const [cue, setCue] = useState<Cue | null>(null)
+  const [cue, setCue] = useState<Cue>(cues.home)
   const [bubbleOpen, setBubbleOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [animation, setAnimation] = useState<AnimationName>('playful')
   const [dock, setDock] = useState('dock-br')
   const [quiet, setQuiet] = useState(false)
+  const [position, setPosition] = useState<Position | null>(null)
+
   const seenSections = useRef(new Set<string>())
   const introShown = useRef(false)
   const inactivityTimer = useRef<number | undefined>(undefined)
-  const lastActivity = useRef(Date.now())
-  const quietRef = useRef(false)
   const manualHiddenRef = useRef(false)
+  const lastActivity = useRef(Date.now())
 
   const showCue = useCallback((sectionId: string, force = false) => {
     if (manualHiddenRef.current) return
@@ -47,120 +94,224 @@ export default function StrobiGuide() {
     setAnimation(next.animation)
     setBubbleOpen(true)
     setHidden(false)
+    setQuiet(false)
     if (!force) seenSections.current.add(sectionId)
   }, [])
 
-  const scrollToTarget = useCallback((target: string) => {
-  const element = document.getElementById(target);
-
-  if (element) {
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    });
-    setActiveSection(target);
-  } else {
-    window.scrollBy({
-      top: window.innerHeight * 0.8,
-      behavior: 'smooth',
-    });
-  }
-}, []);
-
   const registerActivity = useCallback(() => {
     lastActivity.current = Date.now()
-    quietRef.current = false
     setQuiet(false)
     setAnimation(current => current === 'sleeping' ? 'waking' : current)
+
     if (inactivityTimer.current) window.clearTimeout(inactivityTimer.current)
     inactivityTimer.current = window.setTimeout(() => {
       if (Date.now() - lastActivity.current >= 42000) {
         setBubbleOpen(false)
-        quietRef.current = true
         setQuiet(true)
         setAnimation('sleeping')
       }
     }, 43000)
   }, [])
 
+  const scrollToTarget = useCallback((target: string) => {
+    const element = document.getElementById(target)
+    if (!element) return
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    setActiveSection(target)
+  }, [])
+
   useEffect(() => {
     const introTimer = window.setTimeout(() => {
-      if (!introShown.current) {
+      if (!introShown.current && !manualHiddenRef.current) {
         introShown.current = true
         showCue('home', true)
       }
     }, 1100)
 
-    // Existing sites only need matching section IDs for automatic section cues.
-    const sections = sectionOrder.map(id => document.getElementById(id)).filter((node): node is HTMLElement => node !== null)
+    const sectionElements = sectionOrder
+      .map(id => document.getElementById(id))
+      .filter((element): element is HTMLElement => element !== null)
+
     const observer = new IntersectionObserver(entries => {
-      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+      const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+
       if (!visible) return
       const id = visible.target.id
       setActiveSection(id)
+
       const index = Math.max(0, sectionOrder.indexOf(id))
       setDock(dockClasses[index % dockClasses.length])
-      if (introShown.current && !seenSections.current.has(id) && id !== 'home' && !quietRef.current) {
+
+      if (
+        introShown.current &&
+        id !== 'home' &&
+        !seenSections.current.has(id) &&
+        !manualHiddenRef.current
+      ) {
         seenSections.current.add(id)
         showCue(id)
       }
-    }, { threshold: [0.25, 0.5, 0.7] })
-    sections.forEach(section => observer.observe(section))
+    }, { threshold: [0.3, 0.55, 0.75] })
 
-    const onClick = (event: MouseEvent) => {
-      const element = event.target
-      if (!(element instanceof Element)) return
-      const clickable = element.closest<HTMLElement>('[data-strobi-tip], [data-strobi-go]')
-      if (!clickable) return
+    sectionElements.forEach(element => observer.observe(element))
+
+    // Only react to taps on non-interactive page content.
+    // Buttons, links, inputs, switches and Strobi controls remain untouched.
+    const onPagePointerDown = (event: PointerEvent) => {
+      if (event.button !== 0 || !(event.target instanceof Element)) return
+
+      const target = event.target
+      if (target.closest(
+        '#strobi-widget-root, #strobi-widget, .restore-strobi,' +
+        'button, a, input, textarea, select, label, summary,' +
+        '[role="button"], [role="switch"], [role="slider"],' +
+        '[contenteditable="true"], [data-strobi-ignore]'
+      )) return
+
+      if (manualHiddenRef.current) return
+
+      const x = event.clientX
+      const y = event.clientY
+      setPosition(getSafePosition(x, y))
       registerActivity()
-      const tip = clickable.dataset.strobiTip
-      const go = clickable.dataset.strobiGo
-      if (tip && cues[tip]) showCue(tip, true)
-      else if (go) showCue(go in cues ? go : activeSection, true)
-    }
-    document.addEventListener('click', onClick)
 
-    const activityEvents: Array<keyof WindowEventMap> = ['pointerdown', 'keydown', 'touchstart', 'scroll']
-    const onActivity = () => registerActivity()
-    activityEvents.forEach(name => window.addEventListener(name, onActivity, { passive: true }))
+      const section = target.closest<HTMLElement>(
+        '[data-strobi-tip], section[id], main[id], article[id], [id]'
+      )
+
+      const sectionId = section?.dataset.strobiTip || section?.id
+      if (sectionId && cues[sectionId]) {
+        showCue(sectionId, true)
+      } else {
+        const heading = target.closest('h1, h2, h3')?.textContent?.trim()
+        const name = heading || target.textContent?.trim().replace(/\s+/g, ' ').slice(0, 90)
+
+        setCue({
+          message: name
+            ? `Want help understanding “${name}”? I can guide you around this page.`
+            : 'Need help with this part of the page? Tap a section to explore it.',
+          action: 'Explore the page',
+          target: activeSection,
+          animation: 'playful',
+        })
+        setAnimation('playful')
+        setBubbleOpen(true)
+      }
+    }
+
+    document.addEventListener('pointerdown', onPagePointerDown, true)
     registerActivity()
 
     return () => {
       window.clearTimeout(introTimer)
       if (inactivityTimer.current) window.clearTimeout(inactivityTimer.current)
       observer.disconnect()
-      document.removeEventListener('click', onClick)
-      activityEvents.forEach(name => window.removeEventListener(name, onActivity))
+      document.removeEventListener('pointerdown', onPagePointerDown, true)
     }
-  }, [registerActivity, showCue])
+  }, [activeSection, registerActivity, showCue])
 
   const toggleAvatar = () => {
     registerActivity()
-    if (bubbleOpen) setBubbleOpen(false)
-    else showCue(activeSection, true)
+    if (bubbleOpen) {
+      setBubbleOpen(false)
+    } else {
+      showCue(activeSection, true)
+    }
   }
-  const currentCue = cue ?? cues.home
 
   return <>
-    {!hidden && <div className={`strobi-widget ${dock} ${quiet ? 'is-quiet' : ''}`} aria-label="Strobi website guide">
-      {bubbleOpen && <section className="strobi-bubble" aria-live="polite" aria-label="Strobi hint">
-        <button className="bubble-close" aria-label="Dismiss hint" onClick={() => { setBubbleOpen(false); registerActivity() }}>×</button>
-        <div className="bubble-label"><span className="bubble-pulse" /> STROBI TIP</div>
-        <p>{currentCue.message}</p>
-        <div className="bubble-actions">
-          <button className="bubble-primary" onClick={() => { const target = currentCue.target; setBubbleOpen(false); registerActivity(); scrollToTarget(target) }}>{currentCue.action} <span aria-hidden="true">↗</span></button>
-          <button className="bubble-secondary" onClick={() => { setBubbleOpen(false); registerActivity() }}>Not now</button>
+    {!hidden && (
+      <div
+        id="strobi-widget"
+        className={`strobi-widget ${dock} ${quiet ? 'is-quiet' : ''}`}
+        aria-label="Strobi website guide"
+        style={position ? {
+          left: `${position.left}px`,
+          top: `${position.top}px`,
+          right: 'auto',
+          bottom: 'auto',
+        } : undefined}
+      >
+        {bubbleOpen && (
+          <section className="strobi-bubble" aria-live="polite" aria-label="Strobi hint">
+            <button
+              className="bubble-close"
+              aria-label="Dismiss hint"
+              onClick={() => {
+                setBubbleOpen(false)
+                registerActivity()
+              }}
+            >×</button>
+            <div className="bubble-label">
+              <span className="bubble-pulse" /> STROBI TIP
+            </div>
+            <p>{cue.message}</p>
+            <div className="bubble-actions">
+              <button
+                className="bubble-primary"
+                onClick={() => {
+                  const target = cue.target
+                  setBubbleOpen(false)
+                  registerActivity()
+                  scrollToTarget(target)
+                }}
+              >
+                {cue.action} <span aria-hidden="true">↗</span>
+              </button>
+              <button
+                className="bubble-secondary"
+                onClick={() => {
+                  setBubbleOpen(false)
+                  registerActivity()
+                }}
+              >Not now</button>
+            </div>
+          </section>
+        )}
+
+        <div className="strobi-mascot-wrap">
+          <button
+            className="hide-strobi"
+            aria-label="Hide Strobi"
+            title="Hide Strobi"
+            onClick={() => {
+              manualHiddenRef.current = true
+              setHidden(true)
+              setBubbleOpen(false)
+            }}
+          >×</button>
+
+          <button
+            className="strobi-mascot"
+            aria-label={bubbleOpen ? 'Dismiss Strobi hint' : 'Ask Strobi for a hint'}
+            aria-expanded={bubbleOpen}
+            onClick={toggleAvatar}
+          >
+            <span className="mascot-glow" />
+            <span className="mascot-avatar">
+              <Avatar animation={animation} size="100%" ariaLabel="Strobi animated avatar" />
+            </span>
+          </button>
+          {!bubbleOpen && <span className="tap-label">Need a hint?</span>}
         </div>
-      </section>}
-      <div className="strobi-mascot-wrap">
-        <button className="hide-strobi" aria-label="Hide Strobi" title="Hide Strobi" onClick={() => { manualHiddenRef.current = true; setHidden(true); setBubbleOpen(false) }}>×</button>
-        <button className="strobi-mascot" aria-label={bubbleOpen ? 'Dismiss Strobi hint' : 'Ask Strobi for a hint'} aria-expanded={bubbleOpen} onClick={toggleAvatar}>
-          <span className="mascot-glow" />
-          <span className="mascot-avatar"><Avatar animation={animation} size="100%" ariaLabel="Strobi animated avatar" /></span>
-        </button>
-        {!bubbleOpen && <span className="tap-label">Need a hint?</span>}
       </div>
-    </div>}
-    {hidden && <button className="restore-strobi" onClick={() => { manualHiddenRef.current = false; setHidden(false); setQuiet(false); registerActivity(); showCue(activeSection, true) }} aria-label="Show Strobi again"><span className="restore-dot" /> Strobi</button>}
+    )}
+
+    {hidden && (
+      <button
+        className="restore-strobi"
+        onClick={() => {
+          manualHiddenRef.current = false
+          setHidden(false)
+          registerActivity()
+          showCue(activeSection, true)
+        }}
+        aria-label="Show Strobi again"
+      >
+        <span className="restore-dot" /> Strobi
+      </button>
+    )}
   </>
 }
