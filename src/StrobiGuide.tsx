@@ -496,7 +496,6 @@ export default function StrobiGuide() {
 
       if (manualHiddenRef.current) return
 
-      setPosition(getSafePosition(event.clientX, event.clientY))
       registerActivity()
 
       // Find the closest section Strobi knows how to explain.
