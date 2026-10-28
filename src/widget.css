@@ -20,7 +20,10 @@
 .strobi-widget.is-quiet{opacity:.76}.strobi-widget.is-quiet .mascot-avatar{filter:saturate(.6)}
 .restore-strobi{position:fixed;z-index:2147483000;right:17px;bottom:14px;border-radius:999px;border:1px solid #4b456a!important;background:#171725!important;color:#eceaf9!important;padding:11px 15px!important;display:flex;align-items:center;gap:9px;font-size:11px;cursor:pointer;box-shadow:0 12px 35px #0006}
 .restore-dot{width:7px;height:7px;border-radius:50%;background:#a99bff;box-shadow:0 0 14px #a99bff}
-@keyframes strobi-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes strobi-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(-3deg); }
+}
 @keyframes strobi-bubble-in{from{opacity:0;transform:translateY(7px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:760px){.strobi-widget{width:124px}.strobi-mascot-wrap{width:104px}.strobi-mascot{width:94px;height:94px}.strobi-bubble{width:min(270px,calc(100vw - 24px));padding:14px}.strobi-widget.dock-br{right:5px;bottom:6px}.strobi-widget.dock-bl{left:5px;bottom:6px}.strobi-widget.dock-tr{right:5px;top:75px}.strobi-widget.dock-tl{left:5px;top:75px}.strobi-bubble p{font-size:11px}.hide-strobi{opacity:1}.tap-label{font-size:9px}}
 @media(prefers-reduced-motion:reduce){.strobi-widget,.strobi-widget *,.restore-strobi{animation:none!important;transition:none!important}}
