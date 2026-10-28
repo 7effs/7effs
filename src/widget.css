@@ -309,3 +309,14 @@
     transition: none !important;
   }
 }
+
+/* Mobile bubble position fix */
+@media (max-width: 760px) {
+  .strobi-widget .strobi-bubble {
+    width: min(220px, calc(100vw - 24px));
+    max-width: calc(100vw - 24px);
+    margin-left: auto;
+    margin-right: 0;
+    align-self: flex-end;
+  }
+}
