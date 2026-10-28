@@ -5,7 +5,6 @@ import definition from '../strobi.avatar.json'
 import './widget.css'
 
 const Avatar = createAvatar(definition)
-
 type AnimationName = keyof typeof definition.animations
 
 type Cue = {
@@ -15,20 +14,13 @@ type Cue = {
   animation: AnimationName
 }
 
-type Position = {
-  left: number
-  top: number
-}
+type Position = { left: number; top: number }
 
 const SECTION_SELECTOR =
   'main > section[id], .archive-interface > section[id], [data-strobi-section][id]'
 
 const ANIMATIONS: AnimationName[] = [
-  'excited',
-  'playful',
-  'listening',
-  'happy',
-  'proud',
+  'excited', 'playful', 'listening', 'happy', 'proud',
 ]
 
 function getGuideSections(): HTMLElement[] {
@@ -41,117 +33,96 @@ function getGuideSections(): HTMLElement[] {
   )
 }
 
-function isSectionVisibleInLayout(section: HTMLElement): boolean {
-  const style = window.getComputedStyle(section)
-
-  return (
-    style.display !== 'none' &&
-    style.visibility !== 'hidden' &&
-    section.getClientRects().length > 0
-  )
-}
-
 function getRenderableSections(): HTMLElement[] {
-  return getGuideSections().filter(isSectionVisibleInLayout)
+  return getGuideSections().filter(section => {
+    const style = getComputedStyle(section)
+    return style.display !== 'none' &&
+      style.visibility !== 'hidden' &&
+      section.getClientRects().length > 0
+  })
 }
 
 function getSectionTitle(section: HTMLElement): string {
   const heading = section.querySelector<HTMLElement>(
     'h1, h2, h3, [data-strobi-title]'
   )
-
-  return (
-    heading?.innerText?.trim().replace(/\s+/g, ' ').slice(0, 100) ||
-    section.getAttribute('aria-label') ||
-    section.id.replace(/[-_]+/g, ' ')
-  )
+  return heading?.innerText?.trim().replace(/\s+/g, ' ').slice(0, 100)
+    || section.getAttribute('aria-label')
+    || section.id.replace(/[-_]+/g, ' ')
 }
 
 function getSectionText(section: HTMLElement): string {
-  if (
-    section.querySelector(
-      'textarea, [contenteditable="true"], input[type="password"], [role="log"]'
-    )
-  ) {
-    return ''
-  }
+  if (section.querySelector(
+    'textarea, [contenteditable="true"], input[type="password"], [role="log"]'
+  )) return ''
 
   const clone = section.cloneNode(true) as HTMLElement
-
   clone.querySelectorAll(
-    'script, style, button, input, textarea, select, form,' +
-    '[hidden], [aria-hidden="true"], [data-strobi-ignore],' +
-    '[role="dialog"], #strobi-widget-root, #strobi-widget'
-  ).forEach(element => element.remove())
+    'script, style, button, input, textarea, select, form, [hidden], ' +
+    '[aria-hidden="true"], [data-strobi-ignore], [role="dialog"], ' +
+    '#strobi-widget-root, #strobi-widget'
+  ).forEach(el => el.remove())
 
-  return (clone.innerText || '')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .slice(0, 1000)
+  return (clone.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 1000)
+}
+
+function getLocalGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour >= 5 && hour < 12) return 'Good morning'
+  if (hour >= 12 && hour < 17) return 'Good afternoon'
+  if (hour >= 17 && hour < 21) return 'Good evening'
+  return 'Good night'
 }
 
 function createFallbackCue(section: HTMLElement): Cue {
   const sections = getRenderableSections()
   const index = sections.findIndex(item => item.id === section.id)
-
-  const hasNext = index >= 0 && index < sections.length - 1
-  const targetSection = hasNext
-    ? sections[index + 1]
-    : sections[0] || section
-
+  const next = sections[index + 1] || sections[0]
   const title = getSectionTitle(section)
 
   return {
-    message:
-      `You're exploring "${title}". ` +
-      'Take a look around; I can help you navigate the archive.',
-    action: hasNext
-      ? 'Next section'
-      : targetSection.id !== section.id
-        ? 'Back to top'
-        : 'Read this section',
-    target: targetSection.id,
+    message: `You're exploring "${title}". Look through this section for its key details.`,
+    action: next && next.id !== section.id ? 'Next section' : 'Read this section',
+    target: next?.id || section.id,
     animation: ANIMATIONS[Math.max(0, index) % ANIMATIONS.length],
   }
 }
 
-function getSafePosition(x: number, y: number): Position {
-  const margin = 12
-  const width = Math.min(110, Math.max(0, window.innerWidth - margin * 2))
-  const height = Math.min(210, Math.max(0, window.innerHeight - margin * 2))
+function clampPosition(
+  left: number,
+  top: number,
+  width = 188,
+  height = 300
+): Position {
+  const margin = 10
+  const maxLeft = Math.max(margin, window.innerWidth - width - margin)
+  const maxTop = Math.max(margin, window.innerHeight - height - margin)
 
-  let left = x - width / 2
+  return {
+    left: Math.min(Math.max(margin, left), maxLeft),
+    top: Math.min(Math.max(margin, top), maxTop),
+  }
+}
+
+function positionNearPoint(x: number, y: number): Position {
+  const width = Math.min(188, window.innerWidth - 20)
+  const height = Math.min(300, window.innerHeight - 20)
   let top = y - height - 16
 
-  if (top < margin) {
-    top = y + 16
-  }
-
-  left = Math.max(
-    margin,
-    Math.min(left, window.innerWidth - width - margin)
-  )
-
-  top = Math.max(
-    margin,
-    Math.min(top, window.innerHeight - height - margin)
-  )
-
-  return { left, top }
+  if (top < 10) top = y + 16
+  return clampPosition(x - width / 2, top, width, height)
 }
 
 export default function StrobiGuide() {
   const [cue, setCue] = useState<Cue>({
-    message: "Hey! I'm Strobi. Let's explore the archive together.",
-    action: 'Explore the archive',
+    message: `${getLocalGreeting()}! I'm Strobi. I'll help you explore this page.`,
+    action: 'Explore the page',
     target: 'archive-home',
     animation: 'excited',
   })
-
   const [bubbleOpen, setBubbleOpen] = useState(false)
   const [hidden, setHidden] = useState(false)
-  const [animation, setAnimation] =
-    useState<AnimationName>('playful')
+  const [animation, setAnimation] = useState<AnimationName>('playful')
   const [quiet, setQuiet] = useState(false)
   const [position, setPosition] = useState<Position | null>(null)
   const [thinking, setThinking] = useState(false)
@@ -159,7 +130,7 @@ export default function StrobiGuide() {
   const widgetRef = useRef<HTMLDivElement | null>(null)
   const seenSections = useRef(new Set<string>())
   const tipCache = useRef(new Map<string, Cue>())
-  const activeSectionRef = useRef<string>('archive-home')
+  const activeSectionRef = useRef('archive-home')
   const introShown = useRef(false)
   const manualHiddenRef = useRef(false)
   const lastActivity = useRef(Date.now())
@@ -168,7 +139,8 @@ export default function StrobiGuide() {
   const activeRequestSection = useRef<string | null>(null)
   const inactivityTimer = useRef<number | undefined>(undefined)
   const sectionTimer = useRef<number | undefined>(undefined)
-  const intersectionRatios = useRef(new Map<HTMLElement, number>())
+  const ratios = useRef(new Map<HTMLElement, number>())
+  const positionRef = useRef<Position | null>(null)
 
   const cancelInFlight = useCallback(() => {
     requestId.current += 1
@@ -181,15 +153,9 @@ export default function StrobiGuide() {
   const registerActivity = useCallback(() => {
     lastActivity.current = Date.now()
     setQuiet(false)
+    setAnimation(current => current === 'sleeping' ? 'waking' : current)
 
-    setAnimation(current =>
-      current === 'sleeping' ? 'waking' : current
-    )
-
-    if (inactivityTimer.current) {
-      window.clearTimeout(inactivityTimer.current)
-    }
-
+    if (inactivityTimer.current) window.clearTimeout(inactivityTimer.current)
     inactivityTimer.current = window.setTimeout(() => {
       if (Date.now() - lastActivity.current >= 42000) {
         cancelInFlight()
@@ -200,6 +166,12 @@ export default function StrobiGuide() {
     }, 43000)
   }, [cancelInFlight])
 
+  const moveNearPoint = useCallback((x: number, y: number) => {
+    const next = positionNearPoint(x, y)
+    positionRef.current = next
+    setPosition(next)
+  }, [])
+
   const showSmartTip = useCallback(async (
     section: HTMLElement,
     welcome = false
@@ -207,10 +179,8 @@ export default function StrobiGuide() {
     if (manualHiddenRef.current || !section.id) return
 
     registerActivity()
-
     const sectionId = section.id
     const title = getSectionTitle(section)
-
     activeSectionRef.current = sectionId
     seenSections.current.add(sectionId)
 
@@ -223,23 +193,19 @@ export default function StrobiGuide() {
     }
 
     cancelInFlight()
-
     const baseCue = createFallbackCue(section)
-
     setAnimation(baseCue.animation)
     setBubbleOpen(true)
     setHidden(false)
     setQuiet(false)
 
-    const cachedCue = tipCache.current.get(sectionId)
-
-    if (cachedCue) {
-      setCue(cachedCue)
+    const cached = tipCache.current.get(sectionId)
+    if (cached) {
+      setCue(cached)
       return
     }
 
     const sectionText = getSectionText(section)
-
     if (!sectionText) {
       setCue(baseCue)
       tipCache.current.set(sectionId, baseCue)
@@ -248,37 +214,32 @@ export default function StrobiGuide() {
 
     const controller = new AbortController()
     const currentRequest = requestId.current
-
     activeRequest.current = controller
     activeRequestSection.current = sectionId
     setThinking(true)
-
     setCue({
       ...baseCue,
       message: welcome
-        ? "Hey! I'm Strobi. I'm finding one useful detail in this section..."
-        : `Let me find a useful detail about "${title}"...`,
+        ? `${getLocalGreeting()}! I'm finding a useful detail in this section...`
+        : `Here's a quick guide to "${title}"...`,
     })
 
     try {
       const response = await fetch('/api/strobi-guide', {
         method: 'POST',
         signal: controller.signal,
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: [
-            'STROBI PROACTIVE WEBSITE GUIDE',
-            'Write a helpful micro-guide for the section below.',
-            'Use one or two short sentences, ideally under 40 words.',
-            'Explain a useful detail or the purpose of the section.',
-            'Be warm, clear, specific and natural.',
+            'You are Strobi, a proactive guide for the JAYE / EFFS website.',
+            'Give a useful, specific micro-guide in 1–3 short sentences, ideally under 45 words.',
+            'Explain the purpose of this section or point out a helpful detail from the supplied text.',
+            'Suggest a next step only when it is supported by the supplied text.',
             'Do not ask the visitor to type a question.',
-            'Do not invent features, links or facts.',
-            'Only use the supplied section title and visible text.',
-            'Never request passwords, API keys or private credentials.',
-            '',
+            'Do not invent features, links, facts, or capabilities.',
+            'Never request passwords, API keys, or private credentials.',
+            `Local time greeting: ${getLocalGreeting()}.`,
+            `Local time: ${new Date().toLocaleTimeString()}.`,
             `Section ID: ${sectionId}`,
             `Section title: ${title}`,
             `Visible section text: ${sectionText}`,
@@ -286,36 +247,27 @@ export default function StrobiGuide() {
         }),
       })
 
-      if (!response.ok) {
-        throw new Error('The guide service returned an error.')
-      }
-
+      if (!response.ok) throw new Error('Strobi service unavailable')
       const data: { reply?: unknown } = await response.json()
 
       if (
         currentRequest !== requestId.current ||
         controller.signal.aborted ||
         manualHiddenRef.current
-      ) {
-        return
-      }
+      ) return
 
       if (typeof data.reply === 'string' && data.reply.trim()) {
-        const result: Cue = {
+        const result = {
           ...baseCue,
           message: data.reply.trim().slice(0, 500),
         }
-
         tipCache.current.set(sectionId, result)
         setCue(result)
       } else {
         setCue(baseCue)
       }
     } catch {
-      if (
-        currentRequest === requestId.current &&
-        !manualHiddenRef.current
-      ) {
+      if (currentRequest === requestId.current && !manualHiddenRef.current) {
         setCue(baseCue)
       }
     } finally {
@@ -327,78 +279,55 @@ export default function StrobiGuide() {
     }
   }, [cancelInFlight, registerActivity])
 
-  const scrollToTarget = useCallback((target: string) => {
-    const element = document.getElementById(target)
-    if (!element) return
-
-    element.scrollIntoView({
-      behavior: 'smooth',
-      block: 'start',
-    })
-
-    activeSectionRef.current = target
-  }, [])
-
   const closeBubble = useCallback(() => {
     cancelInFlight()
     setBubbleOpen(false)
     registerActivity()
   }, [cancelInFlight, registerActivity])
 
-  const moveNearPoint = useCallback((x: number, y: number) => {
-    const nextPosition = getSafePosition(x, y)
-    setPosition(nextPosition)
+  const scrollToTarget = useCallback((target: string) => {
+    document.getElementById(target)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+    activeSectionRef.current = target
   }, [])
 
   useEffect(() => {
-    const observedSections = new WeakSet<HTMLElement>()
+    const observed = new WeakSet<HTMLElement>()
 
     const observeNewSections = (observer: IntersectionObserver) => {
       for (const section of getGuideSections()) {
-        if (observedSections.has(section)) continue
-
-        observedSections.add(section)
-        intersectionRatios.current.set(section, 0)
+        if (observed.has(section)) continue
+        observed.add(section)
+        ratios.current.set(section, 0)
         observer.observe(section)
       }
     }
 
     const observer = new IntersectionObserver(entries => {
       for (const entry of entries) {
-        const section = entry.target as HTMLElement
-
-        intersectionRatios.current.set(
-          section,
+        ratios.current.set(
+          entry.target as HTMLElement,
           entry.isIntersecting ? entry.intersectionRatio : 0
         )
       }
 
-      const currentSection = Array.from(
-        intersectionRatios.current.entries()
-      )
+      const current = Array.from(ratios.current.entries())
         .filter(([, ratio]) => ratio > 0)
         .sort((a, b) => b[1] - a[1])[0]?.[0]
 
-      if (!currentSection) return
-
-      activeSectionRef.current = currentSection.id
-
-      // Do not change the widget's dock on every section change.
-      // Its position is controlled by the smooth position state.
+      if (!current) return
+      activeSectionRef.current = current.id
 
       if (!introShown.current || manualHiddenRef.current) return
-      if (seenSections.current.has(currentSection.id)) return
+      if (seenSections.current.has(current.id)) return
 
-      if (sectionTimer.current) {
-        window.clearTimeout(sectionTimer.current)
-      }
-
-      const sectionId = currentSection.id
+      if (sectionTimer.current) window.clearTimeout(sectionTimer.current)
+      const sectionId = current.id
 
       sectionTimer.current = window.setTimeout(() => {
-        const mostVisible = Array.from(
-          intersectionRatios.current.entries()
-        )
+        const mostVisible = Array.from(ratios.current.entries())
           .filter(([, ratio]) => ratio > 0)
           .sort((a, b) => b[1] - a[1])[0]?.[0]
 
@@ -406,47 +335,35 @@ export default function StrobiGuide() {
           mostVisible?.id !== sectionId ||
           seenSections.current.has(sectionId) ||
           manualHiddenRef.current
-        ) {
-          return
-        }
+        ) return
 
-        void showSmartTip(currentSection)
+        void showSmartTip(current)
       }, 850)
-    }, {
-      threshold: [0, 0.25, 0.45, 0.65, 0.8],
-    })
+    }, { threshold: [0, 0.25, 0.45, 0.65, 0.8] })
 
     observeNewSections(observer)
 
-    const mutationObserver = new MutationObserver(() => {
-      observeNewSections(observer)
-    })
-
-    mutationObserver.observe(document.body, {
-      childList: true,
-      subtree: true,
-    })
+    const mutationObserver = new MutationObserver(() => observeNewSections(observer))
+    mutationObserver.observe(document.body, { childList: true, subtree: true })
 
     const introTimer = window.setTimeout(() => {
       if (introShown.current || manualHiddenRef.current) return
-
       introShown.current = true
 
       const sections = getRenderableSections()
-      const visibleSection = sections.find(section => {
+      const visible = sections.find(section => {
         const rect = section.getBoundingClientRect()
         return rect.top < window.innerHeight && rect.bottom > 0
       })
+      const section = visible || sections[0]
 
-      const firstSection = visibleSection || sections[0]
-
-      if (firstSection) {
-        void showSmartTip(firstSection, true)
+      if (section) {
+        void showSmartTip(section, true)
       } else {
         setBubbleOpen(true)
         setCue({
-          message: "Hey! I'm Strobi. Scroll through the archive and I'll guide you.",
-          action: 'Explore the archive',
+          message: `${getLocalGreeting()}! I'm Strobi. Scroll through the page and I'll help you explore it.`,
+          action: 'Explore the page',
           target: 'archive-home',
           animation: 'excited',
         })
@@ -454,67 +371,35 @@ export default function StrobiGuide() {
     }, 1000)
 
     const onPagePointerDown = (event: PointerEvent) => {
-      if (event.button !== 0 || !(event.target instanceof Element)) {
-        return
-      }
-
+      if (event.button !== 0 || !(event.target instanceof Element)) return
       const target = event.target
 
       if (target.closest(
-        '#strobi-widget-root, #strobi-widget, .restore-strobi,' +
-        'button, a, input, textarea, select, label, summary,' +
-        '[role="button"], [role="switch"], [role="slider"],' +
+        '#strobi-widget-root, #strobi-widget, .restore-strobi, ' +
+        'button, a, input, textarea, select, label, summary, ' +
+        '[role="button"], [role="switch"], [role="slider"], ' +
         '[contenteditable="true"], [data-strobi-ignore]'
-      )) {
-        return
-      }
+      )) return
 
       if (manualHiddenRef.current) return
 
       registerActivity()
       moveNearPoint(event.clientX, event.clientY)
 
-      let candidate = target.closest<HTMLElement>(
-        'section[id], [data-strobi-section][id]'
-      )
+      const section = target.closest<HTMLElement>(SECTION_SELECTOR)
+      const fallback = section ||
+        getGuideSections().find(item => item.id === activeSectionRef.current) ||
+        getRenderableSections()[0]
 
-      let guideSection: HTMLElement | undefined
-
-      while (candidate) {
-        if (candidate.matches(SECTION_SELECTOR)) {
-          guideSection = candidate
-          break
-        }
-
-        candidate = candidate.parentElement?.closest<HTMLElement>(
-          'section[id], [data-strobi-section][id]'
-        ) ?? null
-      }
-
-      if (guideSection) {
-        void showSmartTip(guideSection)
-        return
-      }
-
-      const currentSection = getGuideSections().find(
-        section => section.id === activeSectionRef.current
-      )
-
-      const fallbackSection =
-        currentSection || getRenderableSections()[0]
-
-      if (fallbackSection) {
-        void showSmartTip(fallbackSection)
-      }
+      if (fallback) void showSmartTip(fallback)
     }
 
     const onResize = () => {
-      if (!position) return
-
-      setPosition(getSafePosition(
-        position.left + 55,
-        position.top + 105
-      ))
+      const current = positionRef.current
+      if (!current) return
+      const next = clampPosition(current.left, current.top)
+      positionRef.current = next
+      setPosition(next)
     }
 
     document.addEventListener('pointerdown', onPagePointerDown, true)
@@ -523,54 +408,34 @@ export default function StrobiGuide() {
 
     return () => {
       window.clearTimeout(introTimer)
-
-      if (inactivityTimer.current) {
-        window.clearTimeout(inactivityTimer.current)
-      }
-
-      if (sectionTimer.current) {
-        window.clearTimeout(sectionTimer.current)
-      }
-
+      if (inactivityTimer.current) window.clearTimeout(inactivityTimer.current)
+      if (sectionTimer.current) window.clearTimeout(sectionTimer.current)
       cancelInFlight()
       observer.disconnect()
       mutationObserver.disconnect()
-
-      document.removeEventListener(
-        'pointerdown',
-        onPagePointerDown,
-        true
-      )
+      document.removeEventListener('pointerdown', onPagePointerDown, true)
       window.removeEventListener('resize', onResize)
     }
-  }, [
-    cancelInFlight,
-    registerActivity,
-    showSmartTip,
-    moveNearPoint,
-    position,
-  ])
+  }, [cancelInFlight, registerActivity, showSmartTip, moveNearPoint])
 
   const toggleAvatar = () => {
     registerActivity()
-
     if (bubbleOpen) {
       closeBubble()
       return
     }
 
     const section =
-      getGuideSections().find(
-        item => item.id === activeSectionRef.current
-      ) || getRenderableSections()[0]
+      getGuideSections().find(item => item.id === activeSectionRef.current) ||
+      getRenderableSections()[0]
 
     if (section) {
       void showSmartTip(section)
     } else {
       setBubbleOpen(true)
       setCue({
-        message: "Hey! I'm Strobi. Scroll through the archive and I'll guide you.",
-        action: 'Explore the archive',
+        message: `${getLocalGreeting()}! I'm Strobi. Scroll through the page and I'll help you explore it.`,
+        action: 'Explore the page',
         target: 'archive-home',
         animation: 'excited',
       })
@@ -583,58 +448,32 @@ export default function StrobiGuide() {
         <div
           ref={widgetRef}
           id="strobi-widget"
-          className={`strobi-widget ${quiet ? 'is-quiet' : ''} ${position ? 'is-positioned' : ''}`}
+          className={`strobi-widget ${quiet ? 'is-quiet' : ''} ${bubbleOpen ? 'bubble-open' : ''}`}
           aria-label="Strobi website guide"
-          style={{
-            ...(position ? {
-              position: 'fixed',
-              left: `${position.left}px`,
-              top: `${position.top}px`,
-              right: 'auto',
-              bottom: 'auto',
-            } : {}),
-            transition: 'left 420ms ease, top 420ms ease',
-          }}
+          style={position ? {
+            left: `${position.left}px`,
+            top: `${position.top}px`,
+            right: 'auto',
+            bottom: 'auto',
+          } : undefined}
         >
           {bubbleOpen && (
-            <section
-              className="strobi-bubble"
-              aria-live="polite"
-              aria-label="Strobi hint"
-            >
-              <button
-                className="bubble-close"
-                aria-label="Dismiss hint"
-                onClick={closeBubble}
-              >
-                ×
-              </button>
-
+            <section className="strobi-bubble" aria-live="polite" aria-label="Strobi hint">
+              <button className="bubble-close" aria-label="Dismiss hint" onClick={closeBubble}>×</button>
               <div className="bubble-label">
                 <span className="bubble-pulse" />
                 {thinking ? 'STROBI IS THINKING' : 'STROBI TIP'}
               </div>
-
               <p>{cue.message}</p>
-
               <div className="bubble-actions">
-                <button
-                  className="bubble-primary"
-                  onClick={() => {
-                    const target = cue.target
-                    closeBubble()
-                    scrollToTarget(target)
-                  }}
-                >
+                <button className="bubble-primary" onClick={() => {
+                  const target = cue.target
+                  closeBubble()
+                  scrollToTarget(target)
+                }}>
                   {cue.action} <span aria-hidden="true">↗</span>
                 </button>
-
-                <button
-                  className="bubble-secondary"
-                  onClick={closeBubble}
-                >
-                  Not now
-                </button>
+                <button className="bubble-secondary" onClick={closeBubble}>Not now</button>
               </div>
             </section>
           )}
@@ -650,33 +489,21 @@ export default function StrobiGuide() {
                 setHidden(true)
                 setBubbleOpen(false)
               }}
-            >
-              ×
-            </button>
+            >×</button>
 
             <button
               className="strobi-mascot"
-              aria-label={
-                bubbleOpen
-                  ? 'Dismiss Strobi hint'
-                  : 'Ask Strobi for a hint'
-              }
+              aria-label={bubbleOpen ? 'Dismiss Strobi hint' : 'Ask Strobi for a hint'}
               aria-expanded={bubbleOpen}
               onClick={toggleAvatar}
             >
               <span className="mascot-glow" />
               <span className="mascot-avatar">
-                <Avatar
-                  animation={animation}
-                  size="100%"
-                  ariaLabel="Strobi animated avatar"
-                />
+                <Avatar animation={animation} size="100%" ariaLabel="Strobi animated avatar" />
               </span>
             </button>
 
-            {!bubbleOpen && (
-              <span className="tap-label">Need a hint?</span>
-            )}
+            {!bubbleOpen && <span className="tap-label">Need a hint?</span>}
           </div>
         </div>
       )}
@@ -688,12 +515,9 @@ export default function StrobiGuide() {
             manualHiddenRef.current = false
             setHidden(false)
             registerActivity()
-
             const section =
-              getGuideSections().find(
-                item => item.id === activeSectionRef.current
-              ) || getRenderableSections()[0]
-
+              getGuideSections().find(item => item.id === activeSectionRef.current) ||
+              getRenderableSections()[0]
             if (section) void showSmartTip(section)
           }}
           aria-label="Show Strobi again"
