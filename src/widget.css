@@ -1,0 +1,26 @@
+/* Widget-only styles. Deliberately avoids changing host page typography/background/layout. */
+.strobi-widget,.restore-strobi{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.4;box-sizing:border-box}
+.strobi-widget *,.restore-strobi *{box-sizing:border-box}
+.strobi-widget{position:fixed;z-index:2147483000;width:150px;display:flex;flex-direction:column;align-items:center;gap:8px;transition:top .75s cubic-bezier(.2,.7,.2,1),right .75s cubic-bezier(.2,.7,.2,1),bottom .75s cubic-bezier(.2,.7,.2,1),left .75s cubic-bezier(.2,.7,.2,1),opacity .3s;pointer-events:none}
+.strobi-widget.dock-br{right:17px;bottom:13px}.strobi-widget.dock-bl{left:17px;bottom:13px}.strobi-widget.dock-tr{right:17px;top:88px}.strobi-widget.dock-tl{left:17px;top:88px}.strobi-widget.dock-tr,.strobi-widget.dock-tl{flex-direction:column-reverse}
+.strobi-mascot-wrap{position:relative;width:124px;display:flex;align-items:center;flex-direction:column;pointer-events:auto}
+.strobi-mascot{animation:strobi-float 5.2s ease-in-out infinite;position:relative;display:block;border:0!important;padding:0!important;margin:0!important;width:112px;height:112px;background:transparent!important;cursor:pointer;filter:drop-shadow(0 12px 26px #0008);isolation:isolate}
+.mascot-avatar{position:absolute;inset:0;display:block;transition:transform .25s}.strobi-mascot:hover .mascot-avatar{transform:scale(1.06) rotate(-3deg)}
+.mascot-glow{position:absolute;inset:19px;border-radius:50%;background:#8278ff55;filter:blur(19px);z-index:-1}
+.hide-strobi{position:absolute;z-index:2;right:2px;top:-3px;width:25px;height:25px;border-radius:50%;border:1px solid #3b3b51!important;background:#171925!important;color:#afb3c8!important;cursor:pointer;opacity:0;transition:opacity .2s;padding:0!important;line-height:1}
+.strobi-mascot-wrap:hover .hide-strobi,.hide-strobi:focus-visible{opacity:1}
+.tap-label{display:block;font-size:10px;color:#dfe0f0;background:#171925ef;border:1px solid #39384e;border-radius:99px;padding:6px 10px;white-space:nowrap;box-shadow:0 4px 15px #0004}
+.strobi-bubble{position:relative;pointer-events:auto;width:min(298px,calc(100vw - 28px));margin:0;padding:17px 17px 14px;background:rgba(19,20,33,.97);border:1px solid #4b456a;border-radius:15px;box-shadow:0 18px 55px #0008,0 0 40px #8677ff10;animation:strobi-bubble-in .24s ease-out;backdrop-filter:blur(18px);color:#eeedf8}
+.strobi-bubble:after{content:'';position:absolute;bottom:-7px;right:39px;width:13px;height:13px;background:#131421;border-right:1px solid #4b456a;border-bottom:1px solid #4b456a;transform:rotate(45deg)}
+.dock-bl .strobi-bubble:after,.dock-tl .strobi-bubble:after{left:39px;right:auto}.dock-tr .strobi-bubble:after,.dock-tl .strobi-bubble:after{top:-7px;bottom:auto;transform:rotate(225deg)}
+.bubble-close{position:absolute;top:8px;right:9px;border:0!important;background:none!important;color:#a5a7ba!important;font-size:19px;line-height:1;padding:0 2px!important;cursor:pointer}
+.bubble-label{display:flex;align-items:center;gap:7px;color:#b8adff;font:500 10px ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em}.bubble-pulse{width:5px;height:5px;border-radius:50%;background:#9c8aff;box-shadow:0 0 13px #9c8aff9c}
+.strobi-bubble p{font-size:12px;line-height:1.65;color:#eeedf8;margin:12px 0 15px;padding-right:3px}.bubble-actions{display:flex;align-items:center;gap:13px}
+.bubble-primary{border:0!important;border-radius:8px;background:#a99bff!important;color:#171327!important;padding:10px 12px!important;font-size:10px;font-weight:700;cursor:pointer}.bubble-primary span{margin-left:10px}.bubble-secondary{border:0!important;background:transparent!important;color:#989bb0!important;padding:8px 0!important;font-size:10px;cursor:pointer}.bubble-secondary:hover{color:#fff!important}
+.strobi-widget.is-quiet{opacity:.76}.strobi-widget.is-quiet .mascot-avatar{filter:saturate(.6)}
+.restore-strobi{position:fixed;z-index:2147483000;right:17px;bottom:14px;border-radius:999px;border:1px solid #4b456a!important;background:#171725!important;color:#eceaf9!important;padding:11px 15px!important;display:flex;align-items:center;gap:9px;font-size:11px;cursor:pointer;box-shadow:0 12px 35px #0006}
+.restore-dot{width:7px;height:7px;border-radius:50%;background:#a99bff;box-shadow:0 0 14px #a99bff}
+@keyframes strobi-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes strobi-bubble-in{from{opacity:0;transform:translateY(7px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:760px){.strobi-widget{width:124px}.strobi-mascot-wrap{width:104px}.strobi-mascot{width:94px;height:94px}.strobi-bubble{width:min(270px,calc(100vw - 24px));padding:14px}.strobi-widget.dock-br{right:5px;bottom:6px}.strobi-widget.dock-bl{left:5px;bottom:6px}.strobi-widget.dock-tr{right:5px;top:75px}.strobi-widget.dock-tl{left:5px;top:75px}.strobi-bubble p{font-size:11px}.hide-strobi{opacity:1}.tap-label{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.strobi-widget,.strobi-widget *,.restore-strobi{animation:none!important;transition:none!important}}
