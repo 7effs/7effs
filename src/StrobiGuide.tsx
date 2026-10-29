@@ -834,6 +834,14 @@ export default function StrobiGuide() {
 
     const check = () => {
       timer = undefined
+      // Baew is hidden while the page's opening intro plays. Idle time only counts once she can
+      // be seen, so she greets from her corner first and drifts off ~9s after appearing.
+      const widget = widgetRef.current
+      if (widget && getComputedStyle(widget).visibility === 'hidden') {
+        lastInteraction = Date.now()
+        schedule(1000)
+        return
+      }
       const idleFor = Date.now() - lastInteraction
       if (idleFor < FLOAT_IDLE_MS) { schedule(FLOAT_IDLE_MS - idleFor + 50); return }
       if (isBusy()) { schedule(1500); return }
