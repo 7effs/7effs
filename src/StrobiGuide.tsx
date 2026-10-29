@@ -1,6 +1,7 @@
 import { createAvatar } from '@bible-strong/avatar-react'
 import '@bible-strong/avatar-react/styles.css'
-import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
+import { flushSync } from 'react-dom'
 import definition from '../strobi.avatar.json'
 import './widget.css'
 
@@ -31,6 +32,19 @@ type DragState = {
 const SECTION_SELECTOR =
   'main > section[id], .archive-interface > section[id], [data-strobi-section][id]'
 const AUTO_HIDE_MS = 8000
+
+// Idle float: once the visitor has been inactive, Baew glides to a new spot now and then.
+const FLOAT_IDLE_MS = 9000        // inactivity required before a glide (and between glides)
+const FLOAT_REST_MIN_MS = 6000    // rest between glides while the visitor stays idle
+const FLOAT_REST_MAX_MS = 11000
+const FLOAT_MS_PER_PX = 9         // roughly 110px per second
+const FLOAT_MIN_MS = 2800
+const FLOAT_MAX_MS = 6500
+const FLOAT_EDGE_MARGIN = 12      // keep clear of the screen edges
+const FLOAT_AVOID_PAD = 12        // breathing room around controls Baew should not cover
+const FLOAT_CONTROL_SELECTOR =
+  'a[href], button, input, select, textarea, summary, audio, video[controls], [role="button"], [role="link"], [role="tab"], [role="slider"], [contenteditable="true"], [tabindex]:not([tabindex="-1"])'
+
 const SESSION_MEMORY_KEY = 'baew-guide-session-v1'
 const ANIMATIONS: AnimationName[] = ['excited', 'playful', 'listening', 'happy', 'proud']
 
@@ -161,6 +175,30 @@ function clampPosition(left: number, top: number, width?: number, height?: numbe
   }
 }
 
+type Box = { left: number; top: number; right: number; bottom: number }
+
+function overlapArea(a: Box, b: Box): number {
+  const width = Math.min(a.right, b.right) - Math.max(a.left, b.left)
+  const height = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top)
+  return width > 0 && height > 0 ? width * height : 0
+}
+
+// Visible on-screen controls Baew should not park on top of. Page-sized wrappers are skipped:
+// they are containers, and dodging them would leave nowhere to go.
+function getControlBoxes(viewWidth: number, viewHeight: number): Box[] {
+  const boxes: Box[] = []
+  for (const element of document.querySelectorAll<HTMLElement>(FLOAT_CONTROL_SELECTOR)) {
+    if (element.closest('#strobi-widget-root, #strobi-widget, .restore-strobi')) continue
+    const rect = element.getBoundingClientRect()
+    if (rect.width < 4 || rect.height < 4) continue
+    if (rect.bottom < 0 || rect.top > viewHeight || rect.right < 0 || rect.left > viewWidth) continue
+    if (rect.width * rect.height > viewWidth * viewHeight * 0.35) continue
+    if (typeof element.checkVisibility === 'function' && !element.checkVisibility({ checkVisibilityCSS: true })) continue
+    boxes.push({ left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom })
+  }
+  return boxes
+}
+
 function findActiveSection(activeId: string): HTMLElement | undefined {
   return getGuideSections().find(section => section.id === activeId) || getRenderableSections()[0]
 }
@@ -207,8 +245,10 @@ export default function StrobiGuide() {
   const [thinking, setThinking] = useState(false)
   const [personality, setPersonality] = useState<Personality>('playful')
   const [dragging, setDragging] = useState(false)
+  const [floatMs, setFloatMs] = useState<number | null>(null)
 
   const widgetRef = useRef<HTMLDivElement | null>(null)
+  const floatFreezeRef = useRef<(sync?: boolean) => void>(() => {})
   const seenSections = useRef(new Set<string>())
   const activeSectionRef = useRef('archive-home')
   const introShown = useRef(false)
@@ -658,6 +698,180 @@ export default function StrobiGuide() {
     }
   }, [showCasual])
 
+  // Idle float. Self-contained so drag, hide/restore and the bubble logic stay exactly as they were.
+  // After a quiet spell Baew glides to a random free spot; any real interaction stops it in place.
+  useEffect(() => {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const canHover = window.matchMedia('(hover: hover)')
+    const recentTargets: Position[] = []
+    let timer: number | undefined
+    let settleTimer: number | undefined
+    let gliding = false
+    let lastInteraction = Date.now()
+    let pointer = { x: -9999, y: -9999, mouse: false }
+
+    const schedule = (delay: number) => {
+      if (timer !== undefined) window.clearTimeout(timer)
+      timer = window.setTimeout(check, delay)
+    }
+
+    // Stop a glide right where Baew currently is: pin left/top to the live, mid-flight position
+    // and drop the slow transition. flushSync makes it land before the interaction that caused it.
+    const freeze = (sync = true) => {
+      if (!gliding) return
+      gliding = false
+      window.clearTimeout(settleTimer)
+      const rect = widgetRef.current?.getBoundingClientRect()
+      const here = rect ? clampPosition(rect.left, rect.top, rect.width, rect.height) : null
+      const apply = () => {
+        setFloatMs(null)
+        if (here) {
+          positionRef.current = here
+          setPosition(here)
+        }
+      }
+      if (sync) flushSync(apply)
+      else apply()
+      schedule(FLOAT_IDLE_MS + 50)
+    }
+    floatFreezeRef.current = freeze
+
+    const onInteract = () => {
+      lastInteraction = Date.now()
+      freeze()
+    }
+    const onPointerMove = (event: PointerEvent) => {
+      // Browsers can replay a synthetic move when the layout shifts under a resting cursor; only
+      // a real change of position counts as the visitor doing something.
+      const moved = Math.hypot(event.clientX - pointer.x, event.clientY - pointer.y) >= 3
+      pointer = { x: event.clientX, y: event.clientY, mouse: event.pointerType === 'mouse' }
+      if (moved) onInteract()
+    }
+    const onPointerOver = (event: PointerEvent) => {
+      if (event.target instanceof Element && event.target.closest('#strobi-widget')) freeze()
+    }
+    const onVisibility = () => { if (document.visibilityState !== 'visible') freeze() }
+    const onMotionPreference = () => { if (reducedMotion.matches) freeze() }
+
+    const hasKeyboardFocus = (widget: HTMLElement) => {
+      try { return widget.querySelector(':focus-visible') !== null } catch { return widget.contains(document.activeElement) }
+    }
+    const isBusy = () => {
+      const widget = widgetRef.current
+      if (!widget) return true // hidden by the visitor
+      if (reducedMotion.matches || document.visibilityState !== 'visible') return true
+      if (dragRef.current || bubbleOpenRef.current || thinkingRef.current) return true
+      if (canHover.matches && widget.matches(':hover')) return true
+      return hasKeyboardFocus(widget)
+    }
+
+    // A random on-screen spot, far enough from here and from recent stops to feel varied, whose
+    // visible footprint (the mascot and its label) clears every on-screen control and the cursor.
+    const pickTarget = (): { target: Position; distance: number } | null => {
+      const widget = widgetRef.current
+      const wrap = widget?.querySelector<HTMLElement>('.strobi-mascot-wrap')
+      if (!widget || !wrap) return null
+      const viewWidth = document.documentElement.clientWidth
+      const viewHeight = document.documentElement.clientHeight
+      const box = widget.getBoundingClientRect()
+      const wrapBox = wrap.getBoundingClientRect()
+      const offsetX = wrapBox.left - box.left
+      const offsetY = wrapBox.top - box.top
+      const maxLeft = viewWidth - box.width - FLOAT_EDGE_MARGIN
+      const maxTop = viewHeight - box.height - FLOAT_EDGE_MARGIN
+      if (maxLeft <= FLOAT_EDGE_MARGIN || maxTop <= FLOAT_EDGE_MARGIN) return null
+      const minTravel = Math.min(320, Math.hypot(viewWidth, viewHeight) * 0.16)
+      const controls = getControlBoxes(viewWidth, viewHeight)
+
+      for (let attempt = 0; attempt < 32; attempt += 1) {
+        const left = FLOAT_EDGE_MARGIN + Math.random() * (maxLeft - FLOAT_EDGE_MARGIN)
+        const top = FLOAT_EDGE_MARGIN + Math.random() * (maxTop - FLOAT_EDGE_MARGIN)
+        const distance = Math.hypot(left - box.left, top - box.top)
+        if (distance < minTravel) continue
+        if (recentTargets.some(spot => Math.hypot(spot.left - left, spot.top - top) < minTravel * 0.6)) continue
+        const footprint: Box = {
+          left: left + offsetX - FLOAT_AVOID_PAD,
+          top: top + offsetY - FLOAT_AVOID_PAD,
+          right: left + offsetX + wrapBox.width + FLOAT_AVOID_PAD,
+          bottom: top + offsetY + wrapBox.height + FLOAT_AVOID_PAD,
+        }
+        if (
+          pointer.mouse &&
+          pointer.x > footprint.left - 24 && pointer.x < footprint.right + 24 &&
+          pointer.y > footprint.top - 24 && pointer.y < footprint.bottom + 24
+        ) continue
+        if (controls.some(control => overlapArea(footprint, control) > 0)) continue
+        return { target: { left, top }, distance }
+      }
+      return null
+    }
+
+    const glide = (target: Position, distance: number) => {
+      const widget = widgetRef.current
+      if (!widget) return
+      if (!positionRef.current) {
+        // Still anchored to the CSS corner. Pin it to explicit left/top without moving it, so the
+        // first glide has a real starting point to animate from.
+        const rect = widget.getBoundingClientRect()
+        const start = clampPosition(rect.left, rect.top, rect.width, rect.height)
+        positionRef.current = start
+        flushSync(() => setPosition(start))
+        void widget.offsetWidth
+      }
+      const duration = Math.round(Math.min(FLOAT_MAX_MS, Math.max(FLOAT_MIN_MS, distance * FLOAT_MS_PER_PX)))
+      gliding = true
+      positionRef.current = target
+      setFloatMs(duration)
+      setPosition(target)
+      settleTimer = window.setTimeout(() => {
+        gliding = false
+        setFloatMs(null)
+        recentTargets.push(target)
+        if (recentTargets.length > 3) recentTargets.shift()
+        schedule(FLOAT_REST_MIN_MS + Math.random() * (FLOAT_REST_MAX_MS - FLOAT_REST_MIN_MS))
+      }, duration + 150)
+    }
+
+    const check = () => {
+      timer = undefined
+      const idleFor = Date.now() - lastInteraction
+      if (idleFor < FLOAT_IDLE_MS) { schedule(FLOAT_IDLE_MS - idleFor + 50); return }
+      if (isBusy()) { schedule(1500); return }
+      const pick = pickTarget()
+      if (!pick) { schedule(4000); return }
+      glide(pick.target, pick.distance)
+    }
+
+    const listen = { capture: true, passive: true } as const
+    const interactionEvents = ['pointerdown', 'touchstart', 'touchmove', 'wheel', 'keydown', 'focusin'] as const
+    interactionEvents.forEach(name => window.addEventListener(name, onInteract, listen))
+    window.addEventListener('pointermove', onPointerMove, listen)
+    window.addEventListener('pointerover', onPointerOver, listen)
+    window.addEventListener('scroll', onInteract, { passive: true })
+    window.addEventListener('resize', onInteract)
+    document.addEventListener('visibilitychange', onVisibility)
+    reducedMotion.addEventListener('change', onMotionPreference)
+    schedule(FLOAT_IDLE_MS)
+
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer)
+      window.clearTimeout(settleTimer)
+      interactionEvents.forEach(name => window.removeEventListener(name, onInteract, listen))
+      window.removeEventListener('pointermove', onPointerMove, listen)
+      window.removeEventListener('pointerover', onPointerOver, listen)
+      window.removeEventListener('scroll', onInteract)
+      window.removeEventListener('resize', onInteract)
+      document.removeEventListener('visibilitychange', onVisibility)
+      reducedMotion.removeEventListener('change', onMotionPreference)
+      floatFreezeRef.current = () => {}
+    }
+  }, [])
+
+  // A bubble opening (casual hello, menu, thinking) means Baew has something to say: stand still.
+  useEffect(() => {
+    if (bubbleOpen || thinking) floatFreezeRef.current(false)
+  }, [bubbleOpen, thinking])
+
   useEffect(() => {
     if (!position || !widgetRef.current) return
     const rect = widgetRef.current.getBoundingClientRect()
@@ -677,6 +891,15 @@ export default function StrobiGuide() {
   }, [cancelInFlight, clearDismissTimer])
 
   const activeTitle = cue.target.replace(/[-_]+/g, ' ') || 'this page'
+  const widgetStyle: CSSProperties | undefined = position
+    ? ({
+        left: `${position.left}px`,
+        top: `${position.top}px`,
+        right: 'auto',
+        bottom: 'auto',
+        ...(floatMs !== null ? { '--strobi-float-ms': `${floatMs}ms` } : {}),
+      } as CSSProperties)
+    : undefined
 
   return (
     <>
@@ -684,9 +907,9 @@ export default function StrobiGuide() {
         <div
           ref={widgetRef}
           id="strobi-widget"
-          className={`strobi-widget ${quiet ? 'is-quiet' : ''} ${bubbleOpen ? 'bubble-open' : ''} ${position ? 'is-positioned' : ''} ${dragging ? 'is-dragging' : ''}`}
+          className={`strobi-widget ${quiet ? 'is-quiet' : ''} ${bubbleOpen ? 'bubble-open' : ''} ${position ? 'is-positioned' : ''} ${dragging ? 'is-dragging' : ''} ${floatMs !== null ? 'is-floating' : ''}`}
           aria-label="Baew website guide"
-          style={position ? { left: `${position.left}px`, top: `${position.top}px`, right: 'auto', bottom: 'auto' } : undefined}
+          style={widgetStyle}
         >
           {bubbleOpen && (
             <section className={`strobi-bubble ${cue.kind === 'menu' ? 'is-menu' : ''}`} aria-live="polite" aria-label="Baew Tips">

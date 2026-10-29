@@ -13,6 +13,8 @@
 }
 
 .strobi-widget {
+  /* Avatar rendered size: +18% over the original 48px (44px on small screens). */
+  --baew-avatar-scale: 1.18;
   position: fixed;
   z-index: 2147483000;
   left: auto;
@@ -34,6 +36,14 @@
 .strobi-widget.is-positioned {
   right: auto;
   bottom: auto;
+}
+
+/* Idle float: a slow glide to a new spot. The duration is set per move from JS, and the
+   class is removed the instant the visitor interacts, which stops the glide where it is. */
+.strobi-widget.is-floating {
+  transition: left var(--strobi-float-ms, 4000ms) cubic-bezier(.37, 0, .63, 1),
+              top var(--strobi-float-ms, 4000ms) cubic-bezier(.37, 0, .63, 1),
+              opacity .22s ease;
 }
 
 .strobi-widget.is-dragging {
@@ -58,8 +68,8 @@
 .strobi-mascot {
   position: relative;
   display: block;
-  width: 48px;
-  height: 48px;
+  width: calc(48px * var(--baew-avatar-scale));
+  height: calc(48px * var(--baew-avatar-scale));
   border: 0 !important;
   padding: 0 !important;
   margin: 0 !important;
@@ -107,7 +117,7 @@
 
 .mascot-glow {
   position: absolute;
-  inset: 12px;
+  inset: calc(12px * var(--baew-avatar-scale));
   z-index: -1;
   border-radius: 50%;
   background: #8278ff33;
@@ -118,7 +128,8 @@
 .hide-strobi {
   position: absolute;
   z-index: 2;
-  right: 2px;
+  /* Keeps the same spot on the avatar's top-right corner as it grows with the scale. */
+  right: calc(2px - (48px * (var(--baew-avatar-scale) - 1)) / 2);
   top: -3px;
   width: 19px;
   height: 19px;
@@ -378,8 +389,8 @@
   }
 
   .strobi-mascot {
-    width: 44px;
-    height: 44px;
+    width: calc(44px * var(--baew-avatar-scale));
+    height: calc(44px * var(--baew-avatar-scale));
   }
 
   .strobi-bubble {
@@ -405,6 +416,7 @@
 
   .hide-strobi {
     opacity: 1;
+    right: calc(2px - (44px * (var(--baew-avatar-scale) - 1)) / 2);
   }
 }
 

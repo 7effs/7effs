@@ -7565,6 +7565,20 @@ not a dark panel or framed card. */
 }
 </style>
 
+<style id="jaye-glimpse-experimental-99-percent-transparent">
+/* Glimpse and Experimental Worlds section backgrounds: 99% transparent (1% opaque).
+   Background colour only. Text, borders, layout, controls, the cleared inner plates and the
+   removed decorative overlays above are all left exactly as they are. The Experimental plate is
+   set on the section itself (its inner .postai-wrap stays clear) so the 1% never doubles up.
+   Glimpse uses the longer selector because an older rule (html body main #glimpse.glimpse-section)
+   already clears it with higher specificity. */
+html body main #glimpse.glimpse-section,
+html body main #glimpse.glimpse-section:hover,
+#postAI-impossible {
+  background-color: rgba(7, 11, 18, .01) !important;
+}
+</style>
+
 
 <script id="jaye-global-background-video-toggle-runtime">
 (()=>{
