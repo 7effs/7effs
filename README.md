@@ -1,17 +1,87 @@
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=Arial&weight=900&size=48&duration=3000&pause=1000&color=FFFFFF&center=true&vCenter=true&width=600&lines=J+A+Y+E;BEYOND+THE+ORDINARY" />
+<br/>
 
-<img src="https://capsule-render.vercel.app/api?type=rect&color=000000&height=2&section=header" />
+# J A Y E
 
-<br>
+<br/>
 
-**A WORLD WITHOUT LIMITS.**
+**INDEPENDENT DIGITAL EXPERIENCE**
 
-SATURN &nbsp; / &nbsp; VIDEO &nbsp; / &nbsp; MANGA
+<br/>
 
-<br>
+<img src="https://img.shields.io/badge/STATUS-ACTIVE-FFFFFF?style=flat-square&labelColor=000000" />
+<img src="https://img.shields.io/badge/PLATFORM-WEB-FFFFFF?style=flat-square&labelColor=000000" />
+<img src="https://img.shields.io/badge/IDENTITY-ORIGINAL-FFFFFF?style=flat-square&labelColor=000000" />
 
-<img src="https://capsule-render.vercel.app/api?type=rect&color=000000&height=2&section=footer" />
+<br/><br/>
+
+<sub>DESIGN ━ ENGINEERING ━ EXPRESSION</sub>
+
+<br/><br/>
+
+</div>
+
+---
+
+<div align="center">
+
+<sub>01 / THE PROJECT</sub>
+
+</div>
+
+## JAYE
+
+An independently conceived digital experience built around visual architecture, interaction, motion, and atmosphere.
+
+A unified environment where interface engineering meets deliberate visual expression.
+
+---
+
+<div align="center">
+
+<sub>02 / TECHNOLOGY</sub>
+
+</div>
+
+## Technical Foundation
+
+<div align="center">
+
+<img src="https://skillicons.dev/icons?i=html,css,js,git,github,vscode&theme=dark" />
+
+<br/><br/>
+
+`HTML5`　`CSS3`　`JAVASCRIPT`
+
+`GIT`　`GITHUB`　`VSCODE`
+
+</div>
+
+---
+
+<div align="center">
+
+<sub>03 / EXPERIENCE ARCHITECTURE</sub>
+
+</div>
+
+## Systems
+
+| DISCIPLINE | IMPLEMENTATION |
+|:---|:---|
+| INTERFACE | Bespoke visual architecture |
+| PRESENTATION | Custom styling systems |
+| INTERACTION | JavaScript-driven behaviour |
+| MOTION | Cinematic transitions |
+| ATMOSPHERE | Layered visual treatments |
+| COMPOSITION | Editorial spatial hierarchy |
+| IDENTITY | Monochromatic design language |
+
+---
+
+<div align="center">
+
+<sub>04 / CREATIVE DIRECTION</sub>
 
 </div>
