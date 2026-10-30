@@ -38,50 +38,86 @@ A unified environment where interface engineering meets deliberate visual expres
 
 ---
 
-<div align="center">
+---
 
-<sub>02 / TECHNOLOGY</sub>
+<div align="center">
+<sub>03 / INTERFACE ENGINEERING</sub>
+</div>
+
+## Architecture
+
+| LAYER | SCOPE |
+|:--|:--|
+| STRUCTURE | Document architecture |
+| VISUAL SYSTEM | Custom styling |
+| BEHAVIOUR | Interactive logic |
+| MOTION | Transition systems |
+| COMPOSITION | Spatial hierarchy |
+| PRESENTATION | Integrated visual layers |
+
+---
+
+<div align="center">
+<sub>04 / EXPERIENCE</sub>
+</div>
+
+## Interface Systems
+
+- Multi-section digital environment
+- Custom navigation and interactions
+- Layered glass surfaces
+- Reflective visual treatments
+- Atmospheric entrance sequences
+- Motion-led transitions
+- Integrated content experiences
+
+---
+
+<div align="center">
+<sub>05 / VISUAL SPECIFICATION</sub>
+</div>
+
+## Design System
+
+| PROPERTY | DIRECTION |
+|:--|:--|
+| PALETTE | Monochrome |
+| CONTRAST | High |
+| TYPOGRAPHY | Editorial |
+| MATERIALITY | Glass / light |
+| COMPOSITION | Spatial |
+| MOTION | Cinematic |
+| LANGUAGE | Minimal |
+
+---
+
+<div align="center">
+<sub>06 / DEVELOPMENT</sub>
+
+<br/>
+
+**ACTIVE DEVELOPMENT**
+
+<br/>
+
+<sub>DESIGN · IMPLEMENTATION · ITERATION</sub>
 
 </div>
 
-## Technical Foundation
+---
 
 <div align="center">
 
-<img src="https://skillicons.dev/icons?i=html,css,js,git,github,vscode&theme=dark" />
+<br/>
+
+# J A Y E
+
+<sub>INDEPENDENT DIGITAL PROJECT</sub>
 
 <br/><br/>
 
-`HTML5`　`CSS3`　`JAVASCRIPT`
+<sub>© 2026 JAYE</sub>
 
-`GIT`　`GITHUB`　`VSCODE`
-
-</div>
-
----
-
-<div align="center">
-
-<sub>03 / EXPERIENCE ARCHITECTURE</sub>
-
-</div>
-
-## Systems
-
-| DISCIPLINE | IMPLEMENTATION |
-|:---|:---|
-| INTERFACE | Bespoke visual architecture |
-| PRESENTATION | Custom styling systems |
-| INTERACTION | JavaScript-driven behaviour |
-| MOTION | Cinematic transitions |
-| ATMOSPHERE | Layered visual treatments |
-| COMPOSITION | Editorial spatial hierarchy |
-| IDENTITY | Monochromatic design language |
-
----
-
-<div align="center">
-
-<sub>04 / CREATIVE DIRECTION</sub>
+<br/>
 
 </div>
