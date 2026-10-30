@@ -37,8 +37,27 @@
 
 <br/><br/>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&reversal=true&height=130&color=0:000000,50:242424,100:000000&section=footer" />
 
-<sub>J A Y E &nbsp; / &nbsp; END</sub>
+<br/>
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=2&color=FFFFFF" />
+
+<br/>
+
+<div align="center">
+
+<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=18&duration=1800&pause=400&color=FFFFFF&center=true&vCenter=true&width=700&lines=SIGNAL+REMAINS.;SYSTEM+STAYS+IN+MOTION.;001+%2F+CONTINUOUS." />
+
+<br/><br/>
+
+<img width="85%" src="https://capsule-render.vercel.app/api?type=rect&height=115&color=0:000000,25:111111,50:303030,75:111111,100:000000&text=J%CE%94&fontColor=FFFFFF&fontSize=65&animation=twinkling" />
+
+<br/>
+
+<sub>INDEPENDENT DIGITAL EXPERIMENTS &nbsp; ◼ &nbsp; 2026</sub>
+
+<br/><br/>
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&reversal=true&height=100&color=0:000000,50:222222,100:000000&section=footer" />
 
 </div>
