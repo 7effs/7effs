@@ -15,7 +15,7 @@
 
 <br/>
 
-### / TECH STACK
+###  TECH STACK
 
 <img src="https://skillicons.dev/icons?i=html,css,js,git,github,vscode&theme=dark" />
 
@@ -27,6 +27,6 @@
 
 <img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=90&color=0:000000,50:252525,100:000000&text=J%CE%94&fontColor=FFFFFF&fontSize=52&animation=twinkling" />
 
-<sub>001 — 2026</sub>
+<sub>@2026 Jaye</sub>
 
 </div>
