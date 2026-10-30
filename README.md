@@ -27,6 +27,13 @@
 
 <img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=90&color=0:000000,50:252525,100:000000&text=J%CE%94&fontColor=FFFFFF&fontSize=52&animation=twinkling" />
 
+
 <div align="center">
-  <img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=65&color=0:000000,50:303030,100:000000&text=J%2F%2F&fontColor=FFFFFF&fontSize=38&animation=twinkling"/>
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=venom&height=115&color=0:000000,20:171717,45:FFFFFF,55:FFFFFF,80:171717,100:000000&text=JAYE&fontColor=FFFFFF&fontSize=65&fontAlignY=50&animation=twinkling" />
+
+<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=12&duration=900&pause=180&color=FFFFFF&center=true&vCenter=true&width=500&lines=RENDERING...;RENDERED.;RENDERING..." />
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=3&color=FFFFFF" />
+
 </div>
