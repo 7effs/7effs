@@ -1,6 +1,6 @@
 import { createAvatar } from '@bible-strong/avatar-react'
 import '@bible-strong/avatar-react/styles.css'
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent as ReactFocusEvent, type PointerEvent as ReactPointerEvent } from 'react'
 import { flushSync } from 'react-dom'
 import definition from '../strobi.avatar.json'
 import './widget.css'
@@ -9,6 +9,12 @@ const Avatar = createAvatar(definition)
 type AnimationName = keyof typeof definition.animations
 type Personality = 'playful' | 'freaky'
 type CueKind = 'tip' | 'casual' | 'menu'
+// Who a popup is for decides how long it stays and what may replace it:
+//   ambient   - spontaneous / idle chatter. Short-lived, never replaces anything already showing.
+//   important - an explanation Baew volunteers (welcome, section tips). A little longer.
+//   user      - something the visitor asked for (menu, "Explain", "Surprise me"). Longest.
+type CuePriority = 'ambient' | 'important' | 'user'
+type DayPart = 'morning' | 'daytime' | 'evening' | 'night'
 type Cue = {
   message: string
   action: string
@@ -16,6 +22,7 @@ type Cue = {
   animation: AnimationName
   kind: CueKind
   alternatives?: string[]
+  verbatim?: boolean // show exactly this text (skip the "never repeat a tip" rewriting)
 }
 type Position = { left: number; top: number }
 type HelpOptions = { welcome?: boolean; deeper?: boolean; automatic?: boolean }
@@ -32,6 +39,13 @@ type DragState = {
 const SECTION_SELECTOR =
   'main > section[id], .archive-interface > section[id], [data-strobi-section][id]'
 const AUTO_HIDE_MS = 8000
+
+// One popup timer serves every cue; only the length differs by priority (see CuePriority).
+const DISMISS_MS: Record<CuePriority, number> = { ambient: 4500, important: 5500, user: AUTO_HIDE_MS }
+const DISMISS_RESUME_MIN_MS = 2000  // least time left once a hovered / focused popup is let go
+const AMBIENT_IDLE_MS = 22000       // quiet needed before Baew says anything unprompted
+const SPONTANEOUS_MIN_GAP_MS = 240000 // spontaneous time-of-day messages are rare: >= 4 min apart, and the first one is 4 min in
+const SPONTANEOUS_RECENT = 3        // how many of the latest ones are never repeated
 
 // Idle float: once the visitor has been inactive, Baew glides to a new spot now and then.
 const FLOAT_IDLE_MS = 9000        // inactivity required before a glide (and between glides)
@@ -87,6 +101,37 @@ const MENU_LINES = [
   'Your next move is yours. I have options and a very small clipboard.',
 ]
 
+// Spontaneous, time-of-day aware check-ins. They only ask or encourage; none assume anything about
+// the visitor's day, work or life. The pool for the current part of the day is the part-specific
+// list plus the anytime list.
+const SPONTANEOUS_ANYTIME = [
+  'Random reminder: you’re doing better than you think 💗',
+  'Breaking news: you’ve been caught being iconic again 😭',
+  'Hydration checkkk 💧 have you had some water?',
+]
+const SPONTANEOUS_BY_DAYPART: Record<DayPart, string[]> = {
+  morning: [
+    'Good morninggg ☀️ did you sleep well?',
+    'Fresh day, fresh start ✨ one small step at a time, okay?',
+    'Morning check-in ☀️ gentle start or full speed today?',
+  ],
+  daytime: [
+    'Oyeee, how’s your day going? 👀',
+    'Need a tiny break, or are we in full focus mode? ✨',
+    'Quick stretch o’clock 🙆 shoulders down, deep breath, carry on.',
+  ],
+  evening: [
+    'How was your day? Tell me the tea ☕',
+    'Evening check-in 🌆 did anything nice happen today?',
+    'Need a tiny break, or are we in full focus mode? ✨',
+  ],
+  night: [
+    'It’s getting late 🌙 remember to get some rest!',
+    'Night owl mode? 🦉 your eyes deserve a little break too.',
+    'Sleepy check 😴 tomorrow-you says thank you for resting.',
+  ],
+}
+
 function getGuideSections(): HTMLElement[] {
   return Array.from(document.querySelectorAll<HTMLElement>(SECTION_SELECTOR)).filter(section =>
     Boolean(section.id) &&
@@ -128,6 +173,14 @@ function getLocalGreeting(): string {
   if (hour >= 12 && hour < 17) return 'Good afternoon'
   if (hour >= 17 && hour < 21) return 'Good evening'
   return 'Good night'
+}
+
+// Same boundaries as getLocalGreeting(), so "Good morning" and a morning message always agree.
+function getDayPart(hour = new Date().getHours()): DayPart {
+  if (hour >= 5 && hour < 12) return 'morning'
+  if (hour >= 12 && hour < 17) return 'daytime'
+  if (hour >= 17 && hour < 21) return 'evening'
+  return 'night'
 }
 
 function normalizeMessage(message: string): string {
@@ -261,6 +314,17 @@ export default function StrobiGuide() {
   const sectionTimer = useRef<number | undefined>(undefined)
   const casualTimer = useRef<number | undefined>(undefined)
   const dismissTimer = useRef<number | undefined>(undefined)
+  // Popup lifetime bookkeeping, all for the one dismissTimer above.
+  const bubbleRef = useRef<HTMLElement | null>(null)
+  const dismissDeadline = useRef(0)      // when the running timer will fire
+  const dismissBase = useRef(0)          // length for the popup on screen (0 = stays until closed)
+  const dismissRemaining = useRef(0)     // time left, kept while the popup is held
+  const pointerInsidePopup = useRef(false)
+  const focusInsidePopup = useRef(false)
+  const popupHeld = useRef(false)        // hovered or keyboard-focused: the clock is stopped
+  const interactionAt = useRef(Date.now())     // last scroll / key / touch / pointer movement anywhere
+  const lastSpontaneousAt = useRef(Date.now()) // so the first spontaneous message is also >= 4 min in
+  const recentSpontaneous = useRef<string[]>([])
   const ratios = useRef(new Map<HTMLElement, number>())
   const positionRef = useRef<Position | null>(null)
   const personalityRef = useRef<Personality>('playful')
@@ -290,6 +354,86 @@ export default function StrobiGuide() {
     dismissTimer.current = undefined
   }, [])
 
+  // Forget hover / focus state. Called on every close path: a popup that unmounts under the pointer
+  // never sends pointerleave, so stale "held" flags must not leak into the next popup.
+  const resetPopupHold = useCallback(() => {
+    pointerInsidePopup.current = false
+    focusInsidePopup.current = false
+    popupHeld.current = false
+    dismissRemaining.current = 0
+  }, [])
+
+  // The single popup timer. Every cue goes through here; re-arming always clears the previous one
+  // first, so there is never more than one pending and a stale callback cannot fire.
+  const armDismiss = useCallback((ms: number) => {
+    clearDismissTimer()
+    if (ms <= 0) {
+      dismissDeadline.current = 0
+      return
+    }
+    dismissDeadline.current = Date.now() + ms
+    dismissTimer.current = window.setTimeout(() => {
+      dismissTimer.current = undefined
+      dismissDeadline.current = 0
+      if (popupHeld.current) return // held popups never dismiss under the visitor
+      setBubbleOpen(false)
+      bubbleOpenRef.current = false
+      resetPopupHold()
+    }, ms)
+  }, [clearDismissTimer, resetPopupHold])
+
+  // Pointer over the popup, or keyboard focus inside it, stops the clock; letting go starts it again
+  // with whatever was left (never less than DISMISS_RESUME_MIN_MS, so it cannot vanish instantly).
+  const updatePopupHold = useCallback(() => {
+    const held = pointerInsidePopup.current || focusInsidePopup.current
+    if (held === popupHeld.current) return
+    popupHeld.current = held
+    if (!bubbleOpenRef.current || thinkingRef.current || dismissBase.current <= 0) return
+    if (held) {
+      if (dismissTimer.current !== undefined) {
+        dismissRemaining.current = Math.max(0, dismissDeadline.current - Date.now())
+        clearDismissTimer()
+      }
+    } else {
+      armDismiss(Math.max(dismissRemaining.current, DISMISS_RESUME_MIN_MS))
+    }
+  }, [armDismiss, clearDismissTimer])
+
+  // Re-read hover / focus from the DOM, for when the popup opens or its buttons are swapped out
+  // (a focused button that unmounts sends no blur). :hover is only trusted on hover-capable
+  // devices, where touch would leave it stuck on after a tap.
+  const syncPopupHold = useCallback(() => {
+    const bubble = bubbleRef.current
+    if (!bubble) return
+    let hovered = false
+    let focused = false
+    try { hovered = window.matchMedia('(hover: hover)').matches && bubble.matches(':hover') } catch { /* leave false */ }
+    try { focused = bubble.querySelector(':focus-visible') !== null } catch { focused = false }
+    pointerInsidePopup.current = hovered
+    focusInsidePopup.current = focused
+    updatePopupHold()
+  }, [updatePopupHold])
+
+  const handlePopupPointer = useCallback((inside: boolean) => {
+    pointerInsidePopup.current = inside
+    updatePopupHold()
+  }, [updatePopupHold])
+
+  const handlePopupFocus = useCallback((event: ReactFocusEvent<HTMLElement>) => {
+    // Only keyboard focus counts. A mouse click leaves a button focused, and that must not pin the
+    // popup open after the pointer has left.
+    let keyboard = true
+    try { keyboard = event.target.matches(':focus-visible') } catch { /* assume keyboard */ }
+    focusInsidePopup.current = keyboard
+    updatePopupHold()
+  }, [updatePopupHold])
+
+  const handlePopupBlur = useCallback((event: ReactFocusEvent<HTMLElement>) => {
+    if (event.relatedTarget instanceof Node && event.currentTarget.contains(event.relatedTarget)) return
+    focusInsidePopup.current = false
+    updatePopupHold()
+  }, [updatePopupHold])
+
   const uniqueMessage = useCallback((candidate: string, alternatives: string[] = [], title = 'this section') => {
     const candidates = [candidate, ...alternatives].map(value => value.trim()).filter(Boolean)
     const fresh = candidates.find(value => !usedMessages.current.has(normalizeMessage(value)))
@@ -314,9 +458,13 @@ export default function StrobiGuide() {
     return fallback
   }, [])
 
-  const presentCue = useCallback((next: Cue, autoHideMs = AUTO_HIDE_MS) => {
+  const presentCue = useCallback((next: Cue, priority: CuePriority, autoHideMs = DISMISS_MS[priority]): boolean => {
+    // Ambient chatter never replaces a popup that is up, or an answer Baew is still preparing.
+    if (priority === 'ambient' && (bubbleOpenRef.current || thinkingRef.current)) return false
     clearDismissTimer()
-    const message = uniqueMessage(next.message, next.alternatives, next.target.replace(/[-_]+/g, ' '))
+    const message = next.verbatim
+      ? next.message
+      : uniqueMessage(next.message, next.alternatives, next.target.replace(/[-_]+/g, ' '))
     const cleanCue = { ...next, message, alternatives: undefined }
     setCue(cleanCue)
     setAnimation(cleanCue.animation)
@@ -324,14 +472,12 @@ export default function StrobiGuide() {
     thinkingRef.current = false
     setBubbleOpen(true)
     bubbleOpenRef.current = true
-    if (autoHideMs > 0) {
-      dismissTimer.current = window.setTimeout(() => {
-        setBubbleOpen(false)
-        bubbleOpenRef.current = false
-        dismissTimer.current = undefined
-      }, autoHideMs)
-    }
-  }, [clearDismissTimer, uniqueMessage])
+    dismissBase.current = autoHideMs
+    dismissRemaining.current = autoHideMs
+    // If the visitor is already hovering / focused in the popup, the clock waits for them to let go.
+    if (autoHideMs > 0 && !popupHeld.current) armDismiss(autoHideMs)
+    return true
+  }, [armDismiss, clearDismissTimer, uniqueMessage])
 
   const registerActivity = useCallback(() => {
     lastActivity.current = Date.now()
@@ -357,13 +503,30 @@ export default function StrobiGuide() {
       target: section?.id || activeSectionRef.current || 'archive-home',
       animation: 'listening',
       kind: 'menu',
-    }, 15000)
+    }, 'user', 15000)
     if (section) activeSectionRef.current = section.id
   }, [cancelInFlight, presentCue, registerActivity])
 
+  // True while Baew should keep quiet on her own: hidden, tab in the background, intro still
+  // playing, a popup up or being prepared, a drag in progress, the visitor typing in a field, or
+  // any recent activity (including scrolling, keys, touch and pointer movement). Cheap, and only
+  // evaluated when a scheduled message is about to fire - nothing polls.
+  const ambientBlocked = useCallback(() => {
+    if (manualHiddenRef.current || document.visibilityState !== 'visible') return true
+    if (bubbleOpenRef.current || thinkingRef.current || dragRef.current) return true
+    const now = Date.now()
+    if (now - lastActivity.current < AMBIENT_IDLE_MS || now - interactionAt.current < AMBIENT_IDLE_MS) return true
+    const widget = widgetRef.current
+    if (!widget || getComputedStyle(widget).visibility === 'hidden') return true
+    const focused = document.activeElement
+    return focused instanceof HTMLElement &&
+      !focused.closest('#strobi-widget') &&
+      focused.matches('input, textarea, select, [contenteditable=""], [contenteditable="true"]')
+  }, [])
+
   const showCasual = useCallback((force = false) => {
     if (manualHiddenRef.current || document.visibilityState !== 'visible') return false
-    if (!force && (bubbleOpenRef.current || thinkingRef.current || Date.now() - lastActivity.current < 22000)) return false
+    if (!force && ambientBlocked()) return false
 
     const mode = personalityRef.current
     const pool = CASUAL_MESSAGES[mode]
@@ -379,19 +542,51 @@ export default function StrobiGuide() {
     usedIdeas.current.add(chosen.idea)
     saveSessionMemory(usedMessages.current, usedIdeas.current, recentTipMessages.current)
     registerActivity()
+    // "Surprise me" (force) is something the visitor asked for; the idle scheduler is not.
     presentCue({
       message: unusedText,
       action: 'More help',
       target: activeSectionRef.current || 'archive-home',
       animation: mode === 'freaky' ? 'playful' : 'happy',
       kind: 'casual',
-    })
+    }, force ? 'user' : 'ambient')
     return true
-  }, [presentCue, registerActivity])
+  }, [ambientBlocked, presentCue, registerActivity])
+
+  // An occasional time-of-day check-in. Rare (>= SPONTANEOUS_MIN_GAP_MS apart), never one of the
+  // last few shown, never while the visitor is busy or any popup is up.
+  const showSpontaneous = useCallback(() => {
+    if (Date.now() - lastSpontaneousAt.current < SPONTANEOUS_MIN_GAP_MS) return false
+    if (ambientBlocked()) return false
+    const pool = [...SPONTANEOUS_BY_DAYPART[getDayPart()], ...SPONTANEOUS_ANYTIME]
+    const fresh = pool.filter(message => !recentSpontaneous.current.includes(message))
+    const unseen = fresh.filter(message => !usedMessages.current.has(normalizeMessage(message)))
+    const choices = unseen.length ? unseen : fresh
+    if (!choices.length) return false
+    const message = choices[Math.floor(Math.random() * choices.length)]
+    const shown = presentCue({
+      message,
+      action: 'More help',
+      target: activeSectionRef.current || 'archive-home',
+      animation: 'happy',
+      kind: 'casual',
+      verbatim: true,
+    }, 'ambient')
+    if (!shown) return false
+    registerActivity()
+    lastSpontaneousAt.current = Date.now()
+    recentSpontaneous.current = [...recentSpontaneous.current, message].slice(-SPONTANEOUS_RECENT)
+    usedMessages.current.add(normalizeMessage(message))
+    saveSessionMemory(usedMessages.current, usedIdeas.current, recentTipMessages.current)
+    return true
+  }, [ambientBlocked, presentCue, registerActivity])
 
   const requestHelp = useCallback(async (section: HTMLElement | undefined, options: HelpOptions = {}) => {
     if (manualHiddenRef.current) return
     registerActivity()
+    // Volunteered explanations (welcome, section tips) are important; ones the visitor asked for
+    // are user-triggered and stay while they read.
+    const priority: CuePriority = options.automatic ? 'important' : 'user'
 
     if (!section) {
       presentCue({
@@ -401,7 +596,7 @@ export default function StrobiGuide() {
         target: 'archive-home',
         animation: 'excited',
         kind: 'casual',
-      })
+      }, priority)
       return
     }
 
@@ -414,7 +609,7 @@ export default function StrobiGuide() {
     const baseCue = fallbackTip(section, Boolean(options.deeper), personalityRef.current)
     const sectionText = getSectionText(section)
     if (!sectionText) {
-      presentCue(baseCue)
+      presentCue(baseCue, priority)
       return
     }
 
@@ -482,12 +677,12 @@ export default function StrobiGuide() {
         recentTipMessages.current.push(reply)
         if (recentTipMessages.current.length > 12) recentTipMessages.current.shift()
         saveSessionMemory(usedMessages.current, usedIdeas.current, recentTipMessages.current)
-        presentCue({ ...baseCue, message: reply, kind: 'tip' })
+        presentCue({ ...baseCue, message: reply, kind: 'tip' }, priority)
       } else {
-        presentCue(baseCue)
+        presentCue(baseCue, priority)
       }
     } catch {
-      if (currentRequest === requestId.current && !manualHiddenRef.current) presentCue(baseCue)
+      if (currentRequest === requestId.current && !manualHiddenRef.current) presentCue(baseCue, priority)
     } finally {
       if (currentRequest === requestId.current) {
         setThinking(false)
@@ -503,8 +698,9 @@ export default function StrobiGuide() {
     cancelInFlight()
     setBubbleOpen(false)
     bubbleOpenRef.current = false
+    resetPopupHold()
     registerActivity()
-  }, [cancelInFlight, clearDismissTimer, registerActivity])
+  }, [cancelInFlight, clearDismissTimer, registerActivity, resetPopupHold])
 
   const scrollToTarget = useCallback((target: string) => {
     document.getElementById(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -634,7 +830,7 @@ export default function StrobiGuide() {
           target: 'archive-home',
           animation: 'excited',
           kind: 'casual',
-        })
+        }, 'important')
       }
     }, 1250)
 
@@ -684,11 +880,13 @@ export default function StrobiGuide() {
           scheduleNext(30000)
           return
         }
-        if (bubbleOpenRef.current || thinkingRef.current || Date.now() - lastActivity.current < 22000) {
-          scheduleNext(22000 + Math.random() * 15000)
+        // Busy (popup up, typing, scrolling, dragging...): try again a little later.
+        if (ambientBlocked()) {
+          scheduleNext(AMBIENT_IDLE_MS + Math.random() * 15000)
           return
         }
-        showCasual(false)
+        // The rare time-of-day check-in when its gap allows, otherwise the usual idle hello.
+        if (!showSpontaneous()) showCasual(false)
         scheduleNext(42000 + Math.random() * 40000)
       }, delay)
     }
@@ -696,7 +894,17 @@ export default function StrobiGuide() {
     return () => {
       if (casualTimer.current !== undefined) window.clearTimeout(casualTimer.current)
     }
-  }, [showCasual])
+  }, [ambientBlocked, showCasual, showSpontaneous])
+
+  // Real use of the page (scrolling, keys, touch, pointer movement) postpones unprompted messages.
+  // Only a timestamp is written, so an event costs nothing and there is no polling.
+  useEffect(() => {
+    const mark = () => { interactionAt.current = Date.now() }
+    const events = ['pointerdown', 'pointermove', 'touchstart', 'touchmove', 'wheel', 'keydown', 'scroll'] as const
+    const options = { capture: true, passive: true } as const
+    events.forEach(name => window.addEventListener(name, mark, options))
+    return () => events.forEach(name => window.removeEventListener(name, mark, options))
+  }, [])
 
   // Idle float. Self-contained so drag, hide/restore and the bubble logic stay exactly as they were.
   // After a quiet spell Baew glides to a random free spot; any real interaction stops it in place.
@@ -880,6 +1088,13 @@ export default function StrobiGuide() {
     if (bubbleOpen || thinking) floatFreezeRef.current(false)
   }, [bubbleOpen, thinking])
 
+  // Popup hover / focus bookkeeping: re-read it whenever the popup opens or its content changes,
+  // and clear it once the popup is gone.
+  useEffect(() => {
+    if (bubbleOpen) syncPopupHold()
+    else resetPopupHold()
+  }, [bubbleOpen, cue, thinking, syncPopupHold, resetPopupHold])
+
   useEffect(() => {
     if (!position || !widgetRef.current) return
     const rect = widgetRef.current.getBoundingClientRect()
@@ -920,7 +1135,16 @@ export default function StrobiGuide() {
           style={widgetStyle}
         >
           {bubbleOpen && (
-            <section className={`strobi-bubble ${cue.kind === 'menu' ? 'is-menu' : ''}`} aria-live="polite" aria-label="Baew Tips">
+            <section
+              ref={bubbleRef}
+              className={`strobi-bubble ${cue.kind === 'menu' ? 'is-menu' : ''}`}
+              aria-live="polite"
+              aria-label="Baew Tips"
+              onPointerEnter={() => handlePopupPointer(true)}
+              onPointerLeave={() => handlePopupPointer(false)}
+              onFocus={handlePopupFocus}
+              onBlur={handlePopupBlur}
+            >
               <button className="bubble-close" aria-label="Dismiss Baew hint" onClick={closeBubble}>×</button>
               <div className="bubble-heading-row">
                 <div className="bubble-label">
@@ -967,6 +1191,7 @@ export default function StrobiGuide() {
               onClick={() => {
                 manualHiddenRef.current = true
                 clearDismissTimer()
+                resetPopupHold()
                 cancelInFlight()
                 setHidden(true)
                 setBubbleOpen(false)

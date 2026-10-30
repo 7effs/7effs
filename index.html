@@ -7577,6 +7577,27 @@ html body main #glimpse.glimpse-section:hover,
 #postAI-impossible {
   background-color: rgba(7, 11, 18, .01) !important;
 }
+
+/* WHY THE SECTIONS STILL LOOKED OPAQUE IN PRODUCTION: the colour was never the problem. Older rules
+   in this file blur whatever is behind the Glimpse section, its tracks and the Experimental panel
+   (backdrop-filter: blur(10-18px)), which smears the background into a flat haze. The earlier
+   "blur off" overrides were written as `backdrop-filter: none; -webkit-backdrop-filter: none;`
+   (unprefixed first). The production CSS minifier (lightningcss, run by `vite build`) collapses that
+   pair to `-webkit-backdrop-filter: none` ONLY. Chrome and Firefox read the unprefixed property, so
+   the blur kept winning in the built site even though the source (and `vite dev`) looked clear.
+   Keep the order below: -webkit- first, unprefixed last. That form survives minification with both
+   properties intact. Do not swap the two lines. */
+html body main #glimpse.glimpse-section,
+html body main #glimpse.glimpse-section:hover,
+html body main #glimpse .glimpse-track,
+html body main #glimpse .glimpse-track:hover,
+html body main #glimpse .glimpse-track:focus-visible,
+html body main #glimpse .glimpse-track.is-active,
+html body main #postAI-impossible.postai-game-section > .postai-wrap,
+html body main #postAI-impossible.postai-game-section > .postai-wrap:hover {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
 </style>
 
 
