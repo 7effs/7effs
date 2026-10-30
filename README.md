@@ -1,67 +1,34 @@
 <div align="center">
 
-<br/>
+<br>
+
+<pre>
+      ╱╲
+     ╱  ╲
+    ╱ ◇  ╲
+   ╱______╲
+      J
+</pre>
 
 # J A Y E
 
-**INDEPENDENT DIGITAL EXPERIENCE**
+<sub>AN INDEPENDENT DIGITAL SPACE</sub>
 
-<br/>
+<br>
 
-<img src="https://img.shields.io/badge/ACTIVE-000000?style=for-the-badge&labelColor=000000&color=FFFFFF" />
-<img src="https://img.shields.io/badge/2026-000000?style=for-the-badge&labelColor=000000&color=FFFFFF" />
+<img src="https://img.shields.io/badge/HTML5-111111?style=flat-square&logo=html5&logoColor=white" />
+<img src="https://img.shields.io/badge/CSS3-111111?style=flat-square&logo=css&logoColor=white" />
+<img src="https://img.shields.io/badge/JavaScript-111111?style=flat-square&logo=javascript&logoColor=white" />
+<img src="https://img.shields.io/badge/Git-111111?style=flat-square&logo=git&logoColor=white" />
+<img src="https://img.shields.io/badge/GitHub-111111?style=flat-square&logo=github&logoColor=white" />
+<img src="https://img.shields.io/badge/VS_Code-111111?style=flat-square&logo=visualstudiocode&logoColor=white" />
 
-<br/><br/>
+<br><br>
 
-<sub>DESIGN &nbsp; / &nbsp; ENGINEERING &nbsp; / &nbsp; EXPRESSION</sub>
-
-<br/><br/>
-
----
-
-<br/>
-
-### THE PROJECT
-
-A custom-built digital experience.  
-Defined by atmosphere, interaction and visual precision.
-
-<br/>
-
-### TECHNOLOGY
-
-<br/>
-
-<img src="https://img.shields.io/badge/HTML5-000000?style=for-the-badge&logo=html5&logoColor=FFFFFF" />
-<img src="https://img.shields.io/badge/CSS3-000000?style=for-the-badge&logo=css3&logoColor=FFFFFF" />
-<img src="https://img.shields.io/badge/JAVASCRIPT-000000?style=for-the-badge&logo=javascript&logoColor=FFFFFF" />
-
-<br/>
-
-<img src="https://img.shields.io/badge/GIT-000000?style=for-the-badge&logo=git&logoColor=FFFFFF" />
-<img src="https://img.shields.io/badge/GITHUB-000000?style=for-the-badge&logo=github&logoColor=FFFFFF" />
-<img src="https://img.shields.io/badge/VS_CODE-000000?style=for-the-badge&logo=visualstudiocode&logoColor=FFFFFF" />
-
-<br/><br/>
+</div>
 
 ---
 
-<br/>
-
-### VISUAL IDENTITY
-
-`MONOCHROME` &nbsp; `GLASS` &nbsp; `MOTION` &nbsp; `INTERACTION`
-
-<br/><br/>
-
-<sub>AN ONGOING STUDY IN DIGITAL EXPRESSION.</sub>
-
-<br/><br/>
-
-# J A Y E
-
-<sub>© 2026 · ALL RIGHTS RESERVED</sub>
-
-<br/>
-
+<div align="center">
+  <sub>J A Y E &nbsp; / &nbsp; 2026</sub>
 </div>
