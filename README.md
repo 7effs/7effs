@@ -7,7 +7,7 @@
 
 <img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=2&color=FFFFFF" />
 
-<sub>J / 001 &nbsp; —</sub>
+<sub> J/001 &nbsp;</sub>
 
 <br/>
 
