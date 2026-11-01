@@ -59,6 +59,12 @@ const FLOAT_AVOID_PAD = 12        // breathing room around controls Baew should 
 const FLOAT_CONTROL_SELECTOR =
   'a[href], button, input, select, textarea, summary, audio, video[controls], [role="button"], [role="link"], [role="tab"], [role="slider"], [contenteditable="true"], [tabindex]:not([tabindex="-1"])'
 
+// Home clearance: Baew's resting corner is bottom-left (CSS). If page text, an icon, a card or a control
+// sits under it she rises to the nearest clear spot, and returns to the corner once it is clear again.
+const HOME_PAD = 8            // breathing room kept around whatever she must not cover
+const HOME_SETTLE_MS = 450    // quiet time after a scroll / resize before she re-checks
+const HOME_SIDE_COST = 1.5    // sideways costs more than rising, so she stays on the left where she can
+
 const SESSION_MEMORY_KEY = 'baew-guide-session-v1'
 const ANIMATIONS: AnimationName[] = ['excited', 'playful', 'listening', 'happy', 'proud']
 
@@ -252,6 +258,100 @@ function getControlBoxes(viewWidth: number, viewHeight: number): Box[] {
   return boxes
 }
 
+type HomeShift = { dx: number; lift: number }
+
+// Everything on screen Baew's home should not sit on: the controls the idle float already avoids, plus
+// text (line by line, so a paragraph's empty margin does not count), images and icons. Full-screen
+// backgrounds are skipped for the same reason as in getControlBoxes.
+function getContentBoxes(viewWidth: number, viewHeight: number): Box[] {
+  const boxes = getControlBoxes(viewWidth, viewHeight)
+  const ours = '#strobi-widget-root, #strobi-widget, .restore-strobi, #jaye-background-switch'
+  const onScreen = (rect: DOMRect) =>
+    rect.width >= 2 && rect.height >= 2 && rect.bottom > 0 && rect.top < viewHeight && rect.right > 0 && rect.left < viewWidth
+  const shown = (element: Element) =>
+    typeof element.checkVisibility !== 'function' || element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true })
+
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+  const range = document.createRange()
+  for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+    if (!node.nodeValue || !/\S/.test(node.nodeValue)) continue
+    const parent = node.parentElement
+    if (!parent || /^(SCRIPT|STYLE|NOSCRIPT)$/.test(parent.tagName) || parent.closest(ours)) continue
+    if (!onScreen(parent.getBoundingClientRect()) || !shown(parent)) continue
+    range.selectNodeContents(node)
+    for (const rect of range.getClientRects()) {
+      if (onScreen(rect)) boxes.push({ left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom })
+    }
+  }
+  for (const element of document.querySelectorAll<Element>('svg, img, [role="img"]')) {
+    if (element.closest(ours) || element.parentElement?.closest('svg')) continue
+    const rect = element.getBoundingClientRect()
+    if (!onScreen(rect) || rect.width * rect.height > viewWidth * viewHeight * 0.35 || !shown(element)) continue
+    boxes.push({ left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom })
+  }
+  return boxes
+}
+
+// The smallest move away from the CSS home corner that leaves Baew's visible footprint (mascot, label and
+// hide button) clear of every obstacle. Rising is preferred to moving sideways. Stays put where the corner
+// is already clear, keeps a spot that is still clear (no fidgeting after a scroll), and, if nothing is fully
+// clear, takes the least-covered spot only when it is clearly better than the corner.
+function findHomeShift(
+  footprint: Box,
+  home: { left: number; top: number; width: number },
+  viewWidth: number,
+  obstacles: Box[],
+  current: HomeShift,
+): HomeShift {
+  const margin = 8
+  const maxDx = Math.max(0, viewWidth - home.width - margin - home.left)
+  const maxLift = Math.max(0, home.top - margin)
+  const areaAt = (dx: number, lift: number): Box => {
+    const left = home.left + dx
+    const top = home.top - lift
+    return {
+      left: left + footprint.left - HOME_PAD,
+      top: top + footprint.top - HOME_PAD,
+      right: left + footprint.right + HOME_PAD,
+      bottom: top + footprint.bottom + HOME_PAD,
+    }
+  }
+  const blocked = (dx: number, lift: number) => {
+    const area = areaAt(dx, lift)
+    return obstacles.some(obstacle => overlapArea(area, obstacle) > 0)
+  }
+  const covered = (dx: number, lift: number) => {
+    const area = areaAt(dx, lift)
+    return obstacles.reduce((sum, obstacle) => sum + overlapArea(area, obstacle), 0)
+  }
+
+  if (!blocked(0, 0)) return { dx: 0, lift: 0 }
+  if ((current.dx > 0 || current.lift > 0) && current.dx <= maxDx && current.lift <= maxLift && !blocked(current.dx, current.lift)) return current
+
+  let best: (HomeShift & { cost: number }) | null = null
+  for (let dx = 0; dx <= maxDx; dx += 6) {
+    if (best && dx * HOME_SIDE_COST >= best.cost) break
+    for (let lift = 0; lift <= maxLift; lift += 2) {
+      if (best && lift + dx * HOME_SIDE_COST >= best.cost) break
+      if (!blocked(dx, lift)) {
+        best = { dx, lift, cost: lift + dx * HOME_SIDE_COST }
+        break
+      }
+    }
+  }
+  if (best) return { dx: best.dx, lift: best.lift }
+
+  const homeCover = covered(0, 0)
+  let least = { dx: 0, lift: 0, cover: homeCover }
+  for (let dx = 0; dx <= maxDx; dx += 12) {
+    for (let lift = 0; lift <= maxLift; lift += 8) {
+      const cover = covered(dx, lift)
+      if (cover < least.cover - 1) least = { dx, lift, cover }
+    }
+  }
+  return least.cover < homeCover * 0.75 ? { dx: least.dx, lift: least.lift } : { dx: 0, lift: 0 }
+}
+
 function findActiveSection(activeId: string): HTMLElement | undefined {
   return getGuideSections().find(section => section.id === activeId) || getRenderableSections()[0]
 }
@@ -299,8 +399,13 @@ export default function StrobiGuide() {
   const [personality, setPersonality] = useState<Personality>('playful')
   const [dragging, setDragging] = useState(false)
   const [floatMs, setFloatMs] = useState<number | null>(null)
+  const [homeShift, setHomeShift] = useState<HomeShift>({ dx: 0, lift: 0 })
+  const [pillShift, setPillShift] = useState<HomeShift>({ dx: 0, lift: 0 })
 
   const widgetRef = useRef<HTMLDivElement | null>(null)
+  const homeShiftRef = useRef<HomeShift>({ dx: 0, lift: 0 })
+  const pillShiftRef = useRef<HomeShift>({ dx: 0, lift: 0 })
+  const pillRef = useRef<HTMLButtonElement | null>(null)
   const floatFreezeRef = useRef<(sync?: boolean) => void>(() => {})
   const seenSections = useRef(new Set<string>())
   const activeSectionRef = useRef('archive-home')
@@ -1083,6 +1188,81 @@ export default function StrobiGuide() {
     }
   }, [])
 
+  // Home clearance. Self-contained like the idle float: it only ever touches a Baew who is still at her
+  // CSS home, and stands down for good the moment she has been dragged or has floated off. It never
+  // writes left/top, only the two offsets the home rule in widget.css reads, so the corner stays the
+  // anchor (resize, rotation and safe areas keep working) and drag / float / popups are untouched.
+  // While she is hidden the same check keeps the small "Baew" restore pill off the page content too.
+  useEffect(() => {
+    const pill = hidden
+    const shiftRef = pill ? pillShiftRef : homeShiftRef
+    const setShift = pill ? setPillShift : setHomeShift
+    let timer: number | undefined
+    let placed = false
+    let relayout = false // the viewport or fonts changed: pick the nearest clear spot afresh
+
+    const schedule = (delay: number) => {
+      if (timer !== undefined) window.clearTimeout(timer)
+      timer = window.setTimeout(check, delay)
+    }
+
+    const check = () => {
+      timer = undefined
+      const widget = pill ? pillRef.current : widgetRef.current
+      if (!widget || (!pill && positionRef.current)) return
+      if (getComputedStyle(widget).visibility === 'hidden') { schedule(500); return } // opening intro
+      if (!pill && (dragRef.current || bubbleOpenRef.current || thinkingRef.current)) { schedule(900); return }
+      const wrap = pill ? widget : widget.querySelector<HTMLElement>('.strobi-mascot-wrap')
+      if (!wrap) return
+      const viewWidth = document.documentElement.clientWidth
+      const viewHeight = document.documentElement.clientHeight
+      const box = widget.getBoundingClientRect()
+      const current = shiftRef.current
+      const parts = [wrap, pill ? null : widget.querySelector<HTMLElement>('.hide-strobi')]
+        .filter((part): part is HTMLElement => part !== null)
+        .map(part => part.getBoundingClientRect())
+      const footprint: Box = {
+        left: Math.min(...parts.map(part => part.left)) - box.left,
+        top: Math.min(...parts.map(part => part.top)) - box.top,
+        right: Math.max(...parts.map(part => part.right)) - box.left,
+        bottom: Math.max(...parts.map(part => part.bottom)) - box.top,
+      }
+      const home = { left: box.left - current.dx, top: box.top + current.lift, width: box.width }
+      const keep = relayout ? { dx: 0, lift: 0 } : current
+      relayout = false
+      const next = findHomeShift(footprint, home, viewWidth, getContentBoxes(viewWidth, viewHeight), keep)
+      if (Math.abs(next.dx - current.dx) > 0.5 || Math.abs(next.lift - current.lift) > 0.5) {
+        shiftRef.current = next
+        if (placed) {
+          setShift(next)
+        } else {
+          // First placement: she is only just appearing, so put her there without a slide.
+          widget.style.transition = 'none'
+          flushSync(() => setShift(next))
+          void widget.offsetWidth
+          widget.style.transition = ''
+        }
+      }
+      if (!placed) {
+        placed = true
+        schedule(1500) // once more after the page's own entrance motion has settled
+      }
+    }
+
+    const onScroll = () => schedule(HOME_SETTLE_MS)
+    const onResize = () => { relayout = true; schedule(HOME_SETTLE_MS) }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onResize)
+    void document.fonts?.ready.then(() => { relayout = true; schedule(150) })
+    schedule(pill ? 60 : 600)
+
+    return () => {
+      if (timer !== undefined) window.clearTimeout(timer)
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onResize)
+    }
+  }, [hidden])
+
   // A bubble opening (casual hello, menu, thinking) means Baew has something to say: stand still.
   useEffect(() => {
     if (bubbleOpen || thinking) floatFreezeRef.current(false)
@@ -1122,7 +1302,9 @@ export default function StrobiGuide() {
         bottom: 'auto',
         ...(floatMs !== null ? { '--strobi-float-ms': `${floatMs}ms` } : {}),
       } as CSSProperties)
-    : undefined
+    : homeShift.dx > 0 || homeShift.lift > 0
+      ? ({ '--strobi-home-dx': `${homeShift.dx}px`, '--strobi-home-lift': `${homeShift.lift}px` } as CSSProperties)
+      : undefined
 
   return (
     <>
@@ -1222,7 +1404,11 @@ export default function StrobiGuide() {
 
       {hidden && (
         <button
+          ref={pillRef}
           className="restore-strobi"
+          style={pillShift.dx > 0 || pillShift.lift > 0
+            ? ({ '--strobi-pill-dx': `${pillShift.dx}px`, '--strobi-pill-lift': `${pillShift.lift}px` } as CSSProperties)
+            : undefined}
           onClick={() => {
             manualHiddenRef.current = false
             introShown.current = true

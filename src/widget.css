@@ -18,10 +18,20 @@
   --baew-avatar-scale: 1.298;
   position: fixed;
   z-index: 2147483000;
-  left: auto;
+  /* Resting / home anchor: BOTTOM-LEFT, clear of the safe areas. This is the only place the home
+     corner is defined. The component never restores a corner from JS: it only writes inline
+     left/top (with right/bottom: auto) once she has been dragged or has floated, exactly as before,
+     and drops back to this rule whenever no position has been set. The page's "Switch background"
+     button keeps the bottom-right corner. */
+  /* Home clearance: --strobi-home-dx / --strobi-home-lift are 0 (and normally unset) while the corner
+     is clear. When text, an icon, a card or a control sits under it, JS sets them to the smallest
+     rise (and, on the narrowest phones, nudge) that frees her, so the corner stays the anchor and the
+     offsets are measured from it. */
+  --strobi-bubble-room: calc(min(250px, 100dvh - 82px) + 104px);
+  left: calc(max(8px, env(safe-area-inset-left)) + var(--strobi-home-dx, 0px));
   top: auto;
-  right: 8px;
-  bottom: 8px;
+  right: auto;
+  bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--strobi-home-lift, 0px));
   width: min(204px, calc(100vw - 16px));
   display: flex;
   flex-direction: column;
@@ -30,8 +40,15 @@
   pointer-events: none;
   transition: left 180ms cubic-bezier(.22, 1, .36, 1),
               top 180ms cubic-bezier(.22, 1, .36, 1),
+              bottom 180ms cubic-bezier(.22, 1, .36, 1),
               opacity .22s ease;
   will-change: left, top;
+}
+
+/* While a popup is open it grows upward from her, so a lifted home is capped to what leaves the
+   popup room to stay on screen (and returns to the full lift when it closes). */
+.strobi-widget.bubble-open {
+  bottom: calc(max(8px, env(safe-area-inset-bottom)) + min(var(--strobi-home-lift, 0px), max(0px, calc(100dvh - var(--strobi-bubble-room)))));
 }
 
 .strobi-widget.is-positioned {
@@ -159,8 +176,10 @@
   line-height: 1.25;
   text-align: center;
   color: #dfe0f0;
-  background: #171925e8;
-  border: 1px solid #39384e;
+  /* Shared JAYE control surface (see :root --jaye-* in index.html): smoked glass, hairline edge. */
+  background: var(--jaye-glass, rgba(11, 13, 20, .86));
+  border: 1px solid var(--jaye-edge, rgba(214, 224, 240, .2));
+  box-shadow: var(--jaye-highlight, inset 0 1px 0 rgba(255, 255, 255, .08)), 0 2px 8px rgba(0, 0, 0, .35);
   border-radius: 99px;
   padding: 3px 6px;
   white-space: nowrap;
@@ -185,7 +204,7 @@
   background: rgba(19, 20, 33, .97);
   border: 1px solid #4b456a;
   border-radius: 13px;
-  box-shadow: 0 8px 22px #0005;
+  box-shadow: 0 8px 22px #0005, var(--jaye-highlight, inset 0 1px 0 rgba(255, 255, 255, .08));
   animation: strobi-bubble-in .2s ease-out;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -382,11 +401,14 @@
 .restore-strobi {
   position: fixed;
   z-index: 2147483000;
-  right: 8px;
-  bottom: 8px;
+  /* Baew's collapsed state rests where Baew rests: bottom-left, raised the same way (see
+     --strobi-home-*) only if page content would otherwise sit under it. */
+  left: calc(max(8px, env(safe-area-inset-left)) + var(--strobi-pill-dx, 0px));
+  right: auto;
+  bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--strobi-pill-lift, 0px));
   border-radius: 999px;
-  border: 1px solid #4b456a !important;
-  background: #171725ed !important;
+  border: 1px solid var(--jaye-edge, rgba(214, 224, 240, .2)) !important;
+  background: var(--jaye-glass, rgba(11, 13, 20, .86)) !important;
   color: #eceaf9 !important;
   padding: 7px 10px !important;
   display: flex;
@@ -394,8 +416,20 @@
   gap: 7px;
   font-size: 10px;
   cursor: pointer;
-  box-shadow: 0 6px 18px #0004;
+  box-shadow: var(--jaye-highlight, inset 0 1px 0 rgba(255, 255, 255, .08)), 0 6px 18px -6px rgba(0, 0, 0, .6);
   font-family: Inter, system-ui, sans-serif;
+  transition: border-color .2s ease, background-color .2s ease,
+              left 180ms cubic-bezier(.22, 1, .36, 1), bottom 180ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.restore-strobi:hover,
+.restore-strobi:focus-visible {
+  border-color: var(--jaye-edge-strong, rgba(226, 234, 247, .38)) !important;
+  outline: none;
+}
+
+.restore-strobi:focus-visible {
+  box-shadow: var(--jaye-highlight, inset 0 1px 0 rgba(255, 255, 255, .08)), 0 6px 18px -6px rgba(0, 0, 0, .6), 0 0 0 2px #d9d2ff;
 }
 
 .restore-dot {
@@ -419,6 +453,7 @@
 @media (max-width: 760px) {
   .strobi-widget {
     width: min(188px, calc(100vw - 16px));
+    --strobi-bubble-room: calc(min(230px, 100dvh - 76px) + 98px);
   }
 
   .strobi-mascot-wrap {
@@ -454,6 +489,12 @@
   .hide-strobi {
     opacity: 1;
     right: calc(2px - (44px * (var(--baew-avatar-scale) - 1)) / 2);
+  }
+}
+
+@media (max-width: 300px) {
+  .tap-label {
+    display: none;
   }
 }
 
