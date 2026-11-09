@@ -2182,7 +2182,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </head>
 <body>
 <canvas id="jaye-tornado-background" aria-hidden="true"></canvas>
-<video id="jaye-global-video-background" aria-hidden="true" muted loop playsinline preload="auto" src="jaye-video-background.mp4" tabindex="-1"></video>
+<video id="jaye-global-video-background" aria-hidden="true" muted loop playsinline preload="none" src="jaye-video-background.mp4" tabindex="-1"></video>
 <button id="jaye-background-switch" type="button" aria-pressed="false" aria-label="Switch global background to video">Switch background</button>
 
 
@@ -2431,40 +2431,59 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <div class="artifact-lightwell"></div>
 <svg class="artifact-figure" fill="none" viewbox="0 0 720 700" xmlns="http://www.w3.org/2000/svg">
 <defs>
-<lineargradient gradientunits="userSpaceOnUse" id="artifactRim" x1="120" x2="602" y1="72" y2="606"><stop stop-color="#EDF2FA" stop-opacity=".92"></stop><stop offset=".28" stop-color="#C4CBD4" stop-opacity=".68"></stop><stop offset=".61" stop-color="#8996AA" stop-opacity=".25"></stop><stop offset=".84" stop-color="#E0E3E8" stop-opacity=".52"></stop><stop offset="1" stop-color="#EDF2FA" stop-opacity=".16"></stop></lineargradient>
-<lineargradient gradientunits="userSpaceOnUse" id="artifactFaceA" x1="220" x2="482" y1="104" y2="500"><stop stop-color="#EDF2FA" stop-opacity=".26"></stop><stop offset=".22" stop-color="#C4CBD4" stop-opacity=".10"></stop><stop offset=".65" stop-color="#101722" stop-opacity=".88"></stop><stop offset="1" stop-color="#07090D" stop-opacity=".96"></stop></lineargradient>
-<lineargradient gradientunits="userSpaceOnUse" id="artifactFaceB" x1="470" x2="230" y1="158" y2="588"><stop stop-color="#E0E3E8" stop-opacity=".28"></stop><stop offset=".52" stop-color="#181F2B" stop-opacity=".8"></stop><stop offset="1" stop-color="#07090D" stop-opacity=".25"></stop></lineargradient>
-<radialgradient id="artifactHeart"><stop stop-color="#C4CBD4" stop-opacity=".42"></stop><stop offset=".5" stop-color="#E0E3E8" stop-opacity=".12"></stop><stop offset="1" stop-color="#07090D" stop-opacity="0"></stop></radialgradient>
-<filter height="200%" id="artifactSoftGlow" width="200%" x="-50%" y="-50%"><fegaussianblur stddeviation="14"></fegaussianblur></filter>
-<filter height="140%" id="artifactEdgeGlow" width="140%" x="-20%" y="-20%"><fegaussianblur stddeviation="2"></fegaussianblur></filter>
+<linearGradient id="jeLidU" gradientUnits="userSpaceOnUse" x1="0" y1="-340" x2="0" y2="-30"><stop stop-color="#fff"/><stop offset=".2" stop-color="#e3e9f2"/><stop offset=".5" stop-color="#8f9bb1"/><stop offset=".82" stop-color="#363f55"/><stop offset="1" stop-color="#131925"/></linearGradient>
+<linearGradient id="jeLidL" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="230"><stop stop-color="#7b879d"/><stop offset=".55" stop-color="#2c3547"/><stop offset="1" stop-color="#e2e8f2"/></linearGradient>
+<radialGradient id="jeIris"><stop stop-color="#06080d"/><stop offset=".2" stop-color="#121926"/><stop offset=".4" stop-color="#4c5970"/><stop offset=".6" stop-color="#7a879e"/><stop offset=".78" stop-color="#bfcadd"/><stop offset=".92" stop-color="#66738b"/><stop offset="1" stop-color="#05070b"/></radialGradient>
+<radialGradient id="jeCaus" cx=".5" cy=".84" r=".62"><stop stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+<radialGradient id="jeSock" cx=".5" cy=".5" r=".6"><stop stop-color="#0d121b"/><stop offset="1" stop-color="#030407"/></radialGradient>
+<radialGradient id="jeHalo"><stop stop-color="#9db4e6" stop-opacity=".2"/><stop offset=".6" stop-color="#9db4e6" stop-opacity=".07"/><stop offset="1" stop-color="#9db4e6" stop-opacity="0"/></radialGradient>
+<radialGradient id="jeShadow"><stop stop-color="#000" stop-opacity=".5"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+<radialGradient id="jePupGlow"><stop stop-color="#3a5cb0" stop-opacity=".32"/><stop offset="1" stop-color="#3a5cb0" stop-opacity="0"/></radialGradient>
+<linearGradient id="jeBlade" gradientUnits="userSpaceOnUse" x1="226" y1="10" x2="420" y2="-190"><stop stop-color="#59647a"/><stop offset=".35" stop-color="#e9eef7"/><stop offset=".7" stop-color="#aab5c9"/><stop offset="1" stop-color="#fff"/></linearGradient>
+<linearGradient id="jeSlitV" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<linearGradient id="jeSlitH" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#cfe0ff" stop-opacity="0"/><stop offset=".5" stop-color="#cfe0ff" stop-opacity=".5"/><stop offset="1" stop-color="#cfe0ff" stop-opacity="0"/></linearGradient>
+<linearGradient id="jePup" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#03040a"/><stop offset=".5" stop-color="#0a1328"/><stop offset="1" stop-color="#02030a"/></linearGradient>
+<linearGradient id="jeStrk" gradientUnits="userSpaceOnUse" x1="-40" y1="0" x2="760" y2="0"><stop stop-color="#cfe0ff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#cfe0ff" stop-opacity="0"/></linearGradient>
+<linearGradient id="jeGlint" gradientUnits="userSpaceOnUse" x1="-300" y1="0" x2="-80" y2="0"><stop stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".95"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+<clipPath id="jeEyeClip"><path id="jeClipP" d="M-252 12C-150 -210 110 -220 246 -10C130 160 -120 168 -252 12Z"/></clipPath>
+<clipPath id="jePupClip"><path d="M0 -138C48 -74 48 74 0 138C-48 74 -48 -74 0 -138Z"/></clipPath>
 </defs>
-<ellipse cx="370" cy="355" fill="url(#artifactHeart)" filter="url(#artifactSoftGlow)" rx="238" ry="252"></ellipse>
-<g class="artifact-trajectory artifact-trajectory--one" stroke="url(#artifactRim)" stroke-width="1">
-<path d="M89 344 206 131 442 61 631 204 591 460 381 629 148 554 72 423 89 344Z" stroke-opacity=".56"></path>
-<path d="M89 344 148 554 326 497 381 629M206 131 326 277 442 61M326 277 631 204 486 378 591 460" stroke-opacity=".3"></path>
-<path d="M72 423 234 385 326 497 486 378 631 204" stroke-dasharray="3 10" stroke-opacity=".48"></path>
+<ellipse cx="350" cy="372" rx="340" ry="190" fill="url(#jeHalo)"/>
+<ellipse cx="330" cy="560" rx="260" ry="46" fill="url(#jeShadow)" opacity=".7"/>
+<g class="jeye-root" id="jeRoot" transform="translate(384 356) rotate(-9) scale(.85)">
+<path id="jeSock" d="M-252 12C-150 -210 110 -220 246 -10C130 160 -120 168 -252 12Z" fill="url(#jeSock)"/>
+<g clip-path="url(#jeEyeClip)">
+<g id="jeIrisG"><circle r="160" fill="url(#jeIris)"/><circle r="160" fill="url(#jeCaus)"/><g><line x1="-45.18" y1="-3.3" x2="-130.57" y2="-9.52" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="1.19"/><line x1="39.7" y1="21.83" x2="114.69" y2="63.08" stroke="#f2f6fd" stroke-opacity="0.17" stroke-width="1.53"/><line x1="-40.92" y1="22.5" x2="-118.83" y2="65.35" stroke="#04060a" stroke-opacity="0.17" stroke-width="0.9"/><line x1="-34.74" y1="26.63" x2="-102.61" y2="78.65" stroke="#04060a" stroke-opacity="0.28" stroke-width="1.23"/><line x1="-42.22" y1="23.76" x2="-125.1" y2="70.4" stroke="#f2f6fd" stroke-opacity="0.13" stroke-width="1.29"/><line x1="-0.43" y1="40.56" x2="-1.47" y2="139.41" stroke="#f2f6fd" stroke-opacity="0.13" stroke-width="0.76"/><line x1="-1.76" y1="-43.44" x2="-5.16" y2="-127.32" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="0.76"/><line x1="28.26" y1="-39.05" x2="68.38" y2="-94.47" stroke="#04060a" stroke-opacity="0.14" stroke-width="1.53"/><line x1="-45.25" y1="0.78" x2="-109.29" y2="1.88" stroke="#f2f6fd" stroke-opacity="0.22" stroke-width="0.7"/><line x1="-24.97" y1="-31.82" x2="-74.36" y2="-94.76" stroke="#f2f6fd" stroke-opacity="0.27" stroke-width="1.07"/><line x1="-42.55" y1="9.18" x2="-92.95" y2="20.06" stroke="#f2f6fd" stroke-opacity="0.15" stroke-width="1.44"/><line x1="-14.18" y1="43.28" x2="-35.57" y2="108.58" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="0.73"/><line x1="-31.6" y1="-33.75" x2="-68.37" y2="-73.02" stroke="#04060a" stroke-opacity="0.22" stroke-width="1.63"/><line x1="27.9" y1="-36.95" x2="71.27" y2="-94.41" stroke="#f2f6fd" stroke-opacity="0.19" stroke-width="1.08"/><line x1="-16.05" y1="42.19" x2="-32.91" y2="86.5" stroke="#f2f6fd" stroke-opacity="0.13" stroke-width="1.05"/><line x1="29.12" y1="28.57" x2="99.7" y2="97.83" stroke="#f2f6fd" stroke-opacity="0.17" stroke-width="0.71"/><line x1="-43.01" y1="-16.93" x2="-138.28" y2="-54.43" stroke="#f2f6fd" stroke-opacity="0.19" stroke-width="1.26"/><line x1="-40.21" y1="-19.91" x2="-87.86" y2="-43.51" stroke="#f2f6fd" stroke-opacity="0.2" stroke-width="1.69"/><line x1="-10.15" y1="-40.09" x2="-24.74" y2="-97.72" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="0.98"/><line x1="39.06" y1="-19.74" x2="125.56" y2="-63.46" stroke="#f2f6fd" stroke-opacity="0.08" stroke-width="0.92"/><line x1="-23.11" y1="-38.53" x2="-67.99" y2="-113.35" stroke="#04060a" stroke-opacity="0.31" stroke-width="0.95"/><line x1="38.14" y1="24.89" x2="97.47" y2="63.6" stroke="#04060a" stroke-opacity="0.33" stroke-width="1.63"/><line x1="0.15" y1="-40.05" x2="0.46" y2="-119.71" stroke="#f2f6fd" stroke-opacity="0.18" stroke-width="1.37"/><line x1="-27.63" y1="-28.93" x2="-85.46" y2="-89.5" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="1.49"/><line x1="37.62" y1="15.92" x2="143.53" y2="60.72" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="1.52"/><line x1="43.45" y1="-24.37" x2="83.06" y2="-46.59" stroke="#04060a" stroke-opacity="0.27" stroke-width="1.03"/><line x1="-39.35" y1="22.5" x2="-82.67" y2="47.28" stroke="#04060a" stroke-opacity="0.24" stroke-width="0.9"/><line x1="-41.02" y1="23.48" x2="-102.83" y2="58.86" stroke="#04060a" stroke-opacity="0.27" stroke-width="1.01"/><line x1="42.45" y1="-6.64" x2="119.07" y2="-18.62" stroke="#04060a" stroke-opacity="0.3" stroke-width="0.95"/><line x1="-42.91" y1="-17.76" x2="-85.17" y2="-35.25" stroke="#04060a" stroke-opacity="0.16" stroke-width="1.5"/><line x1="31.7" y1="36.27" x2="68.7" y2="78.58" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="1.41"/><line x1="15.67" y1="-37.89" x2="37.32" y2="-90.26" stroke="#f2f6fd" stroke-opacity="0.11" stroke-width="0.72"/><line x1="-22.54" y1="34.21" x2="-81.73" y2="124.04" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="1.24"/><line x1="1.88" y1="-47.03" x2="4.67" y2="-116.47" stroke="#f2f6fd" stroke-opacity="0.12" stroke-width="0.82"/><line x1="29.8" y1="35.37" x2="59.62" y2="70.77" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="1.55"/><line x1="-48.39" y1="-6.04" x2="-94.85" y2="-11.84" stroke="#f2f6fd" stroke-opacity="0.22" stroke-width="0.88"/><line x1="41.15" y1="-4.47" x2="147.14" y2="-15.99" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="1.69"/><line x1="-34.19" y1="28.68" x2="-91.85" y2="77.04" stroke="#04060a" stroke-opacity="0.17" stroke-width="0.7"/><line x1="41.95" y1="26.03" x2="108.1" y2="67.06" stroke="#f2f6fd" stroke-opacity="0.12" stroke-width="1.63"/><line x1="42.77" y1="22.58" x2="96.73" y2="51.06" stroke="#04060a" stroke-opacity="0.23" stroke-width="1.02"/><line x1="27.84" y1="33.71" x2="63.95" y2="77.43" stroke="#f2f6fd" stroke-opacity="0.19" stroke-width="1.11"/><line x1="43.44" y1="-1.91" x2="128.3" y2="-5.63" stroke="#f2f6fd" stroke-opacity="0.12" stroke-width="1.15"/><line x1="40.51" y1="-14.47" x2="115.24" y2="-41.18" stroke="#04060a" stroke-opacity="0.15" stroke-width="0.86"/><line x1="-27.06" y1="-29.74" x2="-65.89" y2="-72.41" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="0.83"/><line x1="-43.52" y1="19.83" x2="-118.72" y2="54.1" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="1.02"/><line x1="2.38" y1="-49.16" x2="5.47" y2="-112.92" stroke="#f2f6fd" stroke-opacity="0.09" stroke-width="0.74"/><line x1="-46.34" y1="-6.7" x2="-97.38" y2="-14.09" stroke="#f2f6fd" stroke-opacity="0.25" stroke-width="0.75"/><line x1="34.97" y1="-26.43" x2="109.73" y2="-82.94" stroke="#f2f6fd" stroke-opacity="0.23" stroke-width="1.66"/><line x1="-39.63" y1="14.65" x2="-105.53" y2="39.02" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="0.65"/><line x1="-8.24" y1="-40.39" x2="-23.86" y2="-116.98" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="1.64"/><line x1="-2.32" y1="-41.16" x2="-5.52" y2="-97.94" stroke="#04060a" stroke-opacity="0.12" stroke-width="1.64"/><line x1="-0.56" y1="46.5" x2="-1.32" y2="110.68" stroke="#04060a" stroke-opacity="0.31" stroke-width="1.43"/><line x1="-38.27" y1="-31.77" x2="-97.98" y2="-81.34" stroke="#f2f6fd" stroke-opacity="0.18" stroke-width="1.03"/><line x1="-11.4" y1="47.66" x2="-22.89" y2="95.68" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="1.34"/><line x1="-41.23" y1="-7.48" x2="-132.71" y2="-24.08" stroke="#04060a" stroke-opacity="0.2" stroke-width="0.71"/><line x1="33.34" y1="-28.7" x2="74.51" y2="-64.13" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="0.82"/><line x1="37.36" y1="15.86" x2="107.73" y2="45.73" stroke="#f2f6fd" stroke-opacity="0.15" stroke-width="1.6"/><line x1="-24.14" y1="36.14" x2="-72.75" y2="108.92" stroke="#04060a" stroke-opacity="0.22" stroke-width="1.21"/><line x1="12.66" y1="-45.35" x2="35.52" y2="-127.27" stroke="#f2f6fd" stroke-opacity="0.2" stroke-width="0.78"/><line x1="34.99" y1="21.93" x2="89.75" y2="56.26" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="0.74"/><line x1="44.29" y1="19.43" x2="128.03" y2="56.16" stroke="#04060a" stroke-opacity="0.22" stroke-width="0.61"/><line x1="7.11" y1="47.5" x2="18.09" y2="120.86" stroke="#04060a" stroke-opacity="0.13" stroke-width="0.63"/><line x1="-32.39" y1="31.26" x2="-66.94" y2="64.61" stroke="#f2f6fd" stroke-opacity="0.25" stroke-width="0.87"/><line x1="-23.96" y1="33.43" x2="-59.4" y2="82.89" stroke="#04060a" stroke-opacity="0.23" stroke-width="1.43"/><line x1="6.21" y1="-43.51" x2="20.75" y2="-145.42" stroke="#f2f6fd" stroke-opacity="0.13" stroke-width="1.28"/><line x1="-26.67" y1="-38.26" x2="-67.02" y2="-96.14" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="1.05"/><line x1="-43.72" y1="23.54" x2="-98.28" y2="52.9" stroke="#f2f6fd" stroke-opacity="0.08" stroke-width="1.3"/><line x1="32.38" y1="33.09" x2="74.28" y2="75.91" stroke="#f2f6fd" stroke-opacity="0.22" stroke-width="0.82"/><line x1="42.85" y1="-10.57" x2="111.51" y2="-27.5" stroke="#04060a" stroke-opacity="0.12" stroke-width="1.57"/><line x1="30.3" y1="33.46" x2="98.56" y2="108.83" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="1.6"/><line x1="-36.77" y1="26.9" x2="-92.48" y2="67.65" stroke="#04060a" stroke-opacity="0.14" stroke-width="0.63"/><line x1="-3.09" y1="40.49" x2="-8.46" y2="110.71" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="0.87"/><line x1="-45.8" y1="-6.42" x2="-139.23" y2="-19.51" stroke="#f2f6fd" stroke-opacity="0.11" stroke-width="1.08"/><line x1="34.7" y1="31.7" x2="82.74" y2="75.61" stroke="#04060a" stroke-opacity="0.29" stroke-width="0.89"/><line x1="24.49" y1="39.64" x2="54.94" y2="88.94" stroke="#04060a" stroke-opacity="0.18" stroke-width="0.61"/><line x1="34.15" y1="21.92" x2="94.83" y2="60.86" stroke="#f2f6fd" stroke-opacity="0.14" stroke-width="1.67"/><line x1="-8.84" y1="-46.31" x2="-20.7" y2="-108.41" stroke="#f2f6fd" stroke-opacity="0.15" stroke-width="1.58"/><line x1="-36.68" y1="30.43" x2="-79.37" y2="65.83" stroke="#04060a" stroke-opacity="0.36" stroke-width="0.92"/><line x1="44.16" y1="20.4" x2="133.95" y2="61.9" stroke="#04060a" stroke-opacity="0.12" stroke-width="0.76"/><line x1="-40.3" y1="2.8" x2="-134.94" y2="9.36" stroke="#f2f6fd" stroke-opacity="0.2" stroke-width="1.18"/><line x1="12.17" y1="47.79" x2="37.97" y2="149.06" stroke="#f2f6fd" stroke-opacity="0.09" stroke-width="0.96"/><line x1="-16.71" y1="41.85" x2="-53.27" y2="133.41" stroke="#f2f6fd" stroke-opacity="0.08" stroke-width="0.9"/><line x1="-38.62" y1="30.89" x2="-101.7" y2="81.35" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="1.3"/><line x1="-40.22" y1="-18.02" x2="-136.51" y2="-61.16" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="0.76"/><line x1="3.14" y1="45.92" x2="9.76" y2="142.51" stroke="#04060a" stroke-opacity="0.19" stroke-width="0.66"/><line x1="-25.78" y1="40.9" x2="-79.52" y2="126.19" stroke="#04060a" stroke-opacity="0.23" stroke-width="1.08"/><line x1="-35.44" y1="26.22" x2="-111.37" y2="82.39" stroke="#04060a" stroke-opacity="0.2" stroke-width="0.85"/><line x1="39.72" y1="-12.36" x2="88.49" y2="-27.54" stroke="#f2f6fd" stroke-opacity="0.12" stroke-width="0.61"/><line x1="21.49" y1="-41.72" x2="46.65" y2="-90.56" stroke="#f2f6fd" stroke-opacity="0.07" stroke-width="0.68"/><line x1="16.96" y1="36.68" x2="38.87" y2="84.04" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="1.45"/><line x1="-27.8" y1="-36.65" x2="-85.42" y2="-112.61" stroke="#04060a" stroke-opacity="0.13" stroke-width="1.03"/><line x1="31.73" y1="28.68" x2="87.62" y2="79.21" stroke="#04060a" stroke-opacity="0.15" stroke-width="1.55"/><line x1="-48.32" y1="6.68" x2="-136.81" y2="18.9" stroke="#04060a" stroke-opacity="0.25" stroke-width="1.33"/><line x1="43.68" y1="4.8" x2="136.16" y2="14.96" stroke="#f2f6fd" stroke-opacity="0.15" stroke-width="1.3"/><line x1="-39.5" y1="14.68" x2="-120.5" y2="44.8" stroke="#f2f6fd" stroke-opacity="0.11" stroke-width="0.68"/><line x1="-20.92" y1="39.71" x2="-51.98" y2="98.68" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="1.06"/><line x1="-27.78" y1="30.45" x2="-91.97" y2="100.82" stroke="#f2f6fd" stroke-opacity="0.12" stroke-width="0.73"/><line x1="45.21" y1="6.25" x2="103.68" y2="14.33" stroke="#f2f6fd" stroke-opacity="0.14" stroke-width="1.54"/><line x1="22.8" y1="-34.19" x2="63.7" y2="-95.53" stroke="#04060a" stroke-opacity="0.19" stroke-width="0.77"/><line x1="16.66" y1="-38.7" x2="50.72" y2="-117.82" stroke="#04060a" stroke-opacity="0.25" stroke-width="1.27"/><line x1="-5.23" y1="-44.57" x2="-14.31" y2="-121.93" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="1.4"/><line x1="-41.61" y1="22.92" x2="-114.41" y2="63.01" stroke="#f2f6fd" stroke-opacity="0.17" stroke-width="1.36"/><line x1="42.84" y1="3.6" x2="118.9" y2="9.99" stroke="#f2f6fd" stroke-opacity="0.15" stroke-width="1.33"/><line x1="-41.21" y1="-21.64" x2="-128.14" y2="-67.29" stroke="#04060a" stroke-opacity="0.31" stroke-width="1.46"/><line x1="-43.32" y1="-14.91" x2="-98.16" y2="-33.77" stroke="#04060a" stroke-opacity="0.26" stroke-width="0.78"/><line x1="-41.06" y1="16.04" x2="-97.81" y2="38.21" stroke="#04060a" stroke-opacity="0.2" stroke-width="1.45"/><line x1="-26.36" y1="-40.51" x2="-54.3" y2="-83.43" stroke="#04060a" stroke-opacity="0.13" stroke-width="1.24"/><line x1="44.87" y1="-13.57" x2="99.32" y2="-30.03" stroke="#04060a" stroke-opacity="0.24" stroke-width="0.69"/><line x1="-48.76" y1="6.26" x2="-122.85" y2="15.77" stroke="#f2f6fd" stroke-opacity="0.09" stroke-width="1.32"/><line x1="-49.22" y1="8.59" x2="-112.68" y2="19.67" stroke="#04060a" stroke-opacity="0.36" stroke-width="1.19"/><line x1="5.07" y1="41.72" x2="13.51" y2="111.17" stroke="#f2f6fd" stroke-opacity="0.22" stroke-width="1.68"/><line x1="14.63" y1="43.44" x2="44.37" y2="131.71" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="1.17"/><line x1="25.78" y1="-35.03" x2="57.04" y2="-77.49" stroke="#f2f6fd" stroke-opacity="0.2" stroke-width="0.72"/><line x1="34.52" y1="22.85" x2="93.61" y2="61.95" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="1.02"/><line x1="-42.96" y1="-17.49" x2="-125.95" y2="-51.29" stroke="#04060a" stroke-opacity="0.14" stroke-width="1.48"/><line x1="25.71" y1="37.63" x2="85.61" y2="125.3" stroke="#f2f6fd" stroke-opacity="0.27" stroke-width="1.09"/><line x1="-27.17" y1="41.19" x2="-76.79" y2="116.42" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="0.79"/><line x1="-4.6" y1="46.46" x2="-10.79" y2="109.06" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="1.2"/><line x1="35" y1="-23.25" x2="76.89" y2="-51.08" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="1.31"/><line x1="40.23" y1="-11.7" x2="97.19" y2="-28.27" stroke="#f2f6fd" stroke-opacity="0.2" stroke-width="0.88"/><line x1="-12.79" y1="45.47" x2="-36.81" y2="130.91" stroke="#f2f6fd" stroke-opacity="0.14" stroke-width="0.95"/><line x1="34.26" y1="21.53" x2="109.57" y2="68.86" stroke="#04060a" stroke-opacity="0.32" stroke-width="1.35"/><line x1="1.15" y1="-43.99" x2="2.64" y2="-101.23" stroke="#f2f6fd" stroke-opacity="0.27" stroke-width="1.42"/><line x1="-9.66" y1="41.79" x2="-22.81" y2="98.65" stroke="#04060a" stroke-opacity="0.31" stroke-width="0.61"/><line x1="-40.73" y1="-6.12" x2="-127.64" y2="-19.17" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="1.68"/><line x1="-15.04" y1="45.89" x2="-38.68" y2="118.01" stroke="#f2f6fd" stroke-opacity="0.25" stroke-width="0.72"/><line x1="-2.71" y1="-45.92" x2="-8.61" y2="-145.86" stroke="#04060a" stroke-opacity="0.17" stroke-width="0.68"/><line x1="-15.7" y1="-43.43" x2="-52.73" y2="-145.86" stroke="#04060a" stroke-opacity="0.15" stroke-width="1.11"/><line x1="37.17" y1="-26.52" x2="107.66" y2="-76.81" stroke="#f2f6fd" stroke-opacity="0.18" stroke-width="0.65"/><line x1="-41.07" y1="-7.38" x2="-104.13" y2="-18.72" stroke="#f2f6fd" stroke-opacity="0.2" stroke-width="1.1"/><line x1="20.14" y1="34.64" x2="56.39" y2="96.98" stroke="#04060a" stroke-opacity="0.28" stroke-width="1.46"/><line x1="-34.74" y1="-21.45" x2="-113.8" y2="-70.27" stroke="#04060a" stroke-opacity="0.18" stroke-width="0.88"/><line x1="-40.04" y1="11.41" x2="-93.35" y2="26.61" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="0.72"/><line x1="34.42" y1="-22.98" x2="82.16" y2="-54.84" stroke="#f2f6fd" stroke-opacity="0.11" stroke-width="0.85"/><line x1="25.92" y1="-39.24" x2="74.25" y2="-112.4" stroke="#f2f6fd" stroke-opacity="0.22" stroke-width="1.68"/><line x1="14.24" y1="-39.77" x2="39.84" y2="-111.27" stroke="#04060a" stroke-opacity="0.34" stroke-width="0.83"/><line x1="46.73" y1="6.05" x2="121.38" y2="15.71" stroke="#04060a" stroke-opacity="0.13" stroke-width="1.13"/><line x1="-22.71" y1="-34.08" x2="-82.57" y2="-123.9" stroke="#f2f6fd" stroke-opacity="0.08" stroke-width="0.94"/><line x1="27.52" y1="40.78" x2="56.64" y2="83.94" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="1.49"/><line x1="23.72" y1="-33" x2="90.27" y2="-125.59" stroke="#04060a" stroke-opacity="0.23" stroke-width="1.66"/><line x1="4.72" y1="39.73" x2="17.26" y2="145.29" stroke="#f2f6fd" stroke-opacity="0.18" stroke-width="1.23"/><line x1="-19.66" y1="-38.77" x2="-57.2" y2="-112.82" stroke="#f2f6fd" stroke-opacity="0.27" stroke-width="1.13"/><line x1="15.71" y1="-47.26" x2="31.69" y2="-95.34" stroke="#04060a" stroke-opacity="0.3" stroke-width="0.63"/><line x1="21.8" y1="-40.5" x2="64.24" y2="-119.38" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="1.52"/><line x1="40.47" y1="-19.26" x2="137.79" y2="-65.57" stroke="#04060a" stroke-opacity="0.14" stroke-width="0.78"/><line x1="-36.34" y1="30.25" x2="-83.78" y2="69.73" stroke="#04060a" stroke-opacity="0.3" stroke-width="1.34"/><line x1="42.13" y1="-14.12" x2="138.57" y2="-46.43" stroke="#04060a" stroke-opacity="0.36" stroke-width="0.79"/><line x1="4.88" y1="47.01" x2="11.97" y2="115.35" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="1.46"/><line x1="-44.72" y1="-18.49" x2="-135.52" y2="-56.04" stroke="#04060a" stroke-opacity="0.38" stroke-width="1.52"/><line x1="-41.16" y1="22.93" x2="-120.01" y2="66.86" stroke="#f2f6fd" stroke-opacity="0.13" stroke-width="1.41"/><line x1="-20.82" y1="41.43" x2="-47.66" y2="94.84" stroke="#f2f6fd" stroke-opacity="0.12" stroke-width="1.68"/><line x1="34.33" y1="22.66" x2="103.52" y2="68.32" stroke="#04060a" stroke-opacity="0.29" stroke-width="1.46"/><line x1="17.04" y1="-46.12" x2="42.56" y2="-115.2" stroke="#f2f6fd" stroke-opacity="0.25" stroke-width="1.38"/><line x1="-11.22" y1="-42.93" x2="-31.23" y2="-119.52" stroke="#f2f6fd" stroke-opacity="0.17" stroke-width="1.34"/><line x1="1.75" y1="-41.89" x2="4.61" y2="-110.09" stroke="#f2f6fd" stroke-opacity="0.15" stroke-width="1.08"/><line x1="21.41" y1="-36.96" x2="72.26" y2="-124.73" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="0.82"/><line x1="31.91" y1="37.71" x2="64.99" y2="76.79" stroke="#04060a" stroke-opacity="0.33" stroke-width="1.25"/><line x1="28.86" y1="-31.69" x2="84.65" y2="-92.94" stroke="#f2f6fd" stroke-opacity="0.19" stroke-width="1.38"/><line x1="3.85" y1="46.25" x2="9.55" y2="114.89" stroke="#04060a" stroke-opacity="0.24" stroke-width="0.96"/><line x1="45.36" y1="-0.38" x2="107.56" y2="-0.91" stroke="#04060a" stroke-opacity="0.34" stroke-width="1.34"/><line x1="-11.12" y1="43.47" x2="-27.61" y2="107.87" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="1.12"/><line x1="-19.6" y1="38.75" x2="-55.53" y2="109.77" stroke="#04060a" stroke-opacity="0.26" stroke-width="0.69"/><line x1="37.11" y1="26.19" x2="98.58" y2="69.57" stroke="#04060a" stroke-opacity="0.29" stroke-width="1.06"/><line x1="36.45" y1="-33.22" x2="111.58" y2="-101.72" stroke="#f2f6fd" stroke-opacity="0.21" stroke-width="1.63"/><line x1="-43.15" y1="5.24" x2="-92.3" y2="11.2" stroke="#f2f6fd" stroke-opacity="0.18" stroke-width="1.54"/><line x1="-28.57" y1="32.61" x2="-81.69" y2="93.21" stroke="#f2f6fd" stroke-opacity="0.07" stroke-width="1.48"/><line x1="37.13" y1="-15.23" x2="104.13" y2="-42.72" stroke="#f2f6fd" stroke-opacity="0.23" stroke-width="1.09"/><line x1="9.69" y1="-47.2" x2="19.56" y2="-95.31" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="0.83"/><line x1="31.11" y1="27.33" x2="78.82" y2="69.24" stroke="#04060a" stroke-opacity="0.22" stroke-width="0.76"/><line x1="33.56" y1="-22.27" x2="91.86" y2="-60.95" stroke="#f2f6fd" stroke-opacity="0.12" stroke-width="0.88"/><line x1="31.81" y1="-28.62" x2="95.15" y2="-85.62" stroke="#f2f6fd" stroke-opacity="0.14" stroke-width="1.19"/><line x1="-36.17" y1="-33.27" x2="-78.95" y2="-72.63" stroke="#f2f6fd" stroke-opacity="0.25" stroke-width="1.23"/><line x1="46.56" y1="17.79" x2="86.59" y2="33.09" stroke="#04060a" stroke-opacity="0.34" stroke-width="0.84"/><line x1="-19.01" y1="45.81" x2="-50.3" y2="121.2" stroke="#f2f6fd" stroke-opacity="0.1" stroke-width="1.68"/><line x1="27.02" y1="37.41" x2="87.33" y2="120.92" stroke="#04060a" stroke-opacity="0.35" stroke-width="1.66"/><line x1="-28.07" y1="35.01" x2="-90" y2="112.23" stroke="#f2f6fd" stroke-opacity="0.11" stroke-width="1.38"/><line x1="-37.35" y1="30.46" x2="-79.15" y2="64.54" stroke="#f2f6fd" stroke-opacity="0.24" stroke-width="1.59"/><line x1="-21.86" y1="-37.56" x2="-71.74" y2="-123.27" stroke="#f2f6fd" stroke-opacity="0.26" stroke-width="0.86"/><line x1="-40" y1="18.74" x2="-90.5" y2="42.39" stroke="#f2f6fd" stroke-opacity="0.11" stroke-width="1.24"/><line x1="-14.29" y1="45.16" x2="-28.15" y2="88.95" stroke="#f2f6fd" stroke-opacity="0.07" stroke-width="0.62"/><line x1="-40.36" y1="25.92" x2="-77.66" y2="49.87" stroke="#04060a" stroke-opacity="0.28" stroke-width="0.63"/><line x1="10.09" y1="-39.57" x2="30.19" y2="-118.45" stroke="#f2f6fd" stroke-opacity="0.22" stroke-width="1.17"/><line x1="16.04" y1="44.92" x2="51.26" y2="143.54" stroke="#04060a" stroke-opacity="0.37" stroke-width="1.3"/><line x1="20.27" y1="36.38" x2="75.08" y2="134.78" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="1.68"/><line x1="13.19" y1="39.69" x2="35.46" y2="106.68" stroke="#f2f6fd" stroke-opacity="0.16" stroke-width="1.31"/><line x1="-22.65" y1="35.58" x2="-59.7" y2="93.77" stroke="#04060a" stroke-opacity="0.23" stroke-width="0.81"/><line x1="-36.77" y1="24.86" x2="-124.59" y2="84.22" stroke="#04060a" stroke-opacity="0.38" stroke-width="0.7"/><line x1="-36.16" y1="-26.27" x2="-109.39" y2="-79.48" stroke="#f2f6fd" stroke-opacity="0.18" stroke-width="1.45"/><line x1="-3.99" y1="49.5" x2="-10.56" y2="130.84" stroke="#04060a" stroke-opacity="0.35" stroke-width="1.07"/><line x1="38.88" y1="-20.26" x2="86.86" y2="-45.26" stroke="#04060a" stroke-opacity="0.22" stroke-width="1.17"/></g>
+<polygon points="74,0 57.82,4.55 73.09,11.58 56.4,13.54 70.38,22.87 53.58,22.2 65.93,33.6 49.45,30.3 59.87,43.5 44.1,37.67 52.33,52.33 37.67,44.1 43.5,59.87 30.3,49.45 33.6,65.93 22.2,53.59 22.87,70.38 13.54,56.4 11.58,73.09 4.55,57.82 0,74 -4.55,57.82 -11.58,73.09 -13.54,56.4 -22.87,70.38 -22.2,53.58 -33.6,65.93 -30.31,49.45 -43.5,59.87 -37.67,44.1 -52.33,52.33 -44.1,37.67 -59.87,43.5 -49.45,30.3 -65.93,33.59 -53.59,22.2 -70.38,22.87 -56.4,13.54 -73.09,11.58 -57.82,4.55 -74,0 -57.82,-4.55 -73.09,-11.58 -56.4,-13.54 -70.38,-22.87 -53.58,-22.2 -65.93,-33.6 -49.45,-30.31 -59.87,-43.5 -44.1,-37.67 -52.33,-52.33 -37.67,-44.1 -43.5,-59.87 -30.3,-49.45 -33.59,-65.93 -22.2,-53.59 -22.87,-70.38 -13.54,-56.4 -11.58,-73.09 -4.55,-57.82 0,-74 4.55,-57.82 11.58,-73.09 13.54,-56.4 22.87,-70.38 22.2,-53.58 33.6,-65.93 30.31,-49.45 43.5,-59.87 37.67,-44.1 52.33,-52.33 44.1,-37.67 59.87,-43.5 49.45,-30.3 65.93,-33.59 53.59,-22.19 70.38,-22.87 56.4,-13.54 73.09,-11.58 57.82,-4.55" fill="none" stroke="#f4f7fc" stroke-opacity=".34" stroke-width="1.1"/><circle r="50" fill="none" stroke="#04060a" stroke-opacity=".5" stroke-width="2"/>
+<circle r="153" fill="none" stroke="#04060a" stroke-opacity=".34" stroke-width="22"/><circle r="153" fill="none" stroke="#04060a" stroke-opacity=".5" stroke-width="9"/>
+<g id="jePupG"><g id="jePupS"><path d="M0 -138C48 -74 48 74 0 138C-48 74 -48 -74 0 -138Z" fill="url(#jePup)"/>
+<g clip-path="url(#jePupClip)"><ellipse cx="0" cy="40" rx="64" ry="104" fill="url(#jePupGlow)"/><g><circle class="jeye-star" cx="17.07" cy="-116.66" r="2.5" fill="#fff" style="animation-delay:-0.35s"/><circle class="jeye-star" cx="-20.43" cy="12.79" r="2.33" fill="#fff" style="animation-delay:-2.93s"/><circle class="jeye-star" cx="14.08" cy="-128.17" r="1.04" fill="#fff" style="animation-delay:-0.34s"/><circle class="jeye-star" cx="-26.4" cy="67.4" r="0.86" fill="#fff" style="animation-delay:-0.02s"/><circle class="jeye-star" cx="39.23" cy="70.55" r="2.56" fill="#fff" style="animation-delay:-2.13s"/><circle class="jeye-star" cx="-13.48" cy="13.8" r="2.39" fill="#fff" style="animation-delay:-2.95s"/><circle class="jeye-star" cx="1.32" cy="-34.18" r="2.01" fill="#fff" style="animation-delay:-3.47s"/><circle class="jeye-star" cx="20.47" cy="36.16" r="2.43" fill="#fff" style="animation-delay:-3.72s"/><circle class="jeye-star" cx="36.39" cy="52.31" r="2.34" fill="#fff" style="animation-delay:-0.43s"/><circle class="jeye-star" cx="-25.53" cy="-108.18" r="2.32" fill="#fff" style="animation-delay:-0.66s"/><circle class="jeye-star" cx="-27.32" cy="-40.57" r="1.58" fill="#fff" style="animation-delay:-1.97s"/><circle class="jeye-star" cx="7.43" cy="117.62" r="1.29" fill="#fff" style="animation-delay:-0.82s"/><circle class="jeye-star" cx="-39.81" cy="-3.8" r="1.18" fill="#fff" style="animation-delay:-3.67s"/><circle class="jeye-star" cx="24.98" cy="24.53" r="1.89" fill="#fff" style="animation-delay:-0.67s"/><circle class="jeye-star" cx="2" cy="-19.77" r="2.35" fill="#fff" style="animation-delay:-2.53s"/><circle class="jeye-star" cx="-36.21" cy="104.56" r="1.57" fill="#fff" style="animation-delay:-0.67s"/><circle class="jeye-star" cx="14.14" cy="-29.07" r="1.24" fill="#fff" style="animation-delay:-0.71s"/><circle class="jeye-star" cx="-27.31" cy="-37.08" r="2.52" fill="#fff" style="animation-delay:-1.89s"/><circle class="jeye-star" cx="2.07" cy="38.83" r="2.51" fill="#fff" style="animation-delay:-3.06s"/><circle class="jeye-star" cx="33.21" cy="-52.33" r="2.17" fill="#fff" style="animation-delay:-1.5s"/><circle class="jeye-star" cx="29.82" cy="-45.45" r="1.99" fill="#fff" style="animation-delay:-2.27s"/><circle class="jeye-star" cx="-32.85" cy="-56.68" r="2.29" fill="#fff" style="animation-delay:-0.18s"/><circle class="jeye-star" cx="-35.55" cy="99.03" r="2.49" fill="#fff" style="animation-delay:-3.84s"/><circle class="jeye-star" cx="-13.76" cy="-90.3" r="1.11" fill="#fff" style="animation-delay:-3.58s"/><circle class="jeye-star" cx="27.97" cy="57.48" r="1.3" fill="#fff" style="animation-delay:-2.3s"/><circle class="jeye-star" cx="14.99" cy="99.37" r="2.34" fill="#fff" style="animation-delay:-2.56s"/><circle class="jeye-star" cx="-16.06" cy="-125.6" r="0.82" fill="#fff" style="animation-delay:-3.15s"/><circle class="jeye-star" cx="9.51" cy="32.37" r="0.79" fill="#fff" style="animation-delay:-3.61s"/><circle class="jeye-star" cx="-31.05" cy="-37.83" r="1.42" fill="#fff" style="animation-delay:-3.12s"/><circle class="jeye-star" cx="32.94" cy="-120.45" r="0.9" fill="#fff" style="animation-delay:-0.3s"/><circle class="jeye-star" cx="-28.49" cy="-98.22" r="2.14" fill="#fff" style="animation-delay:-1.5s"/><circle class="jeye-star" cx="1.85" cy="7.98" r="2.4" fill="#fff" style="animation-delay:-1.33s"/><circle class="jeye-star" cx="28.84" cy="-94.56" r="1.75" fill="#fff" style="animation-delay:-2.95s"/><circle class="jeye-star" cx="6.09" cy="99.3" r="2" fill="#fff" style="animation-delay:-1.22s"/><circle class="jeye-star" cx="-11.19" cy="-82.75" r="2.54" fill="#fff" style="animation-delay:-2.73s"/><circle class="jeye-star" cx="-23.91" cy="1.36" r="1.03" fill="#fff" style="animation-delay:-0.88s"/><circle class="jeye-star" cx="14.24" cy="4.25" r="1.91" fill="#fff" style="animation-delay:-2.94s"/><circle class="jeye-star" cx="-27.83" cy="-40.27" r="1.64" fill="#fff" style="animation-delay:-1.45s"/><circle class="jeye-star" cx="33.86" cy="-75.64" r="2.33" fill="#fff" style="animation-delay:-1.11s"/><circle class="jeye-star" cx="19.01" cy="22.44" r="1.77" fill="#fff" style="animation-delay:-1.7s"/><circle class="jeye-star" cx="-29.15" cy="125.75" r="0.7" fill="#fff" style="animation-delay:-2.58s"/><circle class="jeye-star" cx="10.92" cy="-121.58" r="2.09" fill="#fff" style="animation-delay:-1.87s"/><circle class="jeye-star" cx="-25.81" cy="100.66" r="1.78" fill="#fff" style="animation-delay:-0.07s"/><circle class="jeye-star" cx="-14.64" cy="-114.28" r="1.47" fill="#fff" style="animation-delay:-3.99s"/><circle class="jeye-star" cx="27.02" cy="109.99" r="2" fill="#fff" style="animation-delay:-0.48s"/><circle class="jeye-star" cx="22.22" cy="-45.74" r="0.71" fill="#fff" style="animation-delay:-0.19s"/><circle class="jeye-star" cx="28.74" cy="-66.47" r="2.5" fill="#fff" style="animation-delay:-0.19s"/><circle class="jeye-star" cx="34.37" cy="-57.68" r="1.09" fill="#fff" style="animation-delay:-2.51s"/><circle class="jeye-star" cx="-18.62" cy="121.6" r="2.19" fill="#fff" style="animation-delay:-0.65s"/><circle class="jeye-star" cx="0.66" cy="-19.26" r="2.2" fill="#fff" style="animation-delay:-1.07s"/><circle class="jeye-star" cx="35.36" cy="90.05" r="1.16" fill="#fff" style="animation-delay:-1.6s"/><circle class="jeye-star" cx="1.74" cy="125.07" r="1.85" fill="#fff" style="animation-delay:-2.78s"/><circle class="jeye-star" cx="-23.62" cy="-113.68" r="1.04" fill="#fff" style="animation-delay:-2.09s"/><circle class="jeye-star" cx="-14.49" cy="-117.11" r="1.12" fill="#fff" style="animation-delay:-3.25s"/><circle class="jeye-star" cx="30.24" cy="-40.1" r="1.61" fill="#fff" style="animation-delay:-0.72s"/><circle class="jeye-star" cx="3.8" cy="-105.1" r="2.59" fill="#fff" style="animation-delay:-3.4s"/><circle class="jeye-star" cx="-32.86" cy="-17.22" r="0.85" fill="#fff" style="animation-delay:-3.11s"/><circle class="jeye-star" cx="35.46" cy="65.64" r="2.05" fill="#fff" style="animation-delay:-0.44s"/><circle class="jeye-star" cx="26.61" cy="75.02" r="1.94" fill="#fff" style="animation-delay:-3.4s"/><circle class="jeye-star" cx="34.62" cy="6.22" r="1.44" fill="#fff" style="animation-delay:-0.25s"/><circle class="jeye-star" cx="6.99" cy="-67.13" r="1.15" fill="#fff" style="animation-delay:-3.69s"/><circle class="jeye-star" cx="21.33" cy="63.84" r="1.08" fill="#fff" style="animation-delay:-3.33s"/><circle class="jeye-star" cx="-4.44" cy="-19.41" r="0.91" fill="#fff" style="animation-delay:-0.47s"/><circle class="jeye-star" cx="-38.37" cy="106.21" r="1.08" fill="#fff" style="animation-delay:-1.06s"/><circle class="jeye-star" cx="-17.26" cy="113.05" r="2.52" fill="#fff" style="animation-delay:-1.32s"/><circle class="jeye-star" cx="-19.05" cy="51.45" r="1.28" fill="#fff" style="animation-delay:-2.95s"/><circle class="jeye-star" cx="-31.37" cy="121.37" r="2.31" fill="#fff" style="animation-delay:-0.41s"/><circle class="jeye-star" cx="12.18" cy="-68.46" r="2.35" fill="#fff" style="animation-delay:-2.44s"/><circle class="jeye-star" cx="5.83" cy="14.09" r="1.95" fill="#fff" style="animation-delay:-3.7s"/><circle class="jeye-star" cx="34.48" cy="126.83" r="1.03" fill="#fff" style="animation-delay:-2.47s"/></g>
+<rect x="-17" y="-96" width="34" height="192" fill="url(#jeSlitH)" opacity=".7"/><rect x="-1.4" y="-96" width="2.8" height="192" fill="url(#jeSlitV)"/>
+<ellipse cx="0" cy="98" rx="20" ry="3" fill="#fff" opacity=".4"/></g>
+<path d="M0 -138C48 -74 48 74 0 138C-48 74 -48 -74 0 -138Z" fill="none" stroke="#e8f0ff" stroke-opacity=".55" stroke-width="1.5"/></g></g></g>
+<g id="jeShade" fill="none" stroke="#000" stroke-linecap="round" transform="translate(0 6)"><path id="jeSh1" stroke-opacity=".12" stroke-width="64"/><path id="jeSh2" stroke-opacity=".16" stroke-width="44"/><path id="jeSh3" stroke-opacity=".22" stroke-width="26"/><path id="jeSh4" stroke-opacity=".32" stroke-width="10"/>
+<path id="jeShL1" stroke-opacity=".14" stroke-width="30"/><path id="jeShL2" stroke-opacity=".2" stroke-width="12"/></g>
+<g id="jeSpec"><path d="M-128 -46V-100A25 25 0 0 1 -78 -100V-46Z" fill="#fff" opacity=".9"/><path d="M-103 -46V-122M-128 -84H-78" stroke="#0c1119" stroke-opacity=".35" stroke-width="2"/>
+<circle cx="-62" cy="-14" r="5.5" fill="#fff" opacity=".85"/></g>
 </g>
-<g class="artifact-shell artifact-shell--rear">
-<path d="M206 131 360 206 326 497 148 554 89 344Z" fill="url(#artifactFaceA)" stroke="url(#artifactRim)" stroke-width="1.15"></path>
-<path d="M206 131 326 277 360 206M326 277 326 497M326 277 89 344M326 497 148 554" stroke="url(#artifactRim)" stroke-opacity=".62" stroke-width="1.1"></path>
+<g id="jeLids" stroke-linejoin="round">
+<path id="jeBrow" fill="none" stroke="#e6ecf6" stroke-opacity=".38" stroke-width="1.2"/>
+<path id="jeLidUp" fill="url(#jeLidU)" stroke="#05070c" stroke-opacity=".6" stroke-width="1.4"/>
+<path id="jeF1" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.1"/>
+<path id="jeF2" fill="none" stroke="#0a0e16" stroke-opacity=".55" stroke-width="1.6"/>
+<path id="jeGlintP" fill="none" stroke="url(#jeGlint)" stroke-width="3.2" stroke-linecap="round"/>
+<path id="jeEdgeU" fill="none" stroke="#f4f7fc" stroke-opacity=".85" stroke-width="1.3"/>
+<path id="jeLidLo" fill="url(#jeLidL)" stroke="#05070c" stroke-opacity=".6" stroke-width="1.2"/>
+<path id="jeF3" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1"/>
+<path id="jeEdgeL" fill="none" stroke="#f4f7fc" stroke-opacity=".5" stroke-width="1.1"/>
 </g>
-<g class="artifact-shell artifact-shell--front">
-<path d="M360 206 442 61 631 204 486 378 591 460 381 629 326 497 486 378Z" fill="url(#artifactFaceB)" stroke="url(#artifactRim)" stroke-width="1.1"></path>
-<path d="M442 61 486 378 631 204M486 378 381 629M486 378 326 497M591 460 486 378" stroke="url(#artifactRim)" stroke-opacity=".7" stroke-width="1.15"></path>
+<path d="M236 -30C290 -64 338 -104 392 -156C346 -82 300 -34 260 -4Z" fill="url(#jeBlade)" stroke="#05070c" stroke-opacity=".5" stroke-width="1"/>
+<path d="M236 -30C290 -64 338 -104 392 -156" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="1.1"/>
+<path d="M262 8C312 -2 362 -30 410 -82C362 -38 314 8 270 22Z" fill="url(#jeBlade)" opacity=".8"/>
+<path d="M-258 26C-282 40 -296 62 -300 88C-284 70 -266 56 -248 46Z" fill="url(#jeLidL)"/>
 </g>
-<g class="artifact-void-frame">
-<path d="M287 237 378 214 438 286 416 374 335 428 261 374 249 294Z" fill="#07090D" fill-opacity=".92" stroke="url(#artifactRim)" stroke-width="1.6"></path>
-<path d="M287 237 335 311 438 286M335 311 416 374M335 311 261 374M335 311 378 214" stroke="#EDF2FA" stroke-opacity=".66" stroke-width="1.15"></path>
-<path d="M306 268 371 249 402 292 384 351 333 382 292 350 284 301Z" fill="url(#artifactHeart)" stroke="#C4CBD4" stroke-opacity=".6" stroke-width="1"></path>
-<path d="M314 282 356 271 381 294 368 327 334 345 310 322Z" fill="#07090D" stroke="#EDF2FA" stroke-opacity=".5" stroke-width=".8"></path>
-<circle cx="346" cy="307" fill="#EDF2FA" r="4"></circle><circle cx="346" cy="307" r="12" stroke="#C4CBD4" stroke-opacity=".6"></circle>
-</g>
-<g class="artifact-precision-marks" stroke="#EDF2FA" stroke-linecap="round" stroke-width="1">
-<path d="M206 111V145M189 128H223M631 185V219M614 202H648M148 536V571M131 553H165M381 607V643M364 625H398" stroke-opacity=".5"></path>
-<path d="M535 96 543 88M543 96 535 88M171 243 179 235M179 243 171 235" stroke-opacity=".72"></path>
-</g>
-<g class="artifact-nodes"><circle cx="206" cy="131" fill="#EDF2FA" r="4"></circle><circle cx="442" cy="61" fill="#C4CBD4" r="3.6"></circle><circle cx="631" cy="204" fill="#E0E3E8" r="4"></circle><circle cx="148" cy="554" fill="#EDF2FA" r="3"></circle><circle cx="381" cy="629" fill="#C4CBD4" r="4"></circle></g>
-<path class="artifact-scan" d="M154 181 452 90" stroke="#EDF2FA" stroke-linecap="round" stroke-width="1.5"></path>
+<g id="jeFlare" transform="translate(0 356)"><path class="artifact-scan" d="M180 0H620" stroke="#fff" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+<rect x="-40" y="-1.2" width="800" height="2.4" fill="url(#jeStrk)" opacity=".9"/><rect x="-40" y="-8" width="800" height="16" fill="url(#jeStrk)" opacity=".1"/></g>
 </svg>
 <div class="artifact-caption artifact-caption--top"><span>OBJECT / 001</span><i>✳</i><span>FORM UNRESOLVED</span></div>
 <div class="artifact-caption artifact-caption--bottom"><span>FIG. A</span><span>THE IMPOSSIBLE ARCHIVE</span><span>Δ 07</span></div>
@@ -2490,27 +2509,8 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <div class="portal-masthead"><span><i></i> CONTINUE THE ARCHIVE</span><span>THRESHOLD / 01</span><span>02—09</span></div>
 <div class="portal-layout">
 <div aria-hidden="true" class="archive-gateway-art">
-<svg class="gateway-wordmark" focusable="false" role="presentation" viewBox="0 0 720 430" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-<defs>
-  <linearGradient id="gatewayWordmarkMetal" x1="180" y1="240" x2="540" y2="460" gradientUnits="userSpaceOnUse">
-    <stop stop-color="#F0F1F3"/>
-    <stop offset=".48" stop-color="#AAB1BA"/>
-    <stop offset="1" stop-color="#E0E3E8"/>
-  </linearGradient>
-  <radialGradient id="gatewayWordmarkGlow">
-    <stop stop-color="#C4CBD4" stop-opacity=".2"/>
-    <stop offset="1" stop-color="#07090D" stop-opacity="0"/>
-  </radialGradient>
-</defs>
-<ellipse class="gateway-wordmark-glow" cx="360" cy="350" rx="250" ry="210" fill="url(#gatewayWordmarkGlow)"/>
-<g class="gateway-wordmark-frame" fill="none" stroke="url(#gatewayWordmarkMetal)" stroke-width="1.2" opacity=".48">
-  <path d="M155 300H225M495 300H565M155 400H225M495 400H565"/>
-  <path d="M190 285V315M530 285V315M190 385V415M530 385V415" opacity=".65"/>
-  <circle cx="360" cy="350" r="150" stroke-dasharray="1 12" opacity=".42"/>
-  <circle cx="360" cy="350" r="174" stroke-dasharray="2 18" opacity=".3"/>
-</g>
-<!-- Threshold wordmark removed; preserve the surrounding orbital frame and archive artwork. -->
-</svg>
+<svg class="gateway-wordmark" focusable="false" role="presentation" viewBox="0 0 720 430" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+<div class="archive-orbit" id="archiveOrbit" aria-hidden="true"><div class="ao-scene"><div class="ao-tilt"><div class="ao-line"></div><div class="ao-core"><div class="ao-corona"></div><div class="ao-streamers"></div><div class="ao-disc"></div><div class="ao-rim"></div><div class="ao-slit"></div></div><div class="ao-ring"><div class="ao-card r1" style="--a:0deg;--y:-16px;--tx:5deg;--tz:-4deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 02</span><span class="ao-nm">BELIEFS</span><i class="ao-rd" style="top:34px;width:40px"></i><i class="ao-rd" style="top:45px;width:93px"></i><i class="ao-rd" style="top:56px;width:62px"></i><em class="ao-num">02</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div><div class="ao-card r1" style="--a:45deg;--y:10px;--tx:-7deg;--tz:5deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 03</span><span class="ao-nm">THE THINGS I DO</span><i class="ao-rd" style="top:34px;width:77px"></i><i class="ao-rd" style="top:45px;width:46px"></i><i class="ao-rd" style="top:56px;width:99px"></i><i class="ao-rd" style="top:67px;width:68px"></i><em class="ao-num">03</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div><div class="ao-card r1" style="--a:90deg;--y:-6px;--tx:8deg;--tz:-3deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 04</span><span class="ao-nm">A FAVOURITES</span><i class="ao-rd" style="top:34px;width:114px"></i><i class="ao-rd" style="top:45px;width:83px"></i><i class="ao-rd" style="top:56px;width:52px"></i><i class="ao-rd" style="top:67px;width:105px"></i><i class="ao-rd" style="top:78px;width:74px"></i><em class="ao-num">04</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div><div class="ao-card r1" style="--a:135deg;--y:16px;--tx:-4deg;--tz:6deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 05</span><span class="ao-nm">THE PEOPLE I GOT LUCKY WITH</span><i class="ao-rd" style="top:34px;width:67px"></i><i class="ao-rd" style="top:45px;width:120px"></i><i class="ao-rd" style="top:56px;width:89px"></i><em class="ao-num">05</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div><div class="ao-card r2" style="--a:180deg;--y:-12px;--tx:7deg;--tz:-5deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 06</span><span class="ao-nm">LITTLE THINGS</span><i class="ao-rd" style="top:34px;width:104px"></i><i class="ao-rd" style="top:45px;width:73px"></i><i class="ao-rd" style="top:56px;width:42px"></i><i class="ao-rd" style="top:67px;width:95px"></i><em class="ao-num">06</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div><div class="ao-card r2" style="--a:225deg;--y:8px;--tx:-8deg;--tz:3deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 07</span><span class="ao-nm">THINGS I’M STILL FIGURING OUT</span><i class="ao-rd" style="top:34px;width:57px"></i><i class="ao-rd" style="top:45px;width:110px"></i><i class="ao-rd" style="top:56px;width:79px"></i><i class="ao-rd" style="top:67px;width:48px"></i><i class="ao-rd" style="top:78px;width:101px"></i><em class="ao-num">07</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div><div class="ao-card r2" style="--a:270deg;--y:-18px;--tx:4deg;--tz:-6deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 08</span><span class="ao-nm">THINGS I LIKE</span><i class="ao-rd" style="top:34px;width:94px"></i><i class="ao-rd" style="top:45px;width:63px"></i><i class="ao-rd" style="top:56px;width:116px"></i><em class="ao-num">08</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div><div class="ao-card r2" style="--a:315deg;--y:12px;--tx:-6deg;--tz:4deg"><div class="ao-face ao-front"><i class="ao-hole"></i><span class="ao-hd">NO. 09</span><span class="ao-nm">MEMORIES</span><i class="ao-rd" style="top:34px;width:47px"></i><i class="ao-rd" style="top:45px;width:100px"></i><i class="ao-rd" style="top:56px;width:69px"></i><i class="ao-rd" style="top:67px;width:122px"></i><em class="ao-num">09</em></div><div class="ao-face ao-back"><i class="ao-hole"></i><span class="ao-mono">J7</span></div></div></div></div></div></div>
 <canvas class="starburst-graph-canvas" aria-hidden="true"></canvas>
 <div class="portal-art-stamp portal-art-stamp--a"><span>FIG. 01</span><b>THRESHOLD STUDY</b></div>
 <div class="portal-art-stamp portal-art-stamp--b"><span>CORE</span><b>ACCESS GRANTED</b></div>
@@ -2536,9 +2536,10 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <a aria-current="location" class="is-current" href="#archive-interface-one"><span>INTERFACE 01</span><small>02—05</small></a>
 <a href="#archive-interface-two"><span>Int 02</span><small>06—09 <span aria-hidden="true">↘</span></small></a>
 </nav>
+<div class="archive-chapter-heading" id="archive-one-curiosity"><div class="archive-chapter-marks" aria-hidden="true"><span class="archive-chapter-mark"></span><span class="archive-chapter-mark"></span></div><span class="archive-chapter-range" aria-hidden="true">02—03</span><h2 class="archive-chapter-title" id="archive-one-curiosity-title">Curiosity.</h2></div>
 <section aria-labelledby="archive-one-beliefs-title" id="archive-one-beliefs">
 <div class="section-number">02</div>
-<h2 id="archive-one-beliefs-title" tabindex="-1">Beliefs.</h2>
+<h3 class="archive-section-title" id="archive-one-beliefs-title" tabindex="-1">Beliefs.</h3>
 <p class="reveal-piece">I like thinking deeply about things, questioning what I'm told, and forming my own opinions.</p>
 <p class="reveal-piece">I'm interested in how people think, why things work the way they do, and ideas that actually make me stop and think.</p>
 <p class="reveal-piece">I don't believe being smart means knowing everything.</p>
@@ -2546,7 +2547,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </section>
 <section aria-labelledby="archive-one-things-i-do-title" id="archive-one-things-i-do">
 <div class="section-number">03</div>
-<h2 id="archive-one-things-i-do-title" tabindex="-1">The Things I Do.</h2>
+<h3 class="archive-section-title" id="archive-one-things-i-do-title" tabindex="-1">The Things I Do.</h3>
 <p class="reveal-piece">I’ve tried a lot of things over the years. Some stayed with me, some disappeared after a while, and some taught me something even though I never got good at them.</p>
 <p class="reveal-piece"><strong>I like that about myself.</strong></p>
 <p class="reveal-piece">I don't think everything I try has to become a talent, a hobby, or something I can show people. Sometimes I just want to know what something feels like, what I can learn from it, or whether it belongs in my life at all.</p>
@@ -2554,9 +2555,10 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <p class="reveal-piece"><strong>I’m still trying things. Still learning. Still changing my mind sometimes.</strong></p>
 <p class="reveal-piece">I think that's probably going to be a part of me for a long time.</p>
 </section>
+<div class="archive-chapter-heading" id="archive-one-keep-close"><div class="archive-chapter-marks" aria-hidden="true"><span class="archive-chapter-mark"></span><span class="archive-chapter-mark"></span></div><span class="archive-chapter-range" aria-hidden="true">04—05</span><h2 class="archive-chapter-title" id="archive-one-keep-close-title">What I Keep Close.</h2></div>
 <section aria-labelledby="archive-one-favourites-title" id="archive-one-favourites">
 <div class="section-number">04</div>
-<h2 id="archive-one-favourites-title" tabindex="-1">A Favourites.</h2>
+<h3 class="archive-section-title" id="archive-one-favourites-title" tabindex="-1">A Favourites.</h3>
 <div class="favourites">
 <div class="fav">
 <div class="fav-label">BLUE</div>
@@ -2612,7 +2614,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </section>
 <section aria-labelledby="archive-one-people-title" id="archive-one-people">
 <div class="section-number">05</div>
-<h2 id="archive-one-people-title" tabindex="-1">The People I Got Lucky With.</h2>
+<h3 class="archive-section-title" id="archive-one-people-title" tabindex="-1">The People I Got Lucky With.</h3>
 <p class="reveal-piece">I’ve met some genuinely great people, both in-game and in real life.</p>
 <p class="reveal-piece">Different places, different stories, different kinds of friendships, but somehow they all became part of my life.</p>
 <p class="reveal-piece"><strong>I don’t take that for granted.</strong></p>
@@ -2629,9 +2631,10 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <a href="#archive-interface-one"><span>INTERFACE 01</span><small>02—05 <span aria-hidden="true">↗</span></small></a>
 <a aria-current="location" class="is-current" href="#archive-interface-two"><span>INTERFACE 02</span><small>06—09</small></a>
 </nav>
+<div class="archive-chapter-heading" id="archive-two-whole-story"><div class="archive-chapter-marks" aria-hidden="true"><span class="archive-chapter-mark"></span><span class="archive-chapter-mark"></span></div><span class="archive-chapter-range" aria-hidden="true">06—07</span><h2 class="archive-chapter-title" id="archive-two-whole-story-title">Not the Whole Story.</h2></div>
 <section aria-labelledby="archive-two-little-things-title" id="archive-two-little-things">
 <div class="section-number">06</div>
-<h2 id="archive-two-little-things-title" tabindex="-1">Little Things.</h2>
+<h3 class="archive-section-title" id="archive-two-little-things-title" tabindex="-1">Little Things.</h3>
 <p class="reveal-piece">Not everything about me needs a whole explanation.</p>
 <p class="reveal-piece">I like small things that make everyday life better, good conversations, random laughs, late-night gaming, discovering something new, listening to music, spending time with people I care about, and having things that feel like mine.</p>
 <p class="reveal-piece">I also appreciate simple things more than complicated ones.
@@ -2641,16 +2644,17 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </section>
 <section aria-labelledby="archive-two-figuring-out-title" id="archive-two-figuring-out">
 <div class="section-number">07</div>
-<h2 id="archive-two-figuring-out-title" tabindex="-1">Things I’m Still Figuring Out.</h2>
+<h3 class="archive-section-title" id="archive-two-figuring-out-title" tabindex="-1">Things I’m Still Figuring Out.</h3>
 <p class="reveal-piece">I don't have everything figured out, and honestly, I don't think I'm supposed to.</p>
 <p class="reveal-piece">There are things I still don't understand about myself, things I change my mind about, and things I'm still trying to become better at.</p>
 <p class="reveal-piece">Some days I feel like I know where I'm going. Other days, I really don't.</p>
 <p class="reveal-piece"><strong>I'm still growing into the person I'm going to be.</strong></p>
 <p class="reveal-piece">And I think it's okay not to have the whole story figured out yet.</p>
 </section>
+<div class="archive-chapter-heading" id="archive-two-now-and-then"><div class="archive-chapter-marks" aria-hidden="true"><span class="archive-chapter-mark"></span><span class="archive-chapter-mark"></span></div><span class="archive-chapter-range" aria-hidden="true">08—09</span><h2 class="archive-chapter-title" id="archive-two-now-and-then-title">Now and Then.</h2></div>
 <section aria-labelledby="archive-two-things-i-like-title" id="archive-two-things-i-like">
 <div class="section-number">08</div>
-<h2 id="archive-two-things-i-like-title" tabindex="-1">Things I Like.</h2>
+<h3 class="archive-section-title" id="archive-two-things-i-like-title" tabindex="-1">Things I Like.</h3>
 <p class="reveal-piece">I like things that genuinely interest me, not just things that look impressive.</p>
 <p class="reveal-piece">Games, music, animals, technology, interesting conversations, discovering random things online, and anything that gives me something new to explore.</p>
 <p class="reveal-piece">My interests change over time, and that's part of it.</p>
@@ -2658,7 +2662,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </section>
 <section aria-labelledby="archive-two-memories-title" id="archive-two-memories">
 <div class="section-number">09</div>
-<h2 id="archive-two-memories-title" tabindex="-1">Memories.</h2>
+<h3 class="archive-section-title" id="archive-two-memories-title" tabindex="-1">Memories.</h3>
 <p class="reveal-piece">Some moments don't feel important while you're living them.</p>
 <p class="reveal-piece">They're just normal days, random conversations, late nights, stupid jokes, games with people you happened to meet, and little things you never thought you'd miss.</p>
 <p class="reveal-piece">Then time passes.</p>
@@ -4500,8 +4504,10 @@ renderHistory();resizeInput();
     if (target) {
       window.requestAnimationFrame(function () {
         window.requestAnimationFrame(function () {
-          var heading = target.querySelector("h2");
-          target.scrollIntoView({
+          var heading = target.querySelector("h3, h2");
+          var lead = target.previousElementSibling;
+          if (!lead || !lead.classList.contains("archive-chapter-heading")) lead = target;
+          lead.scrollIntoView({
             behavior: window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
             block: "start"
           });
@@ -4752,7 +4758,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   'use strict';
   const svg = {
     archive: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9H32L40 17V39H8Z"/><path d="M32 9V17H40"/><path d="M14 20H30M14 26H27M14 32H23"/><path d="M8 14H4V43H35" opacity=".55"/></svg>',
-    gate: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"><path d="M7 41V21C7 10 14 5 24 5S41 10 41 21V41"/><path d="M13 41V22C13 14 17 11 24 11S35 14 35 22V41"/><path d="M19 41V25C19 21 20.5 18 24 18S29 21 29 25V41"/><path d="M3 41H45"/><path d="M24 1V5" opacity=".6"/></svg>',
+    gate: '<svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M16.00 7.30 18.29 13.54 24.94 13.80 19.71 17.91 21.53 24.30 16.00 20.60 10.47 24.30 12.29 17.91 7.06 13.80 13.71 13.54Z" fill="currentColor"/></svg>',
     personal: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="square" stroke-linejoin="miter"><path d="M8 8H40V40H8Z"/><path d="M15 15H33V33H15Z"/><path d="M15 15L33 33M33 15L15 33" opacity=".42"/><path d="M8 24H15M33 24H40"/></svg>',
     thoughts: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12H24L30 18H41V36H7Z"/><path d="M7 12V8H25L29 12"/><path d="M14 24H33M14 29H28"/><path d="M35 4L37 8L41 10L37 12L35 16L33 12L29 10L33 8Z" opacity=".72"/></svg>',
     beliefs: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"><path d="M6 25C12 13 22 8 32 11C39 13 42 20 39 26C35 34 22 40 12 35"/><path d="M11 26C16 18 24 16 30 18C34 20 35 24 32 28C28 32 20 34 15 31"/><path d="M22 23L26 26L23 30"/><path d="M7 38L11 35L12 40" opacity=".62"/></svg>',
@@ -4789,14 +4795,14 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   inject('#archive-interface-one .archive-interface-brand','personal');
   inject('#archive-interface-two .archive-interface-brand','thoughts');
   const chapterMarks=[
-    ['#archive-interface-one > section:nth-of-type(1) h2','beliefs'],
-    ['#archive-interface-one > section:nth-of-type(2) h2','doing'],
-    ['#archive-interface-one > section:nth-of-type(3) h2','favourites'],
-    ['#archive-interface-one > section:nth-of-type(4) h2','people'],
-    ['#archive-interface-two > section:nth-of-type(1) h2','little'],
-    ['#archive-interface-two > section:nth-of-type(2) h2','figuring'],
-    ['#archive-interface-two > section:nth-of-type(3) h2','likes'],
-    ['#archive-interface-two > section:nth-of-type(4) h2','memory'],
+    ['#archive-one-curiosity .archive-chapter-mark:nth-child(1)','beliefs'],
+    ['#archive-one-curiosity .archive-chapter-mark:nth-child(2)','doing'],
+    ['#archive-one-keep-close .archive-chapter-mark:nth-child(1)','favourites'],
+    ['#archive-one-keep-close .archive-chapter-mark:nth-child(2)','people'],
+    ['#archive-two-whole-story .archive-chapter-mark:nth-child(1)','little'],
+    ['#archive-two-whole-story .archive-chapter-mark:nth-child(2)','figuring'],
+    ['#archive-two-now-and-then .archive-chapter-mark:nth-child(1)','likes'],
+    ['#archive-two-now-and-then .archive-chapter-mark:nth-child(2)','memory'],
     ['#demiGate .demi-system-header','demi'],
     ['#after-demi .sys-title','after'],
     ['#nodeAITitle','cat'],
@@ -6024,8 +6030,26 @@ const mo=new MutationObserver(()=>{const svg=gate.querySelector('svg.demi-word-o
  // Depth order with an index tie-break: identical to the previous stable depth sort, and cheap on the nearly-sorted order left by the last frame.
  const sphereOrder=(a,b)=>{const d=sDepth[a]-sDepth[b];return d!==0?d:a-b};
  const ringOrder=(a,b)=>{const d=rDepth[a]-rDepth[b];return d!==0?d:a-b};
+ /* Performance only: do not compute frames that nobody can see. draw() and everything it paints are untouched; a frame is
+    simply not computed while the canvas is fully covered, and the animation carries on from where it stopped (time does not
+    advance while skipped). Covered means (a) the opening intro, an opaque full-screen layer, is up and not yet exiting, or
+    (b) the video / image background has finished fading this canvas out. One frame is always painted first so the canvas
+    is never empty when it is revealed. The intro cover is honoured for at most 60 s as a safety net. */
+ const rootEl=document.documentElement,introEl=document.getElementById('jaye-intro-v1'),coverLimit=performance.now()+60000;
+ let drawnOnce=false,fadedSince=0;
+ const canvasUnseen=now=>{
+   if(!drawnOnce)return false;
+   if(introEl&&now<coverLimit&&rootEl.classList.contains('jaye-intro-active')&&introEl.isConnected&&!introEl.hidden&&!introEl.classList.contains('jaye-intro-exit'))return true;
+   if(rootEl.classList.contains('jaye-video-background-active')||rootEl.classList.contains('jaye-image-background-active')){
+     if(!fadedSince)fadedSince=now;
+     return now-fadedSince>1000; /* the CSS fade-out takes .85 s; keep drawing until it is over */
+   }
+   fadedSince=0;return false;
+ };
  function draw(now){
    if(document.hidden){raf=requestAnimationFrame(draw);return;}
+   if(canvasUnseen(now)){last=now;raf=requestAnimationFrame(draw);return;}
+   drawnOnce=true;
    const dt=Math.min(.045,(now-last)/1000||.016);last=now;if(!reduce)time+=dt;
    ctx.clearRect(0,0,w,h);
    // Deep, restrained black-gold atmosphere; no full-screen wash over page content.
@@ -6141,7 +6165,7 @@ const mo=new MutationObserver(()=>{const svg=gate.querySelector('svg.demi-word-o
   const COUNT=156,CAMERA=3.2,PITCH=.35,SPIN=.12,STIFFNESS=140;
   const nodes=[];
   for(let i=0;i<COUNT;i++){const u=rand()*2-1,a=rand()*Math.PI*2,s=Math.sqrt(1-u*u),len=.06+.94*Math.pow(rand(),.75);nodes.push({x:s*Math.cos(a)*len,y:u*len,z:s*Math.sin(a)*len,r:.35+.65*Math.pow(rand(),2),ox:0,oy:0,vx:0,vy:0,depth:0,sx:0,sy:0});}
-  let w=0,h=0,dpr=1,angle=0,last=0,raf=0,alive=true;
+  let w=0,h=0,dpr=1,angle=0,last=0,raf=0,alive=true,inView=true;
   const pointer={x:0,y:0,active:false};
   const resize=()=>{const r=canvas.getBoundingClientRect();w=Math.max(1,r.width);h=Math.max(1,r.height);dpr=Math.min(window.devicePixelRatio||1,2);canvas.width=Math.max(1,Math.round(w*dpr));canvas.height=Math.max(1,Math.round(h*dpr));draw(0,true);};
   const onMove=e=>{const r=canvas.getBoundingClientRect();const x=e.clientX-r.left,y=e.clientY-r.top;pointer.x=x;pointer.y=y;pointer.active=x>=0&&y>=0&&x<=r.width&&y<=r.height;};
@@ -6153,11 +6177,17 @@ const mo=new MutationObserver(()=>{const svg=gate.querySelector('svg.demi-word-o
     ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);const order=nodes.slice().sort((a,b)=>a.depth-b.depth);
     for(const n of order){const depth=Math.max(0,Math.min(1,(n.depth+1)/2));ctx.beginPath();ctx.moveTo(cx,cy0);ctx.lineTo(n.sx,n.sy);ctx.lineWidth=.45+depth*.32;ctx.strokeStyle=`rgba(205,213,225,${.13+depth*.25})`;ctx.stroke();}
     for(const n of order){const k=CAMERA/(CAMERA-n.depth),depth=Math.max(0,Math.min(1,(n.depth+1)/2)),rad=Math.max(.65,(.8+n.r*1.25)*k);ctx.beginPath();ctx.arc(n.sx,n.sy,rad,0,Math.PI*2);ctx.fillStyle=`rgba(239,243,249,${.48+depth*.42})`;ctx.fill();}
-    ctx.beginPath();ctx.arc(cx,cy0,1.15,0,Math.PI*2);ctx.fillStyle='rgba(245,247,251,.82)';ctx.fill();if(!reduce&&!staticFrame&&!document.hidden)raf=requestAnimationFrame(t=>draw(t));
+    ctx.beginPath();ctx.arc(cx,cy0,1.15,0,Math.PI*2);ctx.fillStyle='rgba(245,247,251,.82)';ctx.fill();if(!reduce&&!staticFrame&&!document.hidden&&inView)raf=requestAnimationFrame(t=>draw(t));
   }
+  /* Performance only: a canvas that is scrolled well out of view (or not displayed at all) is not painted, so its frames are
+     not computed either. The loop restarts the moment it comes back within 200px of the viewport. */
+  const viewObserver=new IntersectionObserver(entries=>{
+    const now=entries[entries.length-1].isIntersecting;if(now===inView)return;inView=now;
+    if(inView&&!reduce&&!document.hidden&&alive){cancelAnimationFrame(raf);last=0;raf=requestAnimationFrame(t=>draw(t));}
+  },{rootMargin:'200px'});viewObserver.observe(canvas);
   const observer=new ResizeObserver(resize);observer.observe(scene);observer.observe(canvas);resize();window.addEventListener('pointermove',onMove,{passive:true});window.addEventListener('blur',leave);document.addEventListener('pointerleave',leave);
-  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);last=0;}else if(!reduce){last=0;raf=requestAnimationFrame(t=>draw(t));}});if(!reduce)raf=requestAnimationFrame(t=>draw(t));
-  window.addEventListener('pagehide',()=>{alive=false;cancelAnimationFrame(raf);observer.disconnect();window.removeEventListener('pointermove',onMove);window.removeEventListener('blur',leave);document.removeEventListener('pointerleave',leave);},{once:true});
+  document.addEventListener('visibilitychange',()=>{if(document.hidden){cancelAnimationFrame(raf);last=0;}else if(!reduce&&inView){last=0;raf=requestAnimationFrame(t=>draw(t));}});if(!reduce)raf=requestAnimationFrame(t=>draw(t));
+  window.addEventListener('pagehide',()=>{alive=false;cancelAnimationFrame(raf);observer.disconnect();viewObserver.disconnect();window.removeEventListener('pointermove',onMove);window.removeEventListener('blur',leave);document.removeEventListener('pointerleave',leave);},{once:true});
 })();
 </script>
 
@@ -6192,8 +6222,8 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
 <div id="jaye-image-background-panel" role="dialog" aria-label="Choose an image background" aria-modal="false">
   <div class="jaye-image-panel-head"><span>Pick 🧚</span><button id="jaye-image-panel-close" type="button" aria-label="Close image backgrounds">×</button></div>
   <div class="jaye-image-background-options">
-    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="amber" aria-label="Use orange-haired manga background"><img src="assets/amber-background.jpg" alt="Orange-haired manga character" loading="eager"><span>Amber</span></button>
-    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="noir" aria-label="Use black-haired manga background"><img src="assets/noir-background.jpg" alt="Black-haired manga character" loading="eager"><span>Noir</span></button>
+    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="amber" aria-label="Use orange-haired manga background"><img data-deferred-src="assets/amber-background.jpg" alt="Orange-haired manga character" loading="eager"><span>Amber</span></button>
+    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="noir" aria-label="Use black-haired manga background"><img data-deferred-src="assets/noir-background.jpg" alt="Black-haired manga character" loading="eager"><span>Noir</span></button>
   </div>
 </div>
 <script id="jaye-optional-image-backgrounds-runtime-v1">
@@ -6209,18 +6239,39 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     amber:'assets/amber-background.jpg',
     noir:'assets/noir-background.jpg'
   };
+  /* Performance only. Loading order for the optional backgrounds, none of which is visible when the page opens:
+       1. the two background photographs are requested as soon as the page's HTML is parsed (DOMContentLoaded), at low priority so they never hold up rendering;
+       2. once the page has finished loading and the photographs are in, the background video starts fetching;
+       3. the picker's thumbnail images are attached only when the visitor approaches the picker, or at once if they open it early.
+     The photographs and the thumbnails are the same two files, so a thumbnail never needs a second download.
+     Nothing is swapped in until it is ready, so the current background stays in place while a choice is still loading. */
+  const warm={};
+  const warmUp=key=>warm[key]||(warm[key]=new Promise(resolve=>{
+    const photo=new Image();photo.decoding='async';photo.fetchPriority='low';
+    photo.onload=()=>resolve(photo);photo.onerror=()=>{delete warm[key];resolve(null);};
+    photo.src=images[key];
+  }));
+  const photosSettled=new Promise(resolve=>{const go=()=>resolve(Promise.all(Object.keys(images).map(warmUp)));document.readyState==='loading'?addEventListener('DOMContentLoaded',go,{once:true}):go();});
+  const pageLoaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
+  Promise.all([pageLoaded,photosSettled]).then(()=>{
+    const video=document.getElementById('jaye-global-video-background');
+    /* Only an untouched video is started; pressing the switch already fetches it on demand. */
+    if(video&&video.preload==='none'&&video.paused&&video.readyState===0&&video.networkState!==2&&!root.classList.contains('jaye-video-background-active'))video.preload='auto';
+  });
+  const attachThumbnails=()=>{
+    panel.querySelectorAll('img[data-deferred-src]').forEach(thumb=>{thumb.src=thumb.getAttribute('data-deferred-src');thumb.removeAttribute('data-deferred-src');});
+  };
+  ['pointerenter','pointerdown','focusin'].forEach(type=>switcher.addEventListener(type,attachThumbnails,{once:true,passive:true}));
   let nudgeDismissed=false;
   const closePanel=()=>{panel.classList.remove('is-visible');nudge.classList.remove('is-visible');};
   switcher.addEventListener('click',()=>{
     if(root.classList.contains('jaye-image-background-active'))root.classList.remove('jaye-image-background-active');
     closePanel();
-    if(!nudgeDismissed)nudge.classList.add('is-visible');
+    if(!nudgeDismissed){attachThumbnails();nudge.classList.add('is-visible');}
   });
-  nudge.addEventListener('click',()=>{nudge.classList.remove('is-visible');panel.classList.add('is-visible');});
+  nudge.addEventListener('click',()=>{attachThumbnails();nudge.classList.remove('is-visible');panel.classList.add('is-visible');});
   close.addEventListener('click',()=>{closePanel();nudgeDismissed=true;});
-  panel.querySelectorAll('[data-jaye-image-bg]').forEach(option=>option.addEventListener('click',()=>{
-    const key=option.getAttribute('data-jaye-image-bg');
-    if(!images[key])return;
+  const applyImage=key=>{
     layer.style.backgroundImage='url("'+images[key]+'")';
     root.classList.remove('jaye-video-background-active');
     root.classList.add('jaye-image-background-active');
@@ -6232,6 +6283,17 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     /* Re-arm the existing background nudge after an image is chosen, so the next
        switch back to video can offer the image backgrounds again. */
     nudgeDismissed=false;
+  };
+  let latestChoice=0;
+  panel.querySelectorAll('[data-jaye-image-bg]').forEach(option=>option.addEventListener('click',()=>{
+    const key=option.getAttribute('data-jaye-image-bg');
+    if(!images[key])return;
+    const choice=++latestChoice;
+    /* Wait until the photograph is downloaded and decoded, so the swap never shows an empty layer; a newer choice cancels this one. */
+    warmUp(key).then(photo=>photo&&photo.decode?photo.decode().then(()=>photo,()=>photo):photo).then(photo=>{
+      if(choice!==latestChoice)return;
+      if(photo)applyImage(key);else closePanel();
+    });
   }));
   document.addEventListener('pointerdown',event=>{
     if(panel.classList.contains('is-visible')&&!panel.contains(event.target)&&!nudge.contains(event.target))panel.classList.remove('is-visible');
@@ -7082,7 +7144,17 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 #archive-interface-one>section[id],#archive-interface-two>section[id]{display:grid;grid-template-columns:46px minmax(0,1fr);column-gap:clamp(13px,2.2vw,24px);position:relative;margin:14px 0 0;padding:clamp(22px,3.6vw,36px) clamp(16px,3vw,30px) clamp(23px,3.8vw,38px);border:1px solid rgba(205,199,187,.17);border-radius:2px;background:linear-gradient(115deg,rgba(205,199,187,.045),rgba(12,13,14,.72) 42%,rgba(17,17,18,.55));box-shadow:inset 0 1px rgba(255,255,255,.035),0 12px 30px rgba(0,0,0,.12);min-width:0}
 #archive-interface-one>section[id]::before,#archive-interface-two>section[id]::before{content:"";position:absolute;left:0;top:0;width:54px;height:1px;background:linear-gradient(90deg,rgba(181,165,141,.85),rgba(181,165,141,.08),transparent)}
 #archive-interface-one>section .section-number,#archive-interface-two>section .section-number{grid-column:1;grid-row:1/30;position:static;align-self:start;padding-top:8px;color:#b5a58d;font-size:.61rem;letter-spacing:.15em;font-variant-numeric:tabular-nums}
-#archive-interface-one>section h2,#archive-interface-two>section h2{grid-column:2;margin:0 0 19px;color:#f0eee9;font-family:var(--jaye-serif,Georgia,"Times New Roman",serif);font-size:clamp(2.2rem,5.1vw,4rem);font-weight:400;letter-spacing:-.052em;line-height:.99;text-wrap:balance}
+/* Four chapter headings; each owns the two numbered sections beneath it. */
+#archive-interface-one .archive-chapter-heading,#archive-interface-two .archive-chapter-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 20px;margin:clamp(30px,5vw,52px) 0 16px;scroll-margin-top:72px}
+#archive-interface-one .archive-interface-nav+.archive-chapter-heading,#archive-interface-two .archive-interface-nav+.archive-chapter-heading{margin-top:clamp(18px,3vw,30px)}
+#archive-interface-one .archive-chapter-marks,#archive-interface-two .archive-chapter-marks{display:flex;align-items:center;gap:14px;min-width:0}
+#archive-interface-one .archive-chapter-mark .section-sigil,#archive-interface-two .archive-chapter-mark .section-sigil{display:block;width:37px;height:37px;margin:0;color:var(--titanium-silver)}
+#archive-interface-one .archive-chapter-mark .section-sigil svg,#archive-interface-two .archive-chapter-mark .section-sigil svg{display:block;width:100%;height:100%}
+#archive-interface-one .archive-chapter-range,#archive-interface-two .archive-chapter-range{color:#b5a58d;font-size:.58rem;letter-spacing:.17em;font-variant-numeric:tabular-nums;white-space:nowrap}
+#archive-interface-one .archive-chapter-title,#archive-interface-two .archive-chapter-title{flex:0 0 100%;min-width:0;margin:0;color:#f0eee9;font-family:var(--jaye-serif,Georgia,"Times New Roman",serif);font-size:clamp(2.2rem,5.1vw,4rem);font-weight:400;letter-spacing:-.052em;line-height:.99;text-wrap:balance}
+/* The heading above owns the gap to its first card; the older lead-in margins pre-date it. */
+#archive-interface-one .archive-chapter-heading+section[id],#archive-interface-two .archive-chapter-heading+section[id]{margin-top:0!important}
+#archive-interface-one>section .archive-section-title,#archive-interface-two>section .archive-section-title{grid-column:2;margin:0 0 15px;color:#e6e2da;font-family:var(--font-ui,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif);font-size:.74rem;font-weight:620;letter-spacing:.16em;line-height:1.5;text-transform:uppercase;text-wrap:balance}
 #archive-interface-one>section p,#archive-interface-two>section p{grid-column:2;max-width:680px;margin:0 0 15px;color:#b9b8b5;font-size:clamp(.94rem,1.18vw,1.02rem);line-height:1.72;letter-spacing:-.012em}
 #archive-interface-one>section p strong,#archive-interface-two>section p strong{color:#e6e2da;font-weight:640}
 #archive-interface-one>section p:last-child,#archive-interface-two>section p:last-child{margin-bottom:0}
@@ -7093,17 +7165,23 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 #archive-interface-one #archive-one-favourites .fav p{font-size:.9rem;line-height:1.68;margin:0}
 #archive-interface-one>section[id]:focus-within,#archive-interface-two>section[id]:focus-within{border-color:rgba(181,165,141,.32)}
 @media(max-width:680px){
+ body[data-archive-view^="interface-"] main{width:calc(100% - 24px)}
  #archive-interface-one,#archive-interface-two{padding-bottom:32px}
  #archive-interface-one .archive-view-home-link,#archive-interface-two .archive-view-home-link{margin-bottom:18px}
  #archive-interface-one .archive-interface-heading,#archive-interface-two .archive-interface-heading{padding:17px 0 18px;gap:12px}
  #archive-interface-one .archive-interface-brand,#archive-interface-two .archive-interface-brand{display:block}
+ #archive-interface-one .archive-interface-brand .section-sigil,#archive-interface-two .archive-interface-brand .section-sigil{display:block;margin-bottom:12px}
  #archive-interface-one .archive-interface-title,#archive-interface-two .archive-interface-title{margin-top:7px;font-size:1.12rem}
  #archive-interface-one .archive-interface-nav,#archive-interface-two .archive-interface-nav{gap:7px;margin:12px 0 14px}
  #archive-interface-one .archive-interface-nav a,#archive-interface-two .archive-interface-nav a{min-width:0;padding:10px 9px;font-size:.55rem;gap:7px}
  #archive-interface-one .archive-interface-nav a small,#archive-interface-two .archive-interface-nav a small{font-size:.52rem}
  #archive-interface-one>section[id],#archive-interface-two>section[id]{grid-template-columns:25px minmax(0,1fr);column-gap:10px;margin-top:10px;padding:21px 13px 23px;border-radius:2px}
  #archive-interface-one>section .section-number,#archive-interface-two>section .section-number{font-size:.55rem;padding-top:7px}
- #archive-interface-one>section h2,#archive-interface-two>section h2{font-size:clamp(2rem,8.8vw,3.15rem);line-height:1.02;letter-spacing:-.047em;margin-bottom:15px}
+ #archive-interface-one .archive-chapter-heading,#archive-interface-two .archive-chapter-heading{gap:11px 14px;margin:30px 0 12px}
+ #archive-interface-one .archive-interface-nav+.archive-chapter-heading,#archive-interface-two .archive-interface-nav+.archive-chapter-heading{margin-top:18px}
+ #archive-interface-one .archive-chapter-mark .section-sigil,#archive-interface-two .archive-chapter-mark .section-sigil{width:29px;height:29px}
+ #archive-interface-one .archive-chapter-title,#archive-interface-two .archive-chapter-title{font-size:clamp(2rem,8.8vw,3.15rem);line-height:1.02;letter-spacing:-.047em}
+ #archive-interface-one>section .archive-section-title,#archive-interface-two>section .archive-section-title{margin-bottom:12px;font-size:.7rem}
  #archive-interface-one>section p,#archive-interface-two>section p{font-size:.94rem;line-height:1.68;margin-bottom:13px}
  #archive-interface-one #archive-one-favourites .favourites{grid-template-columns:minmax(0,1fr);gap:8px}
  #archive-interface-one #archive-one-favourites .fav{padding:15px 13px 16px}
@@ -7738,4 +7816,551 @@ html.jaye-video-background-active #jaye-background-switch::before{
   80%,100%{--jaye-sweep:124%}
 }
 @media(prefers-reduced-motion:reduce){#jaye-background-switch{animation:none}}
+</style>
+
+<style id="jaye-edge-containment-v1">
+/* Mobile hero edge containment.
+   The hero draws three things that are meant to bleed past the page gutter: its background veil (::before),
+   its closing hairline (::after) and the right edge of the crystal artwork (right:-21%). A permanent
+   overflow:hidden (#archive-home.jaye-entrance-peak) plus overflow-x:clip cut all of them at the content box,
+   15px inside each screen edge, which showed up as hard vertical edges in both gutters.
+   The hero now clips at the screen edge instead (still clipped, still vertical-box clipped; html/body
+   already clip horizontally at this width, so no horizontal scroll can appear). The two layers are sized to
+   the gutter exactly, so the veil meets the screen edge instead of stopping 3vw short of it. */
+@media(max-width:760px){
+  #archive-home,
+  #archive-home.jaye-entrance-peak{overflow:visible;clip-path:inset(0 min(0px,calc((100% - 100vw)/2)))}
+  #archive-home::before{inset:0 min(0px,calc((100% - 100vw)/2))}
+  #archive-home::after{left:min(0px,calc((100% - 100vw)/2));right:min(0px,calc((100% - 100vw)/2))}
+}
+</style>
+
+<style id="jaye-archive-premium-v1">
+/* "Continue the Archive": one cohesive near-solid obsidian plate for the WHOLE section at every width
+   (replaces the earlier upper-block-only treatment). Outer size, spacing, text, links and the particle
+   canvas are untouched: everything below is colour, shadow, pseudo-element detail and the decorative SVG.
+   Specificity (#archiveInterfaces + two classes) is what beats the shared see-through rule further up. */
+
+/* ---- 1. the plate --------------------------------------------------------------------------------- */
+body>main #archiveInterfaces.archive-interface-launcher.archive-portal-v3{
+  background-color:rgba(7,9,14,.99)!important;
+  background-image:
+    radial-gradient(ellipse 100% 100% at 50% 50%,rgba(0,0,0,0) 58%,rgba(0,0,0,.34) 100%),
+    radial-gradient(ellipse 62% 70% at 16% 18%,rgba(150,168,200,.115),rgba(150,168,200,0) 62%),
+    radial-gradient(ellipse 58% 60% at 96% 104%,rgba(120,134,164,.085),rgba(120,134,164,0) 60%),
+    repeating-linear-gradient(90deg,rgba(196,203,212,.02) 0 1px,rgba(0,0,0,0) 1px 56px),
+    repeating-linear-gradient(0deg,rgba(196,203,212,.02) 0 1px,rgba(0,0,0,0) 1px 56px),
+    linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0) 16%),
+    linear-gradient(112deg,rgba(15,19,29,.99) 0%,rgba(8,10,16,.99) 48%,rgba(11,14,22,.99) 100%)!important;
+  border-color:rgba(137,150,170,.36);
+  border-top-color:rgba(228,232,238,.72);
+  box-shadow:
+    inset 0 1px 0 rgba(237,242,250,.12),
+    inset 0 -70px 90px -60px rgba(0,0,0,.62),
+    0 0 0 1px rgba(0,0,0,.55),
+    0 46px 120px rgba(0,0,0,.5),
+    0 14px 34px rgba(0,0,0,.38);
+}
+/* engraved inner frame with corner brackets (top-right keeps its existing chamfer) */
+body>main #archiveInterfaces.archive-portal-v3::before{
+  border-color:rgba(137,150,170,.15);
+  background:
+    linear-gradient(rgba(228,232,238,.62),rgba(228,232,238,.62)) 0 0/18px 1px no-repeat,
+    linear-gradient(rgba(228,232,238,.62),rgba(228,232,238,.62)) 0 0/1px 18px no-repeat,
+    linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 0 100%/18px 1px no-repeat,
+    linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 0 100%/1px 18px no-repeat,
+    linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 100% 100%/18px 1px no-repeat,
+    linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 100% 100%/1px 18px no-repeat,
+    linear-gradient(to top right,rgba(228,232,238,0) calc(50% - 2px),rgba(228,232,238,.6) calc(50% - 1px),rgba(228,232,238,.6) 50%,rgba(228,232,238,0) 50%) 100% 0/30px 30px no-repeat;
+}
+/* top accent: a bright lead-in that fades along the edge */
+body>main #archiveInterfaces.archive-portal-v3::after{
+  height:1px;
+  background:
+    linear-gradient(90deg,#fff,rgba(255,255,255,0)) 0 0/86px 1px no-repeat,
+    linear-gradient(90deg,rgba(228,232,238,.62),rgba(137,150,170,.2) 38%,rgba(137,150,170,.06) 72%,rgba(137,150,170,0));
+}
+
+/* ---- 2. masthead: a clean hairline (no tick marks), live dot, brighter centre ---------------------------------- */
+#archiveInterfaces .portal-masthead{border-bottom-color:rgba(137,150,170,.3)}
+#archiveInterfaces .portal-masthead::after{
+  content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(228,232,238,.72),rgba(137,150,170,.42) 42%,rgba(137,150,170,0));
+}
+#archiveInterfaces .portal-masthead i{
+  background:var(--frost-white,#edf2fa);
+  box-shadow:0 0 0 3px rgba(237,242,250,.08),0 0 0 1px rgba(237,242,250,.28),0 0 14px rgba(237,242,250,.5);
+}
+#archiveInterfaces .portal-masthead span:nth-child(2){color:rgba(196,203,212,.62)}
+
+/* ---- 3. artwork: blueprint grid under the starburst, stamps with leader rules ---------------------- */
+#archiveInterfaces .archive-gateway-art::after{
+  content:"";position:absolute;inset:-3% -2%;z-index:-1;pointer-events:none;
+  background:
+    repeating-linear-gradient(90deg,rgba(196,203,212,.085) 0 1px,rgba(0,0,0,0) 1px 36px),
+    repeating-linear-gradient(0deg,rgba(196,203,212,.085) 0 1px,rgba(0,0,0,0) 1px 36px);
+  -webkit-mask-image:radial-gradient(ellipse 52% 56% at 50% 50%,#000 0,rgba(0,0,0,.55) 52%,rgba(0,0,0,0) 100%);
+  mask-image:radial-gradient(ellipse 52% 56% at 50% 50%,#000 0,rgba(0,0,0,.55) 52%,rgba(0,0,0,0) 100%);
+}
+#archiveInterfaces .portal-art-stamp{gap:5px;color:rgba(160,172,192,.72)}
+#archiveInterfaces .portal-art-stamp--a{padding-left:9px;border-left:1px solid rgba(196,203,212,.42)}
+#archiveInterfaces .portal-art-stamp--b{padding-right:9px;border-right:1px solid rgba(196,203,212,.42)}
+#archiveInterfaces .portal-art-stamp b{color:rgba(237,242,250,.86)}
+
+/* ---- Index Orbit: eight index cards (one per section 02-09) circling a black core -------------------- */
+#archiveInterfaces .archive-gateway-art .starburst-graph-canvas{display:none!important}
+#archiveInterfaces .archive-gateway-art .gateway-wordmark{pointer-events:none}
+.archive-orbit{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
+.archive-orbit .ao-scene{position:absolute;left:50%;top:50%;width:720px;height:430px;margin:-215px 0 0 -360px;perspective:980px;perspective-origin:50% 40%;transform:scale(var(--k,.8))}
+.archive-orbit .ao-tilt,.archive-orbit .ao-ring{position:absolute;transform-style:preserve-3d}
+.archive-orbit .ao-tilt{inset:0;transform:rotateX(-20deg)}
+.archive-orbit .ao-ring{left:50%;top:50%;width:0;height:0}
+.archive-orbit .ao-line{position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px;border-radius:50%;border:1px solid rgba(214,224,242,.2);transform:rotateX(90deg);box-shadow:0 0 22px rgba(190,205,235,.1),inset 0 0 22px rgba(190,205,235,.07)}
+.archive-orbit .ao-card{position:absolute;left:-69px;top:-43px;width:138px;height:86px;transform-style:preserve-3d;transform:rotateY(var(--a)) translateZ(262px) translateY(var(--y)) rotateX(var(--tx)) rotateZ(var(--tz))}
+.archive-orbit .ao-face{position:absolute;inset:0;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:1px solid rgba(206,216,234,.5);clip-path:polygon(0 0,calc(100% - 11px) 0,100% 11px,100% 100%,0 100%);box-shadow:inset 0 1px rgba(255,255,255,.18);transition:border-color .45s ease}
+.archive-orbit .ao-front{background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 11px),linear-gradient(158deg,#2a3447,#101620 62%,#0b0f17)}
+.archive-orbit .ao-back{transform:rotateY(180deg);background:radial-gradient(circle,#1b2331,#0a0d14 75%)}
+.archive-orbit .ao-face::after{content:"";position:absolute;inset:0;background:#000;opacity:var(--sh,0);pointer-events:none}
+.archive-orbit .ao-hd{position:absolute;left:0;right:0;top:0;height:20px;border-bottom:1px solid rgba(206,216,234,.28);background:linear-gradient(180deg,rgba(255,255,255,.1),rgba(255,255,255,.02));font:500 8px/20px var(--font-mono,ui-monospace,Menlo,monospace);letter-spacing:.2em;color:#cfd8e8;padding-left:19px;transition:background .45s ease,color .45s ease}
+.archive-orbit .ao-nm{position:absolute;left:11px;right:12px;top:24px;font:500 6.6px/1 var(--font-mono,ui-monospace,Menlo,monospace);letter-spacing:.12em;color:#9aa8bf;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.archive-orbit .ao-hole{position:absolute;left:6px;top:6px;width:7px;height:7px;border-radius:50%;background:#06080c;box-shadow:inset 0 1px 1px rgba(0,0,0,.9),0 0 0 1px rgba(206,216,234,.4)}
+.archive-orbit .ao-rd{position:absolute;left:11px;height:5px;background:#aeb9cc;opacity:.78}
+.archive-orbit .ao-num{position:absolute;right:9px;bottom:5px;font:400 24px/1 var(--font-editorial,Georgia,serif);font-style:normal;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(214,224,242,.34)}
+.archive-orbit .ao-mono{position:absolute;inset:0;display:grid;place-items:center;font:400 20px/1 var(--font-editorial,Georgia,serif);color:rgba(214,224,242,.5);letter-spacing:.05em}
+.archive-orbit .ao-card.lit .ao-face{border-color:rgba(240,245,255,.95)}
+.archive-orbit .ao-card.lit .ao-hd{background:linear-gradient(180deg,rgba(255,255,255,.42),rgba(255,255,255,.12));color:#fff}
+.archive-orbit .ao-card.lit .ao-num{-webkit-text-stroke-color:rgba(240,245,255,.8)}
+.archive-orbit .ao-core{position:absolute;left:50%;top:50%;width:460px;height:460px;margin:-230px}
+.archive-orbit .ao-corona{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle closest-side,rgba(0,0,0,0) 20%,rgba(214,226,248,.5) 25%,rgba(165,184,224,.2) 33%,rgba(120,140,190,.07) 48%,rgba(0,0,0,0) 72%)}
+.archive-orbit .ao-streamers{position:absolute;inset:0;border-radius:50%;opacity:.6;background:conic-gradient(from 0deg,rgba(255,255,255,0),rgba(235,242,255,.55) 3%,rgba(255,255,255,0) 8%,rgba(255,255,255,0) 30%,rgba(235,242,255,.34) 34%,rgba(255,255,255,0) 40%,rgba(255,255,255,0) 62%,rgba(235,242,255,.5) 66%,rgba(255,255,255,0) 72%,rgba(255,255,255,0) 100%);-webkit-mask:radial-gradient(circle closest-side,transparent 22%,#000 28%,transparent 66%);mask:radial-gradient(circle closest-side,transparent 22%,#000 28%,transparent 66%);animation:aoSpin 70s linear infinite}
+.archive-orbit .ao-disc{position:absolute;left:50%;top:50%;width:124px;height:124px;margin:-62px;border-radius:50%;background:#000;box-shadow:0 0 0 1.5px rgba(246,249,255,.95),0 0 24px 4px rgba(190,208,240,.55),inset 0 0 26px #000}
+.archive-orbit .ao-rim{position:absolute;left:50%;top:50%;width:130px;height:130px;margin:-65px;border-radius:50%;background:conic-gradient(from 200deg,#fff,#9db2da 22%,rgba(255,255,255,.1) 48%,#d8e3f8 76%,#fff);-webkit-mask:radial-gradient(circle closest-side,transparent 93%,#000 94.5%,#000 98%,transparent 100%);mask:radial-gradient(circle closest-side,transparent 93%,#000 94.5%,#000 98%,transparent 100%)}
+.archive-orbit .ao-slit{position:absolute;left:50%;top:50%;width:2px;height:54px;margin:-27px 0 0 -1px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 50%,rgba(255,255,255,0));opacity:.85}
+@keyframes aoSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.archive-orbit .ao-streamers{animation:none}}
+
+/* ---- 4. heading: bezel round the sigil, rule after the kicker, the stray "°" becomes an ornament --- */
+#archiveInterfaces .archive-launcher-heading{grid-template-columns:36px minmax(0,1fr)}
+#archiveInterfaces .archive-launcher-heading>.section-sigil{
+  /* 32px medallion inside the same 48px-tall slot the arch used, so the section height does not move */
+  width:32px;height:32px;margin:8px 0;align-self:center;display:grid;place-items:center;overflow:visible;
+  border-radius:50%;color:#0b1a4d;
+  border:1px solid rgba(244,247,251,.92);
+  background:radial-gradient(circle at 34% 26%,#fbfcfe,#d4dbe7 48%,#98a4b9 100%);
+  box-shadow:0 0 0 2px #07090d,0 0 0 3px rgba(196,203,212,.5),0 0 16px rgba(196,203,212,.22),inset 0 -3px 5px rgba(58,70,94,.35);
+}
+#archiveInterfaces .archive-launcher-heading>.section-sigil svg{overflow:visible}
+#archiveInterfaces .archive-launcher-heading .portal-title-kicker{display:flex;align-items:center;gap:14px;color:rgba(224,228,235,.92)}
+#archiveInterfaces .archive-launcher-heading .portal-title-kicker::after{
+  content:"";flex:1 1 auto;height:1px;
+  background:linear-gradient(90deg,rgba(196,203,212,.5),rgba(137,150,170,.1) 70%,rgba(137,150,170,0));
+}
+#archiveInterfaces .portal-introduction{position:relative;color:transparent;-webkit-text-fill-color:transparent;overflow:visible}
+#archiveInterfaces .portal-introduction::before{
+  content:"";position:absolute;left:0;top:50%;width:min(100%,430px);height:1px;
+  background:linear-gradient(90deg,rgba(196,203,212,.52),rgba(137,150,170,.08));
+}
+#archiveInterfaces .portal-introduction::after{
+  content:"";position:absolute;left:30px;top:50%;width:7px;height:7px;margin:-4px 0 0;
+  background:#0a0d14;border:1px solid rgba(228,232,238,.8);transform:rotate(45deg);
+}
+
+/* ---- 5. route plates ------------------------------------------------------------------------------ */
+#archiveInterfaces .archive-launch-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0) 40%),
+    repeating-linear-gradient(115deg,rgba(255,255,255,.02) 0 1px,rgba(0,0,0,0) 1px 4px),
+    linear-gradient(112deg,rgba(27,34,48,.995),rgba(10,13,19,.995) 68%)!important;
+  border-color:rgba(160,172,192,.34);
+  box-shadow:inset 0 1px 0 rgba(237,242,250,.12),inset 0 -34px 44px -34px rgba(0,0,0,.6),0 16px 34px rgba(0,0,0,.34)!important;
+}
+#archiveInterfaces .archive-launch-card--two{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0) 40%),
+    repeating-linear-gradient(115deg,rgba(255,255,255,.02) 0 1px,rgba(0,0,0,0) 1px 4px),
+    linear-gradient(115deg,rgba(40,47,62,.995),rgba(18,23,33,.995) 32%,rgba(9,12,18,.995) 72%)!important;
+}
+/* engraved outline numeral behind each plate */
+#archiveInterfaces .archive-launch-card::after{
+  content:"01";position:absolute;z-index:-1;pointer-events:none;right:98px;top:6px;
+  font:500 clamp(2.9rem,6vw,5.4rem)/1 var(--font-editorial);letter-spacing:-.04em;
+  color:transparent;-webkit-text-stroke:1px rgba(196,203,212,.17);
+  transition:-webkit-text-stroke-color .3s ease,transform .45s var(--ease-out,ease);
+}
+#archiveInterfaces .archive-launch-card--two::after{content:"02";right:22px}
+/* bezel round the route symbols */
+#archiveInterfaces .archive-launch-symbol{
+  border-radius:50%;outline:1px solid rgba(196,203,212,.2);outline-offset:6px;
+  background:radial-gradient(circle at 36% 28%,rgba(196,203,212,.15),rgba(196,203,212,0) 70%);
+  transition:outline-color .3s ease;
+}
+/* arrow becomes a small round control (the ring is a pseudo-element, so the <b> keeps its original box and the plate keeps its exact height) */
+#archiveInterfaces .archive-launch-range b{position:relative;isolation:isolate;display:grid;place-items:center;flex:0 0 auto;width:24px;font-size:.82rem;line-height:1.82rem;transition:transform .22s,color .25s}
+#archiveInterfaces .archive-launch-range b::before{
+  content:"";position:absolute;z-index:-1;left:50%;top:50%;width:24px;height:24px;margin:-12px 0 0 -12px;
+  border:1px solid rgba(196,203,212,.34);border-radius:50%;transition:background-color .25s,border-color .25s;
+}
+@media(hover:hover){
+  #archiveInterfaces .archive-launch-card:hover{
+    border-color:rgba(228,232,238,.62);
+    box-shadow:inset 0 1px 0 rgba(237,242,250,.2),inset 0 -34px 44px -34px rgba(0,0,0,.6),0 22px 44px rgba(0,0,0,.46)!important;
+  }
+  #archiveInterfaces .archive-launch-card--record:hover{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 44%),
+      repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 1px,rgba(0,0,0,0) 1px 4px),
+      linear-gradient(112deg,rgba(44,53,72,.995),rgba(12,15,22,.995) 70%)!important;
+  }
+  #archiveInterfaces .archive-launch-card--two:hover{
+    background:
+      linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,0) 44%),
+      repeating-linear-gradient(115deg,rgba(255,255,255,.025) 0 1px,rgba(0,0,0,0) 1px 4px),
+      linear-gradient(115deg,rgba(54,62,80,.995),rgba(22,28,40,.995) 34%,rgba(10,13,20,.995) 74%)!important;
+  }
+  #archiveInterfaces .archive-launch-card:hover::after{-webkit-text-stroke-color:rgba(228,232,238,.34)}
+  #archiveInterfaces .archive-launch-card:hover .archive-launch-symbol{outline-color:rgba(228,232,238,.5)}
+  #archiveInterfaces .archive-launch-card:hover .archive-launch-range b{color:#0a0d14}
+  #archiveInterfaces .archive-launch-card:hover .archive-launch-range b::before{background:rgba(237,242,250,.96);border-color:transparent}
+}
+#archiveInterfaces .archive-launch-card:focus-visible{outline:1px solid rgba(237,242,250,.85);outline-offset:3px}
+#archiveInterfaces .archive-launch-card:focus-visible .archive-launch-range b{color:#0a0d14}
+#archiveInterfaces .archive-launch-card:focus-visible .archive-launch-range b::before{background:rgba(237,242,250,.96);border-color:transparent}
+
+/* ---- 6. bottom line: a clean hairline to mirror the masthead, marker, calmer contrast ------------------------ */
+#archiveInterfaces .portal-bottomline{position:relative;border-top-color:rgba(137,150,170,.3);color:rgba(160,172,192,.74)}
+#archiveInterfaces .portal-bottomline::before{
+  content:"";position:absolute;left:0;right:0;top:-1px;height:1px;pointer-events:none;
+  background:linear-gradient(270deg,rgba(228,232,238,.72),rgba(137,150,170,.42) 42%,rgba(137,150,170,0));
+}
+#archiveInterfaces .portal-bottomline span:nth-child(2){color:rgba(196,203,212,.8)}
+#archiveInterfaces .portal-bottomline span:last-child{display:inline-flex;align-items:center;gap:7px;color:rgba(224,228,235,.86)}
+#archiveInterfaces .portal-bottomline span:last-child::before{content:"";width:5px;height:5px;border:1px solid rgba(228,232,238,.8);transform:rotate(45deg)}
+
+@media(max-width:680px){
+  body>main #archiveInterfaces.archive-portal-v3::before{
+    background:
+      linear-gradient(rgba(228,232,238,.62),rgba(228,232,238,.62)) 0 0/14px 1px no-repeat,
+      linear-gradient(rgba(228,232,238,.62),rgba(228,232,238,.62)) 0 0/1px 14px no-repeat,
+      linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 0 100%/14px 1px no-repeat,
+      linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 0 100%/1px 14px no-repeat,
+      linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 100% 100%/14px 1px no-repeat,
+      linear-gradient(rgba(228,232,238,.4),rgba(228,232,238,.4)) 100% 100%/1px 14px no-repeat;
+  }
+  #archiveInterfaces .archive-gateway-art::after{
+    background:
+      repeating-linear-gradient(90deg,rgba(196,203,212,.085) 0 1px,rgba(0,0,0,0) 1px 28px),
+      repeating-linear-gradient(0deg,rgba(196,203,212,.085) 0 1px,rgba(0,0,0,0) 1px 28px);
+  }
+  #archiveInterfaces .archive-launcher-heading{grid-template-columns:32px minmax(0,1fr);column-gap:12px}
+  #archiveInterfaces .archive-launcher-heading>.section-sigil{width:30px;height:30px;margin:6px 0}
+  #archiveInterfaces .archive-launch-card::after{right:62px;top:8px;font-size:3.1rem}
+  #archiveInterfaces .archive-launch-card--two::after{right:14px}
+  #archiveInterfaces .archive-launch-symbol{outline-offset:4px}
+  #archiveInterfaces .archive-launch-range b{width:21px;font-size:.72rem}
+  #archiveInterfaces .archive-launch-range b::before{width:21px;height:21px;margin:-10.5px 0 0 -10.5px}
+  #archiveInterfaces .portal-introduction::after{left:22px}
+}
+@media(max-width:767px){
+  /* the original shrinks the logo slot from 48px to 42px here; keep the slot's outer height identical */
+  #archiveInterfaces .archive-launcher-heading>.section-sigil{margin:5px 0}
+}
+@media(max-width:680px){
+  #archiveInterfaces .archive-launcher-heading>.section-sigil{margin:6px 0}
+}
+@media(max-width:400px){
+  /* ...and to 35px here */
+  #archiveInterfaces .archive-launcher-heading{column-gap:10px}
+  #archiveInterfaces .archive-launcher-heading>.section-sigil{margin:2.5px 0}
+  #archiveInterfaces .archive-launch-card::after{font-size:2.5rem;right:50px}
+  #archiveInterfaces .archive-launch-card--two::after{right:10px}
+}
+</style>
+<script id="jaye-archive-orbit">
+(()=>{
+  const root=document.getElementById('archiveOrbit');
+  const art=root&&root.closest('.archive-gateway-art');
+  if(!root||!art)return;
+  const scene=root.querySelector('.ao-scene'),tilt=root.querySelector('.ao-tilt'),ring=root.querySelector('.ao-ring'),core=root.querySelector('.ao-core');
+  const cards=[...root.querySelectorAll('.ao-card')],N=cards.length;
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const fit=()=>scene.style.setProperty('--k',(art.clientWidth/720).toFixed(4));
+  fit();if('ResizeObserver' in window)new ResizeObserver(fit).observe(art);else addEventListener('resize',fit);
+  let inView=true;
+  if('IntersectionObserver' in window)new IntersectionObserver(es=>{inView=es[es.length-1].isIntersecting},{rootMargin:'80px'}).observe(art);
+  const ptr={x:0,y:0,t:-1e9};
+  const onP=(x,y)=>{ptr.x=x;ptr.y=y;ptr.t=performance.now()};
+  addEventListener('pointermove',e=>onP(e.clientX,e.clientY),{passive:true});
+  addEventListener('touchmove',e=>{const t=e.touches[0];if(t)onP(t.clientX,t.clientY)},{passive:true});
+  /* route cards light their four index cards and speed the ring up */
+  let hover=0,lit=0,seq=0,seqT=performance.now();
+  const sel=document.querySelectorAll('#archiveInterfaces .archive-launch-card');
+  sel.forEach(c=>{const r=c.classList.contains('archive-launch-card--record')?1:2;
+    const on=()=>{hover=r},off=()=>{hover=0};
+    c.addEventListener('pointerenter',on);c.addEventListener('pointerleave',off);c.addEventListener('focusin',on);c.addEventListener('focusout',off);});
+  const SEQ=[0,1,0,2];
+  let ang=24,last=performance.now(),px=0,py=0,speed=reduce?0:360/64000,lastLit=-1;
+  const frame=t=>{
+    requestAnimationFrame(frame);
+    const dt=Math.min(60,t-last);last=t;
+    if(!inView||document.hidden)return;
+    if(!reduce&&!hover&&t-seqT>2900){seqT=t;seq=(seq+1)%SEQ.length}
+    lit=reduce?0:(hover||SEQ[seq]);
+    if(lit!==lastLit){lastLit=lit;cards.forEach((c,i)=>c.classList.toggle('lit',lit!==0&&c.classList.contains('r'+lit)))}
+    const target=reduce?0:(lit?360/26000:360/64000);speed+=(target-speed)*.05;ang+=dt*speed;
+    const r=art.getBoundingClientRect();let tgx=0,tgy=0;
+    if(!reduce&&t-ptr.t<3600){tgx=clamp((ptr.x-(r.left+r.width/2))/(innerWidth*.5),-1,1);tgy=clamp((ptr.y-(r.top+r.height/2))/(innerHeight*.5),-1,1)}
+    px+=(tgx-px)*.07;py+=(tgy-py)*.07;
+    const rx=-20+py*6,ry=px*12;
+    tilt.style.transform='rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
+    core.style.transform='rotateY('+(-ry).toFixed(2)+'deg) rotateX('+(-rx).toFixed(2)+'deg)';
+    ring.style.transform='rotateY('+ang.toFixed(2)+'deg)';
+    for(let i=0;i<N;i++){const z=Math.cos((ang+i*360/N)*Math.PI/180);const dim=lit&&!cards[i].classList.contains('lit')?.32:0;cards[i].style.setProperty('--sh',(((1-z)/2)*.62+dim).toFixed(3))}
+  };
+  requestAnimationFrame(frame);
+})();
+</script>
+<style id="jaye-hero-emblem-v1">
+/* Hero emblem: "The Watcher", a chrome cat-eye whose pupil is a doorway of stars. The eye follows the pointer or
+   finger, wanders when left alone and blinks. Built without SVG filters so it stays cheap to repaint. On phones the
+   whole eye is shifted/scaled so its right corner stays clear of the screen-edge crop. */
+.artifact-figure .jeye-star{animation:jeyeTw 4.2s ease-in-out infinite}
+@keyframes jeyeTw{0%,100%{opacity:.25}50%{opacity:1}}
+@media(max-width:680px){.artifact-figure .jeye-root{transform:translate(290px,356px) rotate(-9deg) scale(.73)}}
+@media(prefers-reduced-motion:reduce){.artifact-figure .jeye-star{animation:none;opacity:.8}}
+</style>
+<script id="jaye-hero-eye">
+(()=>{
+  const svg=document.querySelector('svg.artifact-figure');
+  if(!svg||!svg.querySelector('#jeRoot'))return;
+  const $=id=>svg.querySelector('#'+id);
+  const U=210,D=160,T=84,TL=60,L='-252 12',R='246 -10';
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t;
+  const inner=o=>`M${L}C-150 ${-U*o} 110 ${-(U+10)*o} ${R}C130 ${D*o} -120 ${(D+8)*o} ${L}Z`;
+  const upper=(o,t)=>{const a=-U*o,b=-(U+10)*o;return `M${L}C-150 ${a} 110 ${b} ${R}C110 ${b-t} -150 ${a-t} ${L}Z`};
+  const cu=(o,off)=>{const a=-U*o-off,b=-(U+10)*o-off;return `M${L}C-150 ${a} 110 ${b} ${R}`};
+  const lower=(o,t)=>{const c=D*o,d=(D+8)*o;return `M${L}C-120 ${d} 130 ${c} ${R}C130 ${c+t} -120 ${d+t} ${L}Z`};
+  const cl=(o,off)=>{const c=D*o+off,d=(D+8)*o+off;return `M${L}C-120 ${d} 130 ${c} ${R}`};
+  const els={};['ClipP','Sock','LidUp','F1','F2','GlintP','EdgeU','Brow','LidLo','F3','EdgeL','Sh1','Sh2','Sh3','Sh4','ShL1','ShL2','IrisG','PupG','PupS','Spec','Flare'].forEach(k=>els[k]=$('je'+k));
+  const glint=svg.querySelector('#jeGlint');
+  const setOpen=o=>{
+    const s=(k,d)=>els[k].setAttribute('d',d);
+    s('ClipP',inner(o));s('Sock',inner(Math.max(o,.02)));
+    s('LidUp',upper(o,T));s('F1',cu(o,T*.62));s('F2',cu(o,T*.3));s('GlintP',cu(o,T*.62));s('EdgeU',cu(o,0));s('Brow',cu(o,T+30));
+    s('LidLo',lower(o,TL));s('F3',cl(o,TL*.55));s('EdgeL',cl(o,0));
+    const e=cu(o,0);['Sh1','Sh2','Sh3','Sh4'].forEach(k=>s(k,e));
+    const lo=cl(o,0);s('ShL1',lo);s('ShL2',lo);
+  };
+  const reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const rnd=(()=>{let a=23;return()=>{a|=0;a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296;};})();
+  let inView=true;
+  if('IntersectionObserver' in window)new IntersectionObserver(es=>{inView=es[es.length-1].isIntersecting},{rootMargin:'60px'}).observe(svg);
+  const ptr={x:0,y:0,t:-1e9};
+  const onP=(x,y)=>{ptr.x=x;ptr.y=y;ptr.t=performance.now()};
+  addEventListener('pointermove',e=>onP(e.clientX,e.clientY),{passive:true});
+  addEventListener('pointerdown',e=>onP(e.clientX,e.clientY),{passive:true});
+  addEventListener('touchmove',e=>{const t=e.touches[0];if(t)onP(t.clientX,t.clientY)},{passive:true});
+  let cx=0,cy=0,tx=0,ty=0,o=1,lastO=1,blink0=-1,nextBlink=performance.now()+3200,sacT=0,wx=0,wy=0,lastKey='';
+  setOpen(1);
+  const frame=t=>{
+    requestAnimationFrame(frame);
+    if(!inView||document.hidden)return;
+    if(t-ptr.t>3600){
+      if(!reduce&&t>sacT){sacT=t+1700+rnd()*2600;wx=(rnd()*2-1)*.85;wy=(rnd()*2-1)*.6}
+      tx=reduce?0:wx;ty=reduce?0:wy;
+    }else{
+      const r=svg.getBoundingClientRect(),mx=r.left+r.width*(innerWidth<=680?.4:.53),my=r.top+r.height*.5;
+      tx=clamp((ptr.x-mx)/(Math.max(innerWidth,520)*.5),-1,1);ty=clamp((ptr.y-my)/(Math.max(innerHeight,480)*.5),-1,1);
+    }
+    cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;
+    if(!reduce&&blink0<0&&t>nextBlink)blink0=t;
+    if(blink0>=0){const p=(t-blink0)/340;if(p>=1){blink0=-1;nextBlink=t+(rnd()<.22?460:3600+rnd()*5200);o=1}else o=1-Math.pow(Math.sin(Math.PI*p),.75)*.97}
+    const near=Math.hypot(cx,cy),a=9*Math.PI/180;
+    const lx=cx*Math.cos(a)-cy*Math.sin(a),ly=cx*Math.sin(a)+cy*Math.cos(a);
+    const sxp=lerp(.4,.96,clamp(near*1.15,0,1))+(reduce?0:.05*Math.sin(t/950));
+    const key=[lx.toFixed(3),ly.toFixed(3),sxp.toFixed(3),o.toFixed(3)].join();
+    if(!reduce&&glint){const gx=((t/6200)%1.8)*820-420;glint.setAttribute('x1',gx.toFixed(0));glint.setAttribute('x2',(gx+240).toFixed(0))}
+    if(key===lastKey)return;lastKey=key;
+    const ix=lx*66,iy=ly*32;
+    els.IrisG.setAttribute('transform','translate('+ix.toFixed(1)+' '+iy.toFixed(1)+')');
+    els.PupG.setAttribute('transform','translate('+(lx*9).toFixed(1)+' '+(ly*5).toFixed(1)+')');
+    els.PupS.setAttribute('transform','scale('+sxp.toFixed(3)+' 1)');
+    els.Spec.setAttribute('transform','translate('+(lx*-16).toFixed(1)+' '+(ly*-8).toFixed(1)+')');
+    els.Flare.setAttribute('transform','translate(0 '+(356+iy+ix*Math.sin(-a)).toFixed(1)+')');
+    els.Flare.style.opacity=clamp(o*1.1,0,1);
+    if(Math.abs(o-lastO)>.002){setOpen(o);lastO=o}
+  };
+  requestAnimationFrame(frame);
+})();
+</script>
+<style id="jaye-demi-cat-glass-v1">
+/* Visual-only glass pass. No markup, script, access or privacy behaviour is touched here.
+   1) Demi gate: the violet/indigo "AI" glows (conic arc, indigo orbits, violet button sheen, blue frame glow)
+      are replaced by graphite smoked glass at ~97% opacity with a cool silver edge, in the site's own palette.
+   2) Cat AI: card, transcript well, bubbles, controls. Every selector is scoped to #nodeAISection or
+      #demi-system #demiGate so nothing else on the page can inherit it. */
+
+/* ---------- Demi gate ---------- */
+#demi-system #demiGate.demi-gate{
+  border-color:rgba(160,174,196,.30);
+  border-top-color:rgba(226,233,245,.42);
+  background:
+    radial-gradient(ellipse 58% 46% at 74% 40%,rgba(172,188,214,.085),transparent 70%),
+    radial-gradient(ellipse 40% 30% at 10% 0%,rgba(236,241,250,.07),transparent 70%),
+    linear-gradient(180deg,rgba(255,255,255,.028),transparent 26%),
+    linear-gradient(150deg,rgba(15,20,29,.97) 0%,rgba(8,10,15,.97) 46%,rgba(5,6,10,.97) 100%)!important;
+  box-shadow:
+    0 42px 100px rgba(0,0,0,.55),
+    0 0 0 1px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(237,242,250,.17),
+    inset 0 0 0 1px rgba(237,242,250,.025),
+    inset 0 -80px 120px -70px rgba(0,0,0,.55)!important;
+}
+#demi-system #demiGate::before{
+  border-color:rgba(176,190,212,.16)!important;
+  box-shadow:inset 0 0 60px rgba(0,0,0,.3)!important;
+}
+/* One slow glass reflection that passes under the copy (z 1; copy is z 2), compositor-only. */
+#demi-system #demiGate::after{
+  content:"";position:absolute;top:-10%;bottom:-10%;left:0;right:auto;width:38%;z-index:1;
+  pointer-events:none;mix-blend-mode:normal;filter:none;opacity:0;
+  background:linear-gradient(90deg,transparent,rgba(226,233,245,.035) 30%,rgba(236,241,250,.10) 50%,rgba(226,233,245,.035) 70%,transparent);
+  transform:translate3d(-130%,0,0) skewX(-20deg);
+  animation:demiGlassSheen 12s cubic-bezier(.4,0,.2,1) infinite;
+}
+@keyframes demiGlassSheen{
+  0%,20%{transform:translate3d(-130%,0,0) skewX(-20deg);opacity:0}
+  30%{opacity:1}
+  64%{transform:translate3d(330%,0,0) skewX(-20deg);opacity:.7}
+  72%,100%{transform:translate3d(330%,0,0) skewX(-20deg);opacity:0}
+}
+#demi-system #demiGate .demi-gate-core{
+  background:radial-gradient(circle at 50% 46%,rgba(205,216,235,.085),rgba(120,138,168,.03) 42%,transparent 62%);
+  filter:drop-shadow(0 0 16px rgba(190,205,228,.12));
+  animation:demiGlassCore 4.6s ease-in-out infinite!important;
+}
+@keyframes demiGlassCore{
+  0%,100%{transform:translateY(0) scale(1);filter:drop-shadow(0 0 14px rgba(190,205,228,.10))}
+  50%{transform:translateY(-4px) scale(1.018);filter:drop-shadow(0 0 26px rgba(210,222,240,.20))}
+}
+#demi-system #demiGate .demi-gate-orbit{border-color:rgba(176,190,212,.30);filter:none}
+#demi-system #demiGate .demi-gate-orbit.orbit-b{border-color:rgba(196,206,222,.22)}
+#demi-system #demiGate .demi-gate-orbit.orbit-c{border-color:rgba(224,229,238,.17)}
+#demi-system #demiGate .demi-enter{
+  border-color:rgba(190,201,220,.50);
+  background:linear-gradient(105deg,rgba(206,216,232,.17),rgba(24,30,42,.86) 40%,rgba(6,8,12,.96));
+  box-shadow:inset 0 1px 0 rgba(237,242,250,.14);
+}
+#demi-system #demiGate .demi-enter::after{background:linear-gradient(90deg,transparent,rgba(237,242,250,.15),transparent)}
+#demi-system #demiGate .demi-enter:hover{
+  border-color:rgba(226,233,245,.85);
+  box-shadow:0 14px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.18);
+}
+@media(prefers-reduced-motion:reduce){
+  #demi-system #demiGate::after{animation:none;opacity:0}
+  #demi-system #demiGate .demi-gate-core{animation:none!important}
+}
+
+/* ---------- Cat AI ---------- */
+#nodeAISection .node-ai-card{
+  border-color:rgba(160,176,202,.26);
+  border-top-color:rgba(226,233,245,.40);
+  background:
+    radial-gradient(ellipse 70% 42% at 86% 0%,rgba(140,168,214,.10),transparent 70%),
+    radial-gradient(ellipse 50% 36% at 0% 100%,rgba(120,140,176,.06),transparent 72%),
+    linear-gradient(180deg,rgba(255,255,255,.03),transparent 22%),
+    linear-gradient(150deg,rgba(19,25,36,.94) 0%,rgba(9,12,18,.95) 58%,rgba(6,8,12,.96) 100%);
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.48),
+    0 0 0 1px rgba(0,0,0,.3),
+    inset 0 1px 0 rgba(237,242,250,.16),
+    inset 0 0 0 1px rgba(237,242,250,.02);
+}
+#nodeAISection .node-ai-card::before{background:linear-gradient(112deg,rgba(237,242,250,.07),transparent 22% 78%,rgba(160,180,214,.05))}
+#nodeAISection .node-ai-card-head{border-bottom-color:rgba(160,176,202,.18);background:linear-gradient(180deg,rgba(237,242,250,.035),transparent)}
+#nodeAISection .node-ai-live-label:first-child::before{
+  content:"";display:inline-block;width:6px;height:6px;margin-right:10px;border-radius:50%;vertical-align:1px;
+  background:#d6e0f0;box-shadow:0 0 0 3px rgba(190,205,230,.08),0 0 12px rgba(190,205,230,.5);
+  animation:catLive 3.2s ease-in-out infinite;
+}
+@keyframes catLive{0%,100%{opacity:.55}50%{opacity:1}}
+
+#nodeAISection .node-ai-mode,
+#nodeAISection .node-ai-input{
+  border-color:rgba(160,176,202,.30);border-radius:6px;
+  background:linear-gradient(180deg,rgba(3,5,8,.74),rgba(8,11,16,.70));
+  box-shadow:inset 0 1px 2px rgba(0,0,0,.5),0 1px 0 rgba(237,242,250,.04);
+}
+#nodeAISection .node-ai-input:focus{border-color:rgba(214,224,240,.60);box-shadow:inset 0 1px 2px rgba(0,0,0,.5),0 0 0 3px rgba(170,190,224,.10)}
+#nodeAISection .node-ai-chip,
+#nodeAISection .node-ai-tool{
+  border-radius:6px;border-color:rgba(160,176,202,.24);
+  background:linear-gradient(180deg,rgba(44,54,74,.42),rgba(17,22,32,.56));
+  box-shadow:inset 0 1px 0 rgba(237,242,250,.07);
+}
+#nodeAISection .node-ai-tool{border-color:rgba(160,176,202,.16);background:linear-gradient(180deg,rgba(30,38,54,.30),rgba(13,17,26,.42))}
+#nodeAISection .node-ai-chip:hover,
+#nodeAISection .node-ai-tool:hover{border-color:rgba(214,224,240,.50);background:linear-gradient(180deg,rgba(66,80,108,.46),rgba(24,31,46,.62))}
+#nodeAISection .node-ai-send{
+  border-radius:6px;border-color:rgba(214,224,240,.48);
+  background:linear-gradient(135deg,rgba(214,222,236,.30),rgba(30,38,54,.82) 62%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 10px 26px rgba(0,0,0,.34);
+}
+
+/* Transcript: a recessed well whose top and bottom dissolve, so scrolled bubbles fade instead of being cut. */
+#nodeAISection .node-ai-transcript{
+  padding:20px 10px;
+  border-top-color:transparent;border-bottom-color:transparent;
+  background:linear-gradient(180deg,rgba(2,4,7,.42),rgba(4,6,10,.30));
+  scrollbar-width:thin;scrollbar-color:rgba(190,203,224,.30) transparent;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 16px,#000 calc(100% - 16px),transparent 100%);
+  mask-image:linear-gradient(180deg,transparent 0,#000 16px,#000 calc(100% - 16px),transparent 100%);
+}
+#nodeAISection .node-ai-bubble{
+  margin-bottom:14px;padding:12px 16px 13px;border-radius:14px;
+  border-color:rgba(160,176,202,.20);color:#e9eef7;font-size:.86rem;line-height:1.68;
+  box-shadow:inset 0 1px 0 rgba(237,242,250,.07),0 8px 22px rgba(0,0,0,.28);
+  animation:catBubbleIn .32s cubic-bezier(.2,.8,.2,1) both;
+}
+#nodeAISection .node-ai-bubble:last-child{margin-bottom:0}
+#nodeAISection .node-ai-bubble.assistant{border-top-left-radius:3px;background:linear-gradient(150deg,rgba(33,42,58,.80),rgba(14,18,27,.88))}
+#nodeAISection .node-ai-bubble.user{
+  border-top-right-radius:3px;border-color:rgba(214,224,240,.30);
+  background:linear-gradient(140deg,rgba(210,220,236,.22),rgba(64,76,98,.20) 52%,rgba(24,30,42,.60));
+}
+/* One consistent speaker label on every Cat bubble (the static first bubble carries a real span, replaced here). */
+#nodeAISection .node-ai-bubble.assistant>.node-ai-bubble-label{display:none}
+#nodeAISection .node-ai-bubble.assistant::before{
+  content:"CAT";display:block;margin:0 0 8px;padding-left:14px;
+  color:#aebfd9;font-size:.58rem;font-weight:700;letter-spacing:.24em;line-height:1;
+  background:radial-gradient(circle at 3px 50%,#d6e0f0 0 2px,rgba(160,185,225,.35) 2.5px,transparent 6px) no-repeat;
+}
+#nodeAISection .node-ai-bubble.assistant[data-retry="true"]{border-color:rgba(214,170,160,.32);background:linear-gradient(150deg,rgba(46,36,38,.74),rgba(18,15,18,.88))}
+#nodeAISection .node-ai-bubble.assistant[data-retry="true"]::before{content:"NO SIGNAL";color:#d3b4ad;background:radial-gradient(circle at 3px 50%,#e6c6bf 0 2px,rgba(214,170,160,.35) 2.5px,transparent 6px) no-repeat}
+#nodeAISection .node-ai-bubble.waiting{
+  color:#aab6c9;
+  background-image:linear-gradient(100deg,transparent 30%,rgba(226,233,245,.10) 50%,transparent 70%),linear-gradient(150deg,rgba(33,42,58,.80),rgba(14,18,27,.88));
+  background-size:220% 100%,100% 100%;background-repeat:no-repeat;
+  animation:catBubbleIn .32s cubic-bezier(.2,.8,.2,1) both,catThinking 1.9s linear .32s infinite;
+}
+@keyframes catBubbleIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes catThinking{from{background-position:130% 0,0 0}to{background-position:-30% 0,0 0}}
+
+#nodeAISection .node-ai-bubble-actions{margin-top:11px;padding-top:10px;border-top:1px solid rgba(160,176,202,.14)}
+#nodeAISection .node-ai-bubble-actions button{
+  display:inline-flex;align-items:center;gap:7px;min-height:32px;padding:6px 12px;
+  border:1px solid rgba(160,176,202,.26);border-radius:999px;background:rgba(237,242,250,.04);
+  color:#c9d3e3;font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;
+  transition:border-color .2s,background .2s,color .2s;
+}
+#nodeAISection .node-ai-bubble-actions button::before{
+  content:"";width:11px;height:11px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='11' height='11' rx='2'/%3E%3Cpath d='M5 15V6a2 2 0 0 1 2-2h9'/%3E%3C/svg%3E") center/contain no-repeat;
+  mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='11' height='11' rx='2'/%3E%3Cpath d='M5 15V6a2 2 0 0 1 2-2h9'/%3E%3C/svg%3E") center/contain no-repeat;
+}
+#nodeAISection .node-ai-bubble-actions button:hover{border-color:rgba(214,224,240,.55);background:rgba(237,242,250,.09);color:#f1f5fb}
+#nodeAISection .node-ai-contact-card{border-radius:14px;border-color:rgba(160,176,202,.28);background:linear-gradient(150deg,rgba(33,42,58,.80),rgba(14,18,27,.9))}
+@media(prefers-reduced-motion:reduce){
+  #nodeAISection .node-ai-bubble,#nodeAISection .node-ai-bubble.waiting,#nodeAISection .node-ai-live-label:first-child::before{animation:none}
+}
 </style>
