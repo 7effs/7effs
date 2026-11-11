@@ -1436,8 +1436,10 @@ body{background-color:var(--obsidian-void);color:var(--frost-white)}
 /* Remove the excess lead-in before chapter 02 / chapter 06. */
 #archive-interface-one .archive-interface-nav,
 #archive-interface-two .archive-interface-nav{margin-bottom:5px!important}
+@media(min-width:681px){
 #archive-interface-one>section[id]:first-of-type,
 #archive-interface-two>section[id]:first-of-type{margin-top:3px!important;padding-top:clamp(18px,2.8vw,28px)!important}
+}
 /* More dimensional glass: muted graphite, a fine warm-silver rim, restrained sheen. */
 #archive-interface-one>section[id],
 #archive-interface-two>section[id]{
@@ -1504,14 +1506,6 @@ body{background-color:var(--obsidian-void);color:var(--frost-white)}
 @media(max-width:680px){
   #archive-interface-one .archive-interface-nav,
   #archive-interface-two .archive-interface-nav{margin-bottom:4px!important}
-  #archive-interface-one>section[id]:first-of-type,
-  #archive-interface-two>section[id]:first-of-type{margin-top:2px!important;padding-top:17px!important}
-  #archive-interface-one>section[id],
-  #archive-interface-two>section[id]{margin-top:8px!important;padding-bottom:20px!important}
-  #archive-interface-one>section[id] h2,
-  #archive-interface-two>section[id] h2{margin-bottom:13px!important}
-  #archive-interface-one>section[id] p,
-  #archive-interface-two>section[id] p{line-height:1.64!important;margin-bottom:11px!important}
 }
 @media(prefers-reduced-motion:reduce){
   #archive-interface-one>section[id]::after,
@@ -2490,14 +2484,14 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <p class="reveal-piece">I don't believe being smart means knowing everything.</p>
 <p class="reveal-piece">For me, it's being curious enough to keep asking better questions.</p>
 </section>
-<section aria-labelledby="archive-one-things-i-do-title" id="archive-one-things-i-do">
+<section aria-labelledby="archive-one-things-i-do-title" data-continues="" id="archive-one-things-i-do">
 <div class="section-number">03</div>
-<h3 class="archive-section-title" id="archive-one-things-i-do-title" tabindex="-1">The Things I Do.</h3>
+<h3 class="archive-section-title is-folded" id="archive-one-things-i-do-title" tabindex="-1">The Things I Do.</h3>
 <p class="reveal-piece">I’ve tried a lot of things over the years. Some stayed with me, some disappeared after a while, and some taught me something even though I never got good at them.</p>
-<p class="reveal-piece"><strong>I like that about myself.</strong></p>
+<p class="reveal-piece is-beat"><strong>I like that about myself.</strong></p>
 <p class="reveal-piece">I don't think everything I try has to become a talent, a hobby, or something I can show people. Sometimes I just want to know what something feels like, what I can learn from it, or whether it belongs in my life at all.</p>
 <p class="reveal-piece">There were things I started because I was curious. Things I kept doing because they made me happy. And a few things I left behind because I realized they <strong>weren't really for me.</strong></p>
-<p class="reveal-piece"><strong>I’m still trying things. Still learning. Still changing my mind sometimes.</strong></p>
+<p class="reveal-piece is-beat"><strong>I’m still trying things. Still learning. Still changing my mind sometimes.</strong></p>
 <p class="reveal-piece">I think that's probably going to be a part of me for a long time.</p>
 </section>
 <div class="archive-chapter-heading" id="archive-one-keep-close"><div class="archive-chapter-marks" aria-hidden="true"><span class="archive-chapter-mark"></span><span class="archive-chapter-mark"></span></div><span class="archive-chapter-range" aria-hidden="true">04—05</span><h2 class="archive-chapter-title" id="archive-one-keep-close-title">What I Keep Close.</h2></div>
@@ -2557,12 +2551,12 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </div>
 </div>
 </section>
-<section aria-labelledby="archive-one-people-title" id="archive-one-people">
+<section aria-labelledby="archive-one-people-title" data-continues="" id="archive-one-people">
 <div class="section-number">05</div>
-<h3 class="archive-section-title" id="archive-one-people-title" tabindex="-1">The People I Got Lucky With.</h3>
+<h3 class="archive-section-title is-folded" id="archive-one-people-title" tabindex="-1">The People I Got Lucky With.</h3>
 <p class="reveal-piece">I’ve met some genuinely great people, both in-game and in real life.</p>
 <p class="reveal-piece">Different places, different stories, different kinds of friendships, but somehow they all became part of my life.</p>
-<p class="reveal-piece"><strong>I don’t take that for granted.</strong></p>
+<p class="reveal-piece is-beat"><strong>I don’t take that for granted.</strong></p>
 <p class="reveal-piece">I feel pretty blessed to have the people I have.</p>
 </section>
 </div>
@@ -2587,13 +2581,13 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <br/>
      Sometimes the little things are enough.</p>
 </section>
-<section aria-labelledby="archive-two-figuring-out-title" id="archive-two-figuring-out">
+<section aria-labelledby="archive-two-figuring-out-title" data-continues="" id="archive-two-figuring-out">
 <div class="section-number">07</div>
-<h3 class="archive-section-title" id="archive-two-figuring-out-title" tabindex="-1">Things I’m Still Figuring Out.</h3>
+<h3 class="archive-section-title is-folded" id="archive-two-figuring-out-title" tabindex="-1">Things I’m Still Figuring Out.</h3>
 <p class="reveal-piece">I don't have everything figured out, and honestly, I don't think I'm supposed to.</p>
 <p class="reveal-piece">There are things I still don't understand about myself, things I change my mind about, and things I'm still trying to become better at.</p>
 <p class="reveal-piece">Some days I feel like I know where I'm going. Other days, I really don't.</p>
-<p class="reveal-piece"><strong>I'm still growing into the person I'm going to be.</strong></p>
+<p class="reveal-piece is-beat"><strong>I'm still growing into the person I'm going to be.</strong></p>
 <p class="reveal-piece">And I think it's okay not to have the whole story figured out yet.</p>
 </section>
 <div class="archive-chapter-heading" id="archive-two-now-and-then"><div class="archive-chapter-marks" aria-hidden="true"><span class="archive-chapter-mark"></span><span class="archive-chapter-mark"></span></div><span class="archive-chapter-range" aria-hidden="true">08—09</span><h2 class="archive-chapter-title" id="archive-two-now-and-then-title">Now and Then.</h2></div>
@@ -2605,16 +2599,16 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <p class="reveal-piece">My interests change over time, and that's part of it.</p>
 <p class="reveal-piece">I like having more than one side to myself.</p>
 </section>
-<section aria-labelledby="archive-two-memories-title" id="archive-two-memories">
+<section aria-labelledby="archive-two-memories-title" data-continues="" id="archive-two-memories">
 <div class="section-number">09</div>
-<h3 class="archive-section-title" id="archive-two-memories-title" tabindex="-1">Memories.</h3>
+<h3 class="archive-section-title is-folded" id="archive-two-memories-title" tabindex="-1">Memories.</h3>
 <p class="reveal-piece">Some moments don't feel important while you're living them.</p>
 <p class="reveal-piece">They're just normal days, random conversations, late nights, stupid jokes, games with people you happened to meet, and little things you never thought you'd miss.</p>
 <p class="reveal-piece">Then time passes.</p>
 <p class="reveal-piece">Some people stayed. Some left. Some I had to leave behind. Some came into my life for a while, <strong>taught me something I needed to learn, and eventually became a memory.</strong></p>
 <p class="reveal-piece">Not every memory is a happy one either. There were difficult days, unfortunate moments, mistakes, and things I wish had gone differently.</p>
 <p class="reveal-piece">But even those days became part of who I am.</p>
-<p class="reveal-piece"><strong>I think that's what memories really are. Pieces of people, places, and moments that once meant something to us.</strong></p>
+<p class="reveal-piece is-beat"><strong>I think that's what memories really are. Pieces of people, places, and moments that once meant something to us.</strong></p>
 <p class="reveal-piece">Some are still close. Some feel far away now.</p>
 <p class="reveal-piece">But I wouldn't want to erase any of them.</p>
 </section>
@@ -5462,12 +5456,6 @@ body > .demi-butterfly .demi-butterfly-label{background:transparent!important;bo
 :root{--glacier-blue:#d5d7dc!important;--signal-mint:#c9cbd0!important;--titanium-silver:#d5d7dc!important;--frost-white:#f1f1f2!important;}
 /* Mobile archive rhythm: compact but deliberate; preserve the text and section order. */
 @media(max-width:680px){
-  .archive-interface>section{padding-top:14px!important;padding-bottom:18px!important;}
-  .archive-interface>section h2{margin-top:0!important;margin-bottom:8px!important;}
-  .archive-interface>section p{margin-top:0!important;margin-bottom:10px!important;line-height:1.52!important;}
-  .archive-interface>section p:last-child{margin-bottom:0!important;}
-  .archive-interface>section+section{margin-top:0!important;}
-  .archive-interface>section .section-number{padding-top:3px!important;}
   #glimpse.glimpse-section{margin-top:16px!important;padding:20px 13px 17px!important;}
 }
 /* Neutral obsidian shell: override old wine/blue gradients, not the actual album artwork. */
@@ -6811,13 +6799,7 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 <style id="premium-gap-and-glimpse-neutral-v2">
 /* Compact the long editorial gaps on the mobile archive without removing any content. */
 @media(max-width:680px){
- .archive-interface>section{padding-top:30px!important;padding-bottom:30px!important;column-gap:12px!important;background:linear-gradient(90deg,rgba(196,203,212,.018),transparent 48%)}
- .archive-interface>section h2{margin-bottom:16px!important}
- .archive-interface>section h2 .section-sigil{margin-bottom:8px!important}
- .archive-interface>section p{margin-bottom:14px!important;line-height:1.78!important}
  .archive-interface>section::before{width:74px!important;background:linear-gradient(90deg,rgba(196,203,212,.7),rgba(137,150,170,.22),transparent)!important}
- .archive-interface>section .section-number{padding-top:8px!important}
- .archive-interface>section .favourites{margin-top:7px!important}
 }
 /* Glimpse: obsidian and titanium silver, not the previous blue-tinted glass. */
 #glimpse{background:radial-gradient(ellipse at 50% 0%,rgba(196,203,212,.075),transparent 46%),linear-gradient(145deg,rgba(18,20,25,.98),rgba(5,6,9,.98) 68%)!important;border-color:rgba(196,203,212,.28)!important;box-shadow:0 34px 90px rgba(0,0,0,.48),inset 0 1px rgba(237,242,250,.14),inset 0 -1px rgba(196,203,212,.08)!important}
@@ -6858,12 +6840,6 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 #glimpse .glimpse-thumbnail,#glimpse .glimpse-art-fallback {border-color:rgba(215,220,228,.42)!important;box-shadow:0 0 0 1px rgba(255,255,255,.035),0 6px 18px rgba(0,0,0,.42)!important;}
 /* Tighten excess vertical rhythm on narrow screens while retaining all text and sections. */
 @media(max-width:680px){
- .archive-interface>section {padding-top:22px!important;padding-bottom:22px!important;}
- .archive-interface>section h2 {margin-top:5px!important;margin-bottom:12px!important;}
- .archive-interface>section p {margin-top:0!important;margin-bottom:11px!important;line-height:1.68!important;}
- .archive-interface>section .section-sigil {margin-top:0!important;margin-bottom:5px!important;}
- .archive-interface>section .favourites {margin-top:4px!important;}
- .archive-interface>section + section {margin-top:0!important;}
  #glimpse {padding-top:22px!important;padding-bottom:22px!important;}
 }
 @media(prefers-reduced-motion:reduce){#glimpse::after{animation:none!important;}}
@@ -6899,10 +6875,6 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 /* Keep artwork intact, but remove blue filters/tints from the Glimpse interface itself. */
 #glimpse .glimpse-thumbnail {filter:saturate(.82) contrast(1.06)!important;}
 @media(max-width:680px){
-  .archive-interface>section {padding-top:17px!important;padding-bottom:17px!important;}
-  .archive-interface>section h2 {margin-top:2px!important;margin-bottom:9px!important;}
-  .archive-interface>section p {margin-bottom:9px!important;line-height:1.58!important;}
-  .archive-interface>section + section {margin-top:0!important;}
   #glimpse {margin-top:24px!important;padding:22px 14px!important;}
   #glimpse .glimpse-heading {margin-bottom:15px!important;}
   #glimpse .glimpse-tracks {gap:7px!important;}
@@ -6919,11 +6891,6 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 @media(max-width:760px){
   body > .demi-butterfly{display:block!important;}
   #demiGate > .demi-butterfly{display:block!important;}
-  .archive-interface>section{padding-top:30px!important;padding-bottom:30px!important;}
-  .archive-interface>section p{margin-top:0.72em!important;margin-bottom:0.72em!important;}
-  .archive-interface>section p:last-child{margin-bottom:0!important;}
-  .archive-interface>section h2{margin-bottom:14px!important;}
-  .archive-interface>section .section-number{padding-top:5px!important;}
   .archive-interface>section{min-width:0!important;}
   .archive-interface>section>*{min-width:0;}
   .postai-game-section{margin-top:24px!important;}
@@ -6977,49 +6944,23 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 @media(min-width:681px){#archiveInterfaces .archive-gateway-art{margin-bottom:0}#archiveInterfaces .portal-layout{padding-bottom:16px}}
 </style>
 
-<style id="interface-one-internal-spacing-fix-v9">
-/* Scope this correction strictly to the Personal Record interface; leave gateway, Demi, and Glimpse untouched. */
-#archive-interface-one > section[id] {
-  padding-top: 26px !important;
-  padding-bottom: 26px !important;
-  row-gap: 0 !important;
-}
-#archive-interface-one > section[id] h2 {
-  margin-top: 0 !important;
-  margin-bottom: 13px !important;
-}
-#archive-interface-one > section[id] h2 .section-sigil {
-  margin-bottom: 8px !important;
-}
-#archive-interface-one > section[id] p {
-  margin-top: 0 !important;
-  margin-bottom: 12px !important;
-  line-height: 1.62 !important;
-}
-#archive-interface-one > section[id] p:last-child { margin-bottom: 0 !important; }
-#archive-interface-one > section[id] + section[id] { margin-top: 0 !important; }
-@media (max-width: 680px) {
-  #archive-interface-one > section[id] { padding-top: 22px !important; padding-bottom: 22px !important; }
-  #archive-interface-one > section[id] h2 { margin-bottom: 11px !important; }
-  #archive-interface-one > section[id] p { margin-bottom: 10px !important; line-height: 1.58 !important; }
-}
-</style>
 
 <style id="jaye-two-interface-redesign-v10">
 /* A fresh editorial system, scoped strictly to the two opened archive interfaces. */
-#archive-interface-one,#archive-interface-two{--chapter-ink:#f0eee9;--chapter-muted:#b6b4b0;--chapter-line:rgba(205,199,187,.19);--chapter-accent:#b5a58d;--chapter-panel:rgba(21,21,22,.72);width:min(990px,100%);padding:10px 0 56px;color:var(--chapter-ink);font-family:var(--font-ui,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif)}
+#archive-interface-one,#archive-interface-two{--chapter-ink:#f0eee9;--chapter-serif:var(--jaye-serif,Georgia,"Times New Roman",serif);--chapter-muted:#b6b4b0;--chapter-line:rgba(205,199,187,.19);--chapter-accent:#b5a58d;--chapter-panel:rgba(21,21,22,.72);width:min(990px,100%);padding:10px 0 56px;color:var(--chapter-ink);font-family:var(--font-ui,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif)}
 #archive-interface-one .archive-view-home-link,#archive-interface-two .archive-view-home-link{margin:8px 0 22px;background:linear-gradient(120deg,rgba(210,204,193,.065),rgba(9,10,11,.78));border-color:rgba(205,199,187,.28);color:#d0cbc1;letter-spacing:.14em}
 #archive-interface-one .archive-interface-heading,#archive-interface-two .archive-interface-heading{padding:20px 0 22px;border-top:1px solid rgba(205,199,187,.27);border-bottom:1px solid rgba(205,199,187,.2);align-items:center}
 #archive-interface-one .archive-interface-brand,#archive-interface-two .archive-interface-brand{gap:14px;flex-wrap:wrap}
-#archive-interface-one .archive-interface-kicker,#archive-interface-two .archive-interface-kicker,#archive-interface-one .archive-interface-range,#archive-interface-two .archive-interface-range{color:#b5a58d;font-size:.58rem;letter-spacing:.17em}
+#archive-interface-one .archive-interface-kicker,#archive-interface-two .archive-interface-kicker,#archive-interface-one .archive-interface-range,#archive-interface-two .archive-interface-range{color:#b5a58d;font-size:.58rem;letter-spacing:.17em;text-transform:uppercase}
 #archive-interface-one .archive-interface-title,#archive-interface-two .archive-interface-title{font-size:clamp(1.1rem,2.5vw,1.55rem);font-weight:620;letter-spacing:-.045em;color:#f0eee9}
 #archive-interface-one .archive-interface-nav,#archive-interface-two .archive-interface-nav{gap:10px;margin:14px 0 18px}
-#archive-interface-one .archive-interface-nav a,#archive-interface-two .archive-interface-nav a{position:relative;min-height:48px;padding:11px 14px;border:1px solid rgba(205,199,187,.17);background:linear-gradient(115deg,rgba(205,199,187,.035),rgba(9,10,11,.64));color:#b8b6b0;letter-spacing:.1em}
+#archive-interface-one .archive-interface-nav a,#archive-interface-two .archive-interface-nav a{position:relative;min-height:48px;padding:11px 14px;border:1px solid rgba(205,199,187,.17);background:linear-gradient(115deg,rgba(205,199,187,.035),rgba(9,10,11,.64));color:#b8b6b0;letter-spacing:.1em;text-transform:uppercase}
 #archive-interface-one .archive-interface-nav a.is-current,#archive-interface-two .archive-interface-nav a.is-current{border-color:rgba(181,165,141,.52);background:linear-gradient(105deg,rgba(181,165,141,.105),rgba(18,18,19,.86) 68%);color:#f0eee9}
 #archive-interface-one .archive-interface-nav a.is-current::before,#archive-interface-two .archive-interface-nav a.is-current::before{background:#b5a58d;box-shadow:0 0 8px rgba(181,165,141,.22)}
 #archive-interface-one>section[id],#archive-interface-two>section[id]{display:grid;grid-template-columns:46px minmax(0,1fr);column-gap:clamp(13px,2.2vw,24px);position:relative;margin:14px 0 0;padding:clamp(22px,3.6vw,36px) clamp(16px,3vw,30px) clamp(23px,3.8vw,38px);border:1px solid rgba(205,199,187,.17);border-radius:2px;background:linear-gradient(115deg,rgba(205,199,187,.045),rgba(12,13,14,.72) 42%,rgba(17,17,18,.55));box-shadow:inset 0 1px rgba(255,255,255,.035),0 12px 30px rgba(0,0,0,.12);min-width:0}
 #archive-interface-one>section[id]::before,#archive-interface-two>section[id]::before{content:"";position:absolute;left:0;top:0;width:54px;height:1px;background:linear-gradient(90deg,rgba(181,165,141,.85),rgba(181,165,141,.08),transparent)}
-#archive-interface-one>section .section-number,#archive-interface-two>section .section-number{grid-column:1;grid-row:1/30;position:static;align-self:start;padding-top:8px;color:#b5a58d;font-size:.61rem;letter-spacing:.15em;font-variant-numeric:tabular-nums}
+#archive-interface-one>section[data-continues],#archive-interface-two>section[data-continues]{margin-top:-1px}
+#archive-interface-one>section .section-number,#archive-interface-two>section .section-number{grid-column:1;grid-row:1/30;position:static;align-self:baseline;padding-top:0;color:#b5a58d;font-size:.61rem;letter-spacing:.15em;font-variant-numeric:tabular-nums}
 /* Four chapter headings; each owns the two numbered sections beneath it. */
 #archive-interface-one .archive-chapter-heading,#archive-interface-two .archive-chapter-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px 20px;margin:clamp(30px,5vw,52px) 0 16px;scroll-margin-top:72px}
 #archive-interface-one .archive-interface-nav+.archive-chapter-heading,#archive-interface-two .archive-interface-nav+.archive-chapter-heading{margin-top:clamp(18px,3vw,30px)}
@@ -7030,9 +6971,13 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 #archive-interface-one .archive-chapter-title,#archive-interface-two .archive-chapter-title{flex:0 0 100%;min-width:0;margin:0;color:#f0eee9;font-family:var(--jaye-serif,Georgia,"Times New Roman",serif);font-size:clamp(2.2rem,5.1vw,4rem);font-weight:400;letter-spacing:-.052em;line-height:.99;text-wrap:balance}
 /* The heading above owns the gap to its first card; the older lead-in margins pre-date it. */
 #archive-interface-one .archive-chapter-heading+section[id],#archive-interface-two .archive-chapter-heading+section[id]{margin-top:0!important}
-#archive-interface-one>section .archive-section-title,#archive-interface-two>section .archive-section-title{grid-column:2;margin:0 0 15px;color:#e6e2da;font-family:var(--font-ui,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif);font-size:.74rem;font-weight:620;letter-spacing:.16em;line-height:1.5;text-transform:uppercase;text-wrap:balance}
-#archive-interface-one>section p,#archive-interface-two>section p{grid-column:2;max-width:680px;margin:0 0 15px;color:#b9b8b5;font-size:clamp(.94rem,1.18vw,1.02rem);line-height:1.72;letter-spacing:-.012em}
+#archive-interface-one>section .archive-section-title,#archive-interface-two>section .archive-section-title{grid-column:2;margin:0 0 15px;color:#ece8df;font-family:var(--chapter-serif);font-size:clamp(1.36rem,2.1vw,1.7rem);font-weight:400;letter-spacing:-.022em;line-height:1.14;text-wrap:balance}
+#archive-interface-one>section .archive-section-title.is-folded,#archive-interface-two>section .archive-section-title.is-folded{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+#archive-interface-one>section p,#archive-interface-two>section p{grid-column:2;max-width:680px;margin:0 0 15px;color:#b9b8b5;font-size:clamp(.94rem,1.18vw,1.02rem);line-height:1.72;letter-spacing:-.012em;text-wrap:pretty}
 #archive-interface-one>section p strong,#archive-interface-two>section p strong{color:#e6e2da;font-weight:640}
+#archive-interface-one>section>p:first-of-type,#archive-interface-two>section>p:first-of-type{color:#d3d0c9;font-size:clamp(1rem,1.3vw,1.1rem)}
+#archive-interface-one>section>p.is-beat,#archive-interface-two>section>p.is-beat{margin:8px 0 18px;color:#ece8df;font-family:var(--chapter-serif);font-size:clamp(1.1rem,1.5vw,1.25rem);line-height:1.42;letter-spacing:-.012em}
+#archive-interface-one>section>p.is-beat strong,#archive-interface-two>section>p.is-beat strong{color:inherit;font-weight:400}
 #archive-interface-one>section p:last-child,#archive-interface-two>section p:last-child{margin-bottom:0}
 #archive-interface-one #archive-one-favourites .favourites{grid-column:2;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:3px;border:0}
 #archive-interface-one #archive-one-favourites .fav{padding:17px 16px 18px;border:1px solid rgba(205,199,187,.15);background:linear-gradient(135deg,rgba(205,199,187,.045),rgba(8,9,10,.42));}
@@ -7040,9 +6985,16 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 #archive-interface-one #archive-one-favourites .fav-label{color:#b5a58d;font-size:.59rem;letter-spacing:.17em}
 #archive-interface-one #archive-one-favourites .fav p{font-size:.9rem;line-height:1.68;margin:0}
 #archive-interface-one>section[id]:focus-within,#archive-interface-two>section[id]:focus-within{border-color:rgba(181,165,141,.32)}
+@media(min-width:681px){
+ #archive-interface-one>section[id]{padding-top:26px;padding-bottom:26px;row-gap:0}
+ #archive-interface-one>section[id] p{margin:0 0 12px;line-height:1.62}
+ #archive-interface-one>section[id]>p.is-beat{margin:8px 0 18px;line-height:1.42}
+ #archive-interface-one>section[id] p:last-child{margin-bottom:0}
+}
 @media(max-width:680px){
- body[data-archive-view^="interface-"] main{width:calc(100% - 24px)}
- #archive-interface-one,#archive-interface-two{padding-bottom:32px}
+ /* The panel runs edge to edge; the 12px gutter is its own padding, so the fixed particle and ring background no longer shows in two strips beside the cards. */
+ body[data-archive-view^="interface-"] main{width:100%}
+ #archive-interface-one,#archive-interface-two{padding:10px 12px 32px}
  #archive-interface-one .archive-view-home-link,#archive-interface-two .archive-view-home-link{margin-bottom:18px}
  #archive-interface-one .archive-interface-heading,#archive-interface-two .archive-interface-heading{padding:17px 0 18px;gap:12px}
  #archive-interface-one .archive-interface-brand,#archive-interface-two .archive-interface-brand{display:block}
@@ -7051,14 +7003,17 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
  #archive-interface-one .archive-interface-nav,#archive-interface-two .archive-interface-nav{gap:7px;margin:12px 0 14px}
  #archive-interface-one .archive-interface-nav a,#archive-interface-two .archive-interface-nav a{min-width:0;padding:10px 9px;font-size:.55rem;gap:7px}
  #archive-interface-one .archive-interface-nav a small,#archive-interface-two .archive-interface-nav a small{font-size:.52rem}
- #archive-interface-one>section[id],#archive-interface-two>section[id]{grid-template-columns:auto minmax(0,1fr);column-gap:10px;margin-top:10px;padding:21px 13px 23px;border-radius:2px}
- #archive-interface-one>section .section-number,#archive-interface-two>section .section-number{grid-row:1;font-size:.55rem;padding-top:7px}
+ #archive-interface-one>section[id],#archive-interface-two>section[id]{grid-template-columns:minmax(0,1fr) auto;column-gap:10px;margin-top:10px;padding:22px 13px 23px;border-radius:2px}
+ #archive-interface-one>section[data-continues],#archive-interface-two>section[data-continues]{margin-top:-1px}
+ #archive-interface-one>section .section-number,#archive-interface-two>section .section-number{grid-column:2;grid-row:1;justify-self:end;margin-bottom:10px;font-size:.55rem}
  #archive-interface-one .archive-chapter-heading,#archive-interface-two .archive-chapter-heading{gap:11px 14px;margin:30px 0 12px}
  #archive-interface-one .archive-interface-nav+.archive-chapter-heading,#archive-interface-two .archive-interface-nav+.archive-chapter-heading{margin-top:18px}
  #archive-interface-one .archive-chapter-mark .section-sigil,#archive-interface-two .archive-chapter-mark .section-sigil{width:29px;height:29px}
  #archive-interface-one .archive-chapter-title,#archive-interface-two .archive-chapter-title{font-size:clamp(2rem,8.8vw,3.15rem);line-height:1.02;letter-spacing:-.047em}
- #archive-interface-one>section .archive-section-title,#archive-interface-two>section .archive-section-title{margin-bottom:12px;font-size:.7rem}
- #archive-interface-one>section p,#archive-interface-two>section p{grid-column:1/-1;font-size:.94rem;line-height:1.68;margin-bottom:13px}
+ #archive-interface-one>section .archive-section-title,#archive-interface-two>section .archive-section-title{grid-column:1;grid-row:1;margin-bottom:12px;font-size:1.36rem}
+ #archive-interface-one>section p,#archive-interface-two>section p{grid-column:1/-1;font-size:.94rem;line-height:1.64;margin-bottom:13px}
+ #archive-interface-one>section>p:first-of-type,#archive-interface-two>section>p:first-of-type{font-size:1.02rem;line-height:1.6}
+ #archive-interface-one>section>p.is-beat,#archive-interface-two>section>p.is-beat{margin:6px 0 16px;font-size:1.1rem;line-height:1.4}
  #archive-interface-one #archive-one-favourites .favourites{grid-column:1/-1;grid-template-columns:minmax(0,1fr);gap:8px}
  #archive-interface-one #archive-one-favourites .fav{padding:15px 13px 16px}
  #archive-interface-one #archive-one-favourites .fav p{font-size:.9rem;line-height:1.66}

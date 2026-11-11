@@ -107,7 +107,12 @@ test('the four Archive headings are on the page, in order, each holding the two 
   }
   assert.equal(chapters.length, 4, 'exactly four chapter headings')
   assert.deepEqual(chapters, ARCHIVE_CHAPTERS)
-  assert.equal((html.match(/<h3 class="archive-section-title"/g) ?? []).length, 8, 'all eight section titles are kept')
+  // All eight headings stay in the DOM (routing focus, screen readers, Baew's context); only four show.
+  // The second section of each chapter continues under the first one's title, so its own is visually folded.
+  const titles = [...html.matchAll(/<h3 class="archive-section-title( is-folded)?" id="([^"]+)-title"/g)].map(m => ({ id: m[2], folded: Boolean(m[1]) }))
+  assert.equal(titles.length, 8, 'all eight section titles are kept in the page')
+  assert.deepEqual(titles.filter(t => t.folded).map(t => t.id), ['archive-one-things-i-do', 'archive-one-people', 'archive-two-figuring-out', 'archive-two-memories'], 'the 2nd section of each chapter folds its title')
+  assert.equal(titles.filter(t => !t.folded).length, 4, 'four section titles stay visible')
   // Every section's own page text mentions the heading it sits under, and nothing else claims a different heading.
   for (const c of ARCHIVE_CHAPTERS) for (const id of c.ids) {
     const entry = entries.find(e => e.domIds.includes(id))
