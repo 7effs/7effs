@@ -5778,54 +5778,7 @@ body > .demi-butterfly .demi-butterfly-label{background:transparent!important;bo
 @media(max-width:700px){#demiDestination>.demi-butterfly{top:105px!important;right:2px!important;width:clamp(175px,48vw,235px)!important;opacity:.96!important}#demiDestination>.demi-dest-intro{min-height:320px!important;padding-top:185px!important}}
 @media(prefers-reduced-motion:reduce){#demiDestination:before,#demiDestination>.demi-butterfly,#demiDestination .demi-butterfly-stage{animation:none!important}}
 </style>
-<style id="jaye-demi-9sec-cycle-style">
-#demiGate{position:relative}#demiGate .demi-gate-copy{transition:opacity .6s ease,filter .6s ease,transform .6s ease}#demiGate.demi-words-in-orbit .demi-gate-copy{opacity:0!important;filter:blur(2px)!important;transform:translateY(3px)!important;pointer-events:none!important}#demiGate .demi-word-orbit{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible;z-index:5;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .6s ease,visibility 0s linear .6s}#demiGate.demi-words-in-orbit .demi-word-orbit{opacity:1;visibility:visible;transition:opacity .6s ease,visibility 0s}#demiGate .demi-word-orbit-guide{fill:none;stroke:#C4CBD4;stroke-opacity:.13;stroke-width:.8;stroke-dasharray:1.5 8;vector-effect:non-scaling-stroke}#demiGate .demi-orbit-glyph{font-family:var(--font-ui,ui-sans-serif,system-ui,sans-serif);font-weight:650;text-anchor:middle;dominant-baseline:central;paint-order:stroke;stroke:rgba(5,7,11,.88);stroke-width:1.7px;stroke-linejoin:round;transform-box:fill-box;transform-origin:center;will-change:transform,opacity}#demiGate .demi-word-orbit-type--eyebrow{font-size:12px;letter-spacing:.3px;fill:#AEB9CA}#demiGate .demi-word-orbit-type--heading{font-size:16px;letter-spacing:.5px;fill:#F0F3F8;font-weight:720}#demiGate .demi-word-orbit-type--body{font-size:10.5px;letter-spacing:.15px;fill:#D4DAE4;font-weight:590}#demiGate .demi-word-orbit-glint{fill:#F4F6FA;filter:drop-shadow(0 0 5px rgba(237,242,250,.8))}@media(max-width:760px){#demiGate .demi-word-orbit-type--eyebrow{font-size:9.5px}#demiGate .demi-word-orbit-type--heading{font-size:12px}#demiGate .demi-word-orbit-type--body{font-size:8.3px}}@media(prefers-reduced-motion:reduce){#demiGate .demi-word-orbit{display:none!important}#demiGate.demi-words-in-orbit .demi-gate-copy{opacity:1!important;filter:none!important;transform:none!important}}
-</style>
-<script id="jaye-demi-9sec-cycle">
-(function(){'use strict';const gate=document.getElementById('demiGate'),root=document.getElementById('demi-system');if(!gate||!root||gate.dataset.demi9Cycle==='ready')return;const copy=gate.querySelector('.demi-gate-copy'),core=gate.querySelector('.demi-gate-core');if(!copy||!core)return;const reduced=matchMedia('(prefers-reduced-motion: reduce)');if(reduced.matches)return;const nodes=[copy.querySelector('.demi-eyebrow'),copy.querySelector('h2'),copy.querySelector('p')];if(nodes.some(n=>!n))return;const specs=nodes.map((n,i)=>({key:['outer','middle','inner'][i],text:n.textContent.replace(/\s+/g,' ').trim(),cls:['demi-word-orbit-type--eyebrow','demi-word-orbit-type--heading','demi-word-orbit-type--body'][i],scale:[1,.82,.65][i],speed:[.64,-.56,.72][i]}));if(specs.some(x=>!x.text))return;const NS='http://www.w3.org/2000/svg',svg=document.createElementNS(NS,'svg');svg.setAttribute('class','demi-word-orbit');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');svg.setAttribute('preserveAspectRatio','none');const paths={},tracks=[];specs.forEach(sp=>{const p=document.createElementNS(NS,'path');p.setAttribute('class','demi-word-orbit-guide');svg.appendChild(p);paths[sp.key]=p});specs.forEach((sp,si)=>{const group=document.createElementNS(NS,'g'),chars=Array.from((sp.text.toUpperCase()+'   ·   ').repeat(2));group.setAttribute('class','demi-word-orbit-track');const glyphs=chars.map((ch,i)=>{const el=document.createElementNS(NS,'text');el.setAttribute('class','demi-orbit-glyph '+sp.cls);el.textContent=ch===' '?'\u00a0':ch;group.appendChild(el);return{el,ch,i,fraction:0}});svg.appendChild(group);tracks.push({spec:sp,si,glyphs})});const glint=document.createElementNS(NS,'circle');glint.setAttribute('class','demi-word-orbit-glint');glint.setAttribute('r','2.6');svg.appendChild(glint);copy.insertAdjacentElement('afterend',svg);gate.dataset.demi9Cycle='ready';let active=false,elapsed=0,last=0,was=false,g={},rafRunning=false;function startLoop(){if(active&&!document.hidden&&!rafRunning){rafRunning=true;last=0;requestAnimationFrame(frame)}}function path(cx,cy,rx,ry){return `M ${cx-rx} ${cy} A ${rx} ${ry} 0 1 1 ${cx+rx} ${cy} A ${rx} ${ry} 0 1 1 ${cx-rx} ${cy} Z`}function measure(){const a=gate.getBoundingClientRect(),b=core.getBoundingClientRect();if(!a.width||!a.height||!b.width||!b.height)return;const cx=b.left-a.left+b.width/2,cy=b.top-a.top+b.height/2,rx=Math.max(35,Math.min(cx-20,a.width-cx-20,b.width*.62)),ry=Math.max(38,Math.min(cy-30,a.height-cy-30,b.height*.53));g={cx,cy,rx,ry,w:a.width,h:a.height};svg.setAttribute('viewBox',`0 0 ${a.width} ${a.height}`);svg.setAttribute('width',a.width);svg.setAttribute('height',a.height);specs.forEach(sp=>paths[sp.key].setAttribute('d',path(cx,cy,rx*sp.scale,ry*sp.scale)));tracks.forEach(t=>{const ws=t.glyphs.map(x=>{try{const w=x.el.getBBox().width;if(w>0)return w}catch(e){}return x.ch===' '?4:/[MW@#%&]/.test(x.ch)?10:/[I1.,:;!|]/.test(x.ch)?4:7}),sum=ws.reduce((a,b)=>a+b,0)||1;let k=0;t.glyphs.forEach((x,i)=>{x.fraction=(k+ws[i]/2)/sum;k+=ws[i]})})}function set(on){if(on===was)return;was=on;gate.classList.toggle('demi-words-in-orbit',on)}function frame(now){if(!active||document.hidden){rafRunning=false;last=0;return}if(last&&now-last<33){requestAnimationFrame(frame);return}if(!last)last=now;const dt=Math.min(50,Math.max(0,now-last));last=now;if(active&&!root.classList.contains('orbits-paused')&&!document.hidden)elapsed=(elapsed+dt)%20000;const phase=elapsed%20000,on=active&&phase>=16000;set(on);if(on&&g.w){const progress=(phase-16000)/4000;tracks.forEach(t=>{const rx=g.rx*t.spec.scale,ry=g.ry*t.spec.scale;t.glyphs.forEach(x=>{const seed=x.i*2.3999632297+t.si*1.71,ang=x.fraction*Math.PI*2+progress*Math.PI*2*t.spec.speed+Math.sin(progress*Math.PI*2+seed)*.025,px=g.cx+rx*Math.cos(ang),py=g.cy+ry*Math.sin(ang),tan=Math.atan2(ry*Math.cos(ang),-rx*Math.sin(ang))*180/Math.PI,dir=x.i%2===0?1:-1,rate=.4+(x.i%5)*.095,spin=dir*progress*360*rate+Math.sin(now*.00075+seed)*5,flip=x.i%19===8?180:0;x.el.setAttribute('x',px.toFixed(2));x.el.setAttribute('y',py.toFixed(2));x.el.setAttribute('transform',`rotate(${(tan+spin+flip).toFixed(2)} ${px.toFixed(2)} ${py.toFixed(2)})`);x.el.style.opacity=String(.82+.18*(.5+.5*Math.sin(now*.0008+seed)))})});const q=progress*Math.PI*2-Math.PI/2;glint.setAttribute('cx',(g.cx+g.rx*Math.cos(q)).toFixed(2));glint.setAttribute('cy',(g.cy+g.ry*Math.sin(q)).toFixed(2))}if(active&&!document.hidden)requestAnimationFrame(frame);else{rafRunning=false;last=0}}measure();if('ResizeObserver'in window){new ResizeObserver(measure).observe(gate);new ResizeObserver(measure).observe(core)}else addEventListener('resize',measure,{passive:true});if('IntersectionObserver'in window)new IntersectionObserver(es=>{active=!!es[0]?.isIntersecting;if(!active){set(false);rafRunning=false;last=0}else startLoop()},{threshold:.08}).observe(gate);else active=true;document.addEventListener('visibilitychange',()=>{if(document.hidden){set(false);rafRunning=false;last=0}else startLoop()});if(active)startLoop()})();
-</script>
 
-<style id="jaye-demi-peak-phase-lock-v1-style">
-/* Peak phase-lock layer: restrained monochrome energy, without changing the 9s cycle or layout. */
-#demiGate .demi-gate-core{transition:filter .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
-#demiGate.demi-words-in-orbit .demi-gate-core{filter:drop-shadow(0 0 13px rgba(226,232,241,.18));transform:scale(1.018)}
-#demiGate .demi-word-orbit{isolation:isolate}
-#demiGate .demi-phase-lock{opacity:0;transition:opacity .7s ease;pointer-events:none}
-#demiGate.demi-words-in-orbit .demi-phase-lock{opacity:1}
-#demiGate .demi-phase-sweep{fill:none;stroke:url(#demiPhaseSweepGradientV1);stroke-width:1.15;stroke-linecap:round;stroke-dasharray:2 11;transform-origin:center;animation:demiPhaseSweep 13s linear infinite}
-#demiGate .demi-phase-ring{fill:none;stroke:#DCE2EA;stroke-width:.7;stroke-opacity:.22;stroke-dasharray:1 12;transform-origin:center;animation:demiPhaseRing 17s linear infinite}
-#demiGate .demi-phase-particle{fill:#F1F4F8;opacity:.0;transform-box:fill-box;transform-origin:center;animation:demiPhaseParticle 3.8s ease-in-out infinite alternate}
-#demiGate .demi-phase-particle:nth-child(3n){animation-duration:5.2s;animation-delay:-1.7s}
-#demiGate .demi-phase-particle:nth-child(3n + 1){animation-duration:4.3s;animation-delay:-2.6s}
-#demiGate .demi-orbit-glyph{filter:drop-shadow(0 0 2px rgba(224,231,240,.12))}
-#demiGate.demi-words-in-orbit .demi-orbit-glyph{animation:demiGlyphMicroPulse 3.6s ease-in-out infinite alternate}
-@keyframes demiPhaseSweep{to{transform:rotate(360deg)}}
-@keyframes demiPhaseRing{to{transform:rotate(-360deg)}}
-@keyframes demiPhaseParticle{0%{opacity:.08;transform:scale(.7) translateY(3px)}100%{opacity:.72;transform:scale(1.35) translateY(-4px)}}
-@keyframes demiGlyphMicroPulse{0%{filter:drop-shadow(0 0 1px rgba(230,236,245,.08))}100%{filter:drop-shadow(0 0 4px rgba(230,236,245,.25))}}
-@media(prefers-reduced-motion:reduce){#demiGate .demi-phase-sweep,#demiGate .demi-phase-ring,#demiGate .demi-phase-particle,#demiGate .demi-orbit-glyph{animation:none!important}#demiGate.demi-words-in-orbit .demi-gate-core{transform:none;filter:none}}
-</style>
-<script id="jaye-demi-peak-phase-lock-v1">
-(function(){
-'use strict';
-const gate=document.getElementById('demiGate');if(!gate||gate.dataset.peakPhaseLock==='ready')return;
-const NS='http://www.w3.org/2000/svg';
-function enhance(svg){if(!svg||svg.querySelector('.demi-phase-lock'))return;
- const defs=svg.querySelector('defs')||document.createElementNS(NS,'defs');if(!defs.parentNode)svg.insertBefore(defs,svg.firstChild);
- const grad=document.createElementNS(NS,'linearGradient');grad.id='demiPhaseSweepGradientV1';grad.setAttribute('x1','0%');grad.setAttribute('y1','0%');grad.setAttribute('x2','100%');grad.setAttribute('y2','0%');
- [['0%','rgba(235,240,248,0)'],['48%','rgba(235,240,248,.65)'],['100%','rgba(235,240,248,0)']].forEach(([offset,color])=>{const stop=document.createElementNS(NS,'stop');stop.setAttribute('offset',offset);stop.setAttribute('stop-color',color);grad.appendChild(stop)});defs.appendChild(grad);
- const layer=document.createElementNS(NS,'g');layer.setAttribute('class','demi-phase-lock');layer.setAttribute('aria-hidden','true');
- const ring=document.createElementNS(NS,'ellipse');ring.setAttribute('class','demi-phase-ring');ring.setAttribute('cx','50%');ring.setAttribute('cy','50%');ring.setAttribute('rx','47%');ring.setAttribute('ry','43%');layer.appendChild(ring);
- const sweep=document.createElementNS(NS,'ellipse');sweep.setAttribute('class','demi-phase-sweep');sweep.setAttribute('cx','50%');sweep.setAttribute('cy','50%');sweep.setAttribute('rx','43%');sweep.setAttribute('ry','38%');layer.appendChild(sweep);
- // Tiny dust points sit outside the text lanes, so the words remain readable.
- for(let i=0;i<10;i++){const c=document.createElementNS(NS,'circle');c.setAttribute('class','demi-phase-particle');const angle=(i/10)*Math.PI*2;const rx=i%2?'.455':'.39',ry=i%2?'.405':'.34';c.setAttribute('cx',`${50+Math.cos(angle)*parseFloat(rx)*100}%`);c.setAttribute('cy',`${50+Math.sin(angle)*parseFloat(ry)*100}%`);c.setAttribute('r',i%4===0?'1.25':'.75');layer.appendChild(c)}
- // Put the atmospheric layer behind individual glyphs but above the original butterfly scene.
- const firstTrack=svg.querySelector('.demi-word-orbit-track');if(firstTrack)svg.insertBefore(layer,firstTrack);else svg.appendChild(layer);
-}
-const existing=gate.querySelector('svg.demi-word-orbit');if(existing)enhance(existing);
-const mo=new MutationObserver(()=>{const svg=gate.querySelector('svg.demi-word-orbit');if(svg)enhance(svg)});mo.observe(gate,{childList:true,subtree:true});gate.dataset.peakPhaseLock='ready';
-})();
-</script>
 
 <style id="jaye-glimpse-clear-glass-and-contextual-emblem">
 /* Spin only while the home hero or Glimpse is on screen. */
@@ -6350,30 +6303,8 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
 </style>
 
 
-<style id="jaye-demi-performance-balance-v1">
-/* Performance balance: keep the signature effect, reduce simultaneous paint/compositor work. */
-#demiGate .demi-phase-lock{contain:paint;}
-#demiGate .demi-phase-sweep,#demiGate .demi-phase-ring,#demiGate .demi-phase-particle{animation-play-state:paused;}
-#demiGate.demi-words-in-orbit .demi-phase-sweep,#demiGate.demi-words-in-orbit .demi-phase-ring,#demiGate.demi-words-in-orbit .demi-phase-particle{animation-play-state:running;}
-#demiGate .demi-orbit-glyph{filter:none!important;}
-#demiGate.demi-words-in-orbit .demi-orbit-glyph{animation:none!important;}
-#demiGate .demi-gate-core{transition:transform .65s ease!important;}
-#demiGate.demi-words-in-orbit .demi-gate-core{filter:none!important;transform:scale(1.008)!important;}
-#demiGate .demi-phase-particle{animation-duration:5.5s!important;}
-#demiGate .demi-phase-sweep{animation-duration:18s!important;}
-#demiGate .demi-phase-ring{animation-duration:24s!important;}
-@media(prefers-reduced-motion:reduce){#demiGate .demi-phase-sweep,#demiGate .demi-phase-ring,#demiGate .demi-phase-particle{animation:none!important}}
-</style>
 
-<style id="jaye-demi-20sec-cycle-v1-style">
-/* 20-second rhythm: 16 seconds settled, 4 seconds of floating orbit. */
-</style>
 
-<style id="jaye-demi-visibility-pause-v1">
-/* Stop ambient peak effects as well as the word timer when Demi is not visible. */
-#demiGate:not(.demi-words-in-orbit) .demi-phase-sweep,#demiGate:not(.demi-words-in-orbit) .demi-phase-ring,#demiGate:not(.demi-words-in-orbit) .demi-phase-particle{animation-play-state:paused!important;}
-#demiGate.demi-words-in-orbit .demi-phase-sweep,#demiGate.demi-words-in-orbit .demi-phase-ring,#demiGate.demi-words-in-orbit .demi-phase-particle{animation-play-state:running!important;}
-</style>
 
 <style id="jaye-final-transparency-and-ice-saturn-pass">
 /* Non-home archive surfaces become genuinely see-through; keep the homepage hero and Demi section unchanged. */
