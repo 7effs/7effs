@@ -27,7 +27,7 @@
      is clear. When text, an icon, a card or a control sits under it, JS sets them to the smallest
      rise (and, on the narrowest phones, nudge) that frees her, so the corner stays the anchor and the
      offsets are measured from it. */
-  --strobi-bubble-room: calc(min(250px, 100dvh - 82px) + 104px);
+  --strobi-bubble-room: calc(min(236px, 100dvh - 82px) + 103px);
   left: calc(max(8px, env(safe-area-inset-left)) + var(--strobi-home-dx, 0px));
   top: auto;
   right: auto;
@@ -187,201 +187,281 @@
   pointer-events: none;
 }
 
-/* The bubble is deliberately short; its content can scroll without leaving the viewport. */
-/* ---- Baew bubble: an index slip --------------------------------------------------------------------
-   Obsidian panel with a hairline accent edge, an editorial serif voice and one accent colour that
-   follows the personality (playful = azure, freaky = amethyst). The footprint is unchanged: same width,
-   same max-height and scrolling as before, so placement, clearance and drag maths are untouched. The
-   tail is drawn from the mascot's wrapper (the bubble itself clips overflow). */
+/* ---- Baew bubble: a wide, short speech bubble in dark glass ----------------------------------------------
+   Landscape proportions (about 2:1) with a small tail that points at Baew, about the same area as the portrait
+   popup it replaces but much shorter, so it covers less of the page. Baew's resting box is untouched: closed,
+   the widget keeps its original width and she sits exactly where she always has; only while the popup is open
+   does the box widen to the right, and she stays on the same spot. The surface is background layers and inset
+   shadows only and nothing loops. The shell does not scroll; .bubble-scroll does, so the glass, rim and tail
+   stay put when a long answer scrolls. */
 .strobi-widget {
   --bb: 111, 163, 255;
   --bb-hi: #dbe8ff;
-  --bb-dim: #8fa2cf;
-  --bb-ink: #050816;
+  --bb-dim: #9aaed8;
+  /* Glass colours, sampled from the reference bubble. --glass is the deep navy the fill is built on; the
+     4% white mix is the .04 white layer in .strobi-bubble. Everything is r, g, b so it can take an alpha. */
+  --glass: 0, 6, 18;
+  --glass-hi: 15, 31, 56;
+  --rim-lo: 29, 67, 111;
+  --rim-hi: 82, 141, 222;
+  --pill-a: 24, 48, 88;
+  --pill-b: 16, 30, 55;
+  --pill-edge: 36, 75, 124;
+  --jaye: 108, 155, 240;
+  --tail-fill: #142239;
+  --rest-w: min(204px, calc(100vw - 16px));
+  --wrap-w: 72px;
+  --orb-x: calc(var(--rest-w) / 2);
 }
 
 .strobi-widget[data-vibe="freaky"] {
   --bb: 170, 144, 255;
   --bb-hi: #e9e1ff;
-  --bb-dim: #a99dd6;
+  --bb-dim: #aca1d9;
+  --glass: 8, 4, 24;
+  --glass-hi: 36, 28, 70;
+  --rim-lo: 66, 54, 118;
+  --rim-hi: 156, 128, 235;
+  --pill-a: 52, 40, 98;
+  --pill-b: 34, 26, 66;
+  --pill-edge: 96, 78, 160;
+  --jaye: 178, 156, 255;
+  --tail-fill: #1a1436;
+}
+
+.strobi-widget.bubble-open {
+  width: min(316px, calc(100vw - 16px));
+  align-items: flex-start;
+  gap: 0;
+}
+
+/* she stays where she rests: same x as the closed widget, tail tip tucked just under her */
+.strobi-widget.bubble-open .strobi-mascot-wrap {
+  margin-left: calc((var(--rest-w) - var(--wrap-w)) / 2);
+  margin-top: 6px;
 }
 
 .strobi-bubble {
   position: relative;
   flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
   pointer-events: auto;
   width: 100%;
   max-width: calc(100vw - 16px);
-  max-height: min(250px, calc(100dvh - 82px));
+  max-height: min(236px, calc(100dvh - 82px));
+  margin: 0;
+  padding: 0;
+  color: #e9f0ff;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  background:
+    /* 4% white mixed into the glass */
+    linear-gradient(rgba(255, 255, 255, .04), rgba(255, 255, 255, .04)) padding-box,
+    /* the soft diagonal highlight across the face */
+    linear-gradient(112deg, rgba(255, 255, 255, 0) 11%, rgba(214, 228, 255, .05) 19%, rgba(255, 255, 255, 0) 29%) padding-box,
+    /* the header band reads a step lighter than the body */
+    linear-gradient(180deg, rgba(var(--glass-hi), .78), rgba(var(--glass-hi), 0) 36px) padding-box,
+    /* and the footer a step lighter again, under the capsule */
+    linear-gradient(0deg, rgba(var(--glass-hi), .6), rgba(var(--glass-hi), 0) 46px) padding-box,
+    /* a faint blue pool in the bottom-right corner, where the reference rim glows */
+    radial-gradient(60% 60% at 98% 100%, rgba(var(--rim-hi), .16), rgba(var(--rim-hi), 0) 72%) padding-box,
+    linear-gradient(rgba(var(--glass), .97), rgba(var(--glass), .97)) padding-box,
+    /* rim: dark and thin along the top and left, brightest at the bottom-right corner */
+    linear-gradient(148deg, rgba(var(--rim-hi), .5), rgba(var(--rim-lo), .9) 30%, rgba(var(--rim-lo), .7) 62%, rgba(var(--rim-hi), .95)) border-box;
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, .55),
+    0 0 0 1px rgba(2, 5, 12, .5),
+    inset 0 1px 0 rgba(190, 214, 255, .1),
+    inset 0 -1px 0 rgba(var(--rim-hi), .2),
+    0 0 18px -6px rgba(var(--rim-hi), .28);
+  backdrop-filter: blur(10px) saturate(1.2);
+  -webkit-backdrop-filter: blur(10px) saturate(1.2);
+  transform-origin: calc(var(--orb-x) + 1px) 100%;
+  animation: strobi-bubble-in .38s cubic-bezier(.2, .8, .2, 1);
+}
+
+/* the tail: a small notch under the bubble, over Baew. A rim-coloured triangle with a fill-coloured one on top. */
+.strobi-bubble::before,
+.strobi-bubble::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+}
+
+.strobi-bubble::before {
+  left: calc(var(--orb-x) - 8px);
+  bottom: -11px;
+  width: 16px;
+  height: 11px;
+  background: rgba(var(--rim-hi), .6);
+}
+
+.strobi-bubble::after {
+  left: calc(var(--orb-x) - 7px);
+  bottom: -10px;
+  width: 14px;
+  height: 10px;
+  background: var(--tail-fill);
+}
+
+.bubble-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
   overflow-wrap: anywhere;
-  margin: 0;
-  padding: 11px 11px 10px 14px;
-  background:
-    radial-gradient(130% 75% at 0% 0%, rgba(var(--bb), .18), rgba(var(--bb), 0) 62%),
-    radial-gradient(90% 60% at 100% 100%, rgba(var(--bb), .08), rgba(var(--bb), 0) 70%),
-    linear-gradient(180deg, rgba(11, 16, 36, .985), rgba(5, 8, 19, .99));
-  border: 1px solid rgba(var(--bb), .36);
-  border-top-color: rgba(var(--bb), .6);
-  border-radius: 3px;
-  box-shadow:
-    0 16px 36px rgba(0, 0, 0, .6),
-    0 0 0 1px rgba(0, 0, 0, .55),
-    0 0 28px rgba(var(--bb), .12),
-    inset 0 1px 0 rgba(255, 255, 255, .1);
-  transform-origin: 50% 100%;
-  animation: strobi-bubble-in .38s cubic-bezier(.2, .8, .2, 1);
-  backdrop-filter: blur(14px) saturate(1.2);
-  -webkit-backdrop-filter: blur(14px) saturate(1.2);
-  color: #e9f0ff;
+  border-radius: 21px;
+  padding: 11px 14px 10px 16px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(var(--bb), .35) transparent;
 }
 
-/* accent rail on the left, and a light that crosses the top edge once as the bubble opens */
-.strobi-bubble::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 2px;
-  background: linear-gradient(180deg, rgb(var(--bb)), rgba(var(--bb), .0));
-  pointer-events: none;
-}
-
-.strobi-bubble::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgb(var(--bb)) 50%, rgba(255, 255, 255, 0)) -60% 0 / 50% 100% no-repeat;
-  animation: strobi-bubble-sweep 1.15s .14s cubic-bezier(.3, .6, .2, 1) both;
-  pointer-events: none;
-}
-
-/* the tail: a notch pointing at Baew, centred over her */
+/* her orbit: a thin ring behind her, tilted */
 .strobi-widget.bubble-open .strobi-mascot-wrap::before {
   content: "";
   position: absolute;
-  z-index: 3;
   left: 50%;
-  top: -6.5px;
-  width: 9px;
-  height: 9px;
-  margin: -4.5px 0 0 -4.5px;
-  background: #060918;
-  border-right: 1px solid rgba(var(--bb), .36);
-  border-bottom: 1px solid rgba(var(--bb), .36);
-  transform: rotate(45deg);
+  top: 50%;
+  width: 110px;
+  height: 34px;
+  margin: -17px 0 0 -55px;
+  border: 1px solid rgba(var(--bb), .34);
+  border-radius: 50%;
+  transform: rotate(-14deg);
   pointer-events: none;
 }
 
 .bubble-close {
   position: absolute;
-  top: 7px;
-  right: 7px;
+  z-index: 2;
+  top: 3px;
+  right: 4px;
   display: grid;
   place-items: center;
-  width: 18px;
-  height: 18px;
-  border: 1px solid rgba(var(--bb), .3) !important;
-  border-radius: 50%;
-  background: rgba(var(--bb), .06) !important;
+  width: 30px;
+  height: 30px;
+  border: 0 !important;
+  background: transparent !important;
   color: var(--bb-dim) !important;
   font-size: 12px;
   line-height: 1;
   padding: 0 !important;
   cursor: pointer;
   pointer-events: auto;
-  transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+  transition: color .18s ease;
+}
+
+/* the 30px target is invisible; the drawn control is the 18px ring inside it */
+.bubble-close::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  border: 1px solid rgba(var(--bb), .3);
+  background: rgba(var(--bb), .06);
+  transition: background-color .18s ease, border-color .18s ease;
 }
 
 .bubble-close:hover,
 .bubble-close:focus-visible {
-  background: rgba(var(--bb), .18) !important;
-  border-color: rgba(var(--bb), .6) !important;
   color: #fff !important;
   outline: none;
 }
 
+.bubble-close:hover::before,
+.bubble-close:focus-visible::before {
+  background: rgba(var(--bb), .18);
+  border-color: rgba(var(--bb), .6);
+}
+
+.bubble-close:focus-visible::before {
+  outline: 2px solid var(--bb-hi);
+  outline-offset: 1px;
+}
+
+/* label: the name, a quiet kind, then a hairline that runs out toward the close button */
 .bubble-heading-row {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 7px;
-  padding-right: 24px;
+  gap: 8px;
+  padding-right: 26px;
+}
+
+.bubble-heading-row::after {
+  content: "";
+  order: 2;
+  flex: 1 1 auto;
+  min-width: 8px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--bb), .5), rgba(var(--bb), 0));
 }
 
 .bubble-label {
   display: flex;
   align-items: center;
-  gap: 7px;
-  color: rgb(var(--bb));
-  font: 700 8.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .2em;
+  order: 1;
+  flex: 0 1 auto;
+  gap: 6px;
+  min-width: 0;
+  color: var(--bb-hi);
+  font: 600 11px/1 var(--font-ui, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+  letter-spacing: .01em;
+}
+
+.bubble-brand {
+  color: rgb(var(--jaye));
+  letter-spacing: .07em;
+}
+
+.bubble-kind {
+  color: var(--bb-dim);
+  font-weight: 400;
 }
 
 .bubble-pulse {
-  position: relative;
   flex: 0 0 5px;
   width: 5px;
   height: 5px;
   border-radius: 50%;
   background: rgb(var(--bb));
-  box-shadow: 0 0 8px rgba(var(--bb), .75);
-}
-
-.bubble-pulse::after {
-  content: "";
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 1px solid rgba(var(--bb), .6);
-  animation: strobi-bubble-ping 2.6s ease-out infinite;
+  box-shadow: 0 0 0 2px rgba(var(--bb), .18);
 }
 
 .strobi-bubble p {
   margin: 9px 0 11px;
   padding: 0;
-  font: 400 12.5px/1.52 var(--font-editorial, Georgia, "Times New Roman", serif);
+  font: 400 13px/1.5 var(--font-editorial, Georgia, "Times New Roman", serif);
   letter-spacing: .004em;
   color: #eef3ff;
   text-wrap: pretty;
 }
 
+/* actions: one soft capsule per state, everything else is plain text */
 .bubble-actions,
 .quick-help-actions {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 4px 12px;
 }
 
-.quick-help-actions {
-  align-items: stretch;
-}
-
+/* the capsule is navy glass with a blue edge, like the reference, not a solid accent fill */
 .bubble-primary {
-  border: 0 !important;
-  border-radius: 2px;
-  background: linear-gradient(180deg, rgb(var(--bb)), rgba(var(--bb), .78)) !important;
-  color: var(--bb-ink) !important;
-  padding: 7px 9px !important;
-  font-size: 9px;
-  line-height: 1.35;
-  font-weight: 750;
-  letter-spacing: .035em;
+  border: 1px solid rgba(var(--pill-edge), .95) !important;
+  border-radius: 999px;
+  background: linear-gradient(100deg, rgba(var(--pill-a), 1), rgba(var(--pill-b), 1)) !important;
+  color: var(--bb-hi) !important;
+  padding: 8px 13px !important;
+  font: 600 10px/1.25 var(--font-ui, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+  letter-spacing: .01em;
   cursor: pointer;
   pointer-events: auto;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .42), 0 0 14px rgba(var(--bb), .26);
-  transition: filter .18s ease, box-shadow .2s ease, transform .15s ease;
-}
-
-.quick-help-actions .bubble-primary {
-  flex: 1 1 42%;
+  box-shadow: inset 0 1px 0 rgba(190, 214, 255, .14), 0 3px 10px -5px rgba(var(--rim-hi), .45);
+  transition: filter .18s ease, transform .15s ease, border-color .18s ease;
 }
 
 .bubble-primary span {
@@ -389,8 +469,8 @@
 }
 
 .bubble-primary:hover {
-  filter: brightness(1.1);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 0 20px rgba(var(--bb), .42);
+  filter: brightness(1.15);
+  border-color: rgba(var(--rim-hi), .8) !important;
 }
 
 .bubble-primary:active {
@@ -407,9 +487,9 @@
   border: 0 !important;
   background: transparent !important;
   color: var(--bb-dim) !important;
-  padding: 6px 4px !important;
-  font-size: 9px;
-  letter-spacing: .03em;
+  padding: 8px 2px !important;
+  font: 500 10px/1.25 var(--font-ui, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+  letter-spacing: .01em;
   cursor: pointer;
   pointer-events: auto;
   text-decoration: underline transparent;
@@ -422,98 +502,88 @@
   text-decoration-color: rgba(var(--bb), .8);
 }
 
-/* "Surprise me": the one playful control. Outlined in the accent, a spark on its corner; it takes the
-   full row under the two primaries. Painted with background, box-shadow and outline only. */
-.quick-help-actions .bubble-secondary {
-  position: relative;
+/* help menu: "Explain this section" is the capsule (full width); "Go deeper" and "Surprise me" are text */
+.quick-help-actions .bubble-primary:first-child {
   flex: 1 1 100%;
-  text-align: center;
-  background: linear-gradient(135deg, rgba(var(--bb), .16), rgba(var(--bb), .04)) !important;
-  color: var(--bb-hi) !important;
-  border-radius: 2px;
-  box-shadow: inset 0 0 0 1px rgba(var(--bb), .46), 0 0 12px rgba(var(--bb), .16);
-  text-decoration: none;
-  transition: box-shadow .18s ease, filter .18s ease;
 }
 
-.quick-help-actions .bubble-secondary::after {
+.quick-help-actions .bubble-primary:nth-child(2) {
+  flex: 0 0 auto;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none;
+  color: var(--bb-hi) !important;
+  padding: 8px 2px !important;
+  border-radius: 0;
+  font-weight: 550;
+  text-decoration: underline transparent;
+  text-underline-offset: 3px;
+}
+
+.quick-help-actions .bubble-primary:nth-child(2)::after {
+  content: " →" / "";
+}
+
+.quick-help-actions .bubble-primary:nth-child(2):hover {
+  filter: none;
+  text-decoration-color: rgba(var(--bb), .8);
+}
+
+.quick-help-actions .bubble-secondary {
+  flex: 0 0 auto;
+  color: var(--bb-hi) !important;
+  font-weight: 550;
+}
+
+.quick-help-actions .bubble-secondary::before {
   content: "";
-  position: absolute;
-  top: -4px;
-  right: -2px;
+  display: inline-block;
   width: 8px;
   height: 8px;
+  margin-right: 5px;
   background: linear-gradient(135deg, #fff, rgb(var(--bb)));
   clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
-  pointer-events: none;
 }
 
-.quick-help-actions .bubble-secondary:hover {
-  filter: brightness(1.15);
-  box-shadow: inset 0 0 0 1px rgba(var(--bb), .72), 0 0 16px rgba(var(--bb), .3);
-}
-
-/* footer: where Baew thinks you are, and the personality switch */
-.bubble-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-top: 9px;
-  padding-top: 8px;
-  border-top: 1px solid rgba(var(--bb), .16);
-}
-
+/* where Baew thinks you are: plain text at the end of the heading row */
 .bubble-context {
+  order: 3;
   display: block;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   min-width: 0;
+  max-width: 45%;
   margin: 0;
   color: var(--bb-dim);
-  font: 600 7.5px/1.2 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  font: 500 10px/1.2 var(--font-ui, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+  letter-spacing: .01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.bubble-context::before {
-  content: "";
-  display: inline-block;
-  width: 5px;
-  height: 5px;
-  margin-right: 7px;
-  vertical-align: 1px;
-  border: 1px solid rgba(var(--bb), .85);
-  transform: rotate(45deg);
-}
-
 .bubble-modes {
   flex: 0 0 auto;
   display: inline-flex;
-  align-items: stretch;
-  border: 1px solid rgba(var(--bb), .32);
-  border-radius: 2px;
-  overflow: hidden;
+  align-items: center;
+  margin-left: auto;
 }
 
 .mode-pill {
+  position: relative;
   border: 0 !important;
   border-radius: 0;
   background: transparent !important;
   color: var(--bb-dim) !important;
-  padding: 5px 8px !important;
-  font: 650 8px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace;
-  letter-spacing: .09em;
-  text-transform: uppercase;
+  padding: 8px 8px !important;
+  font: 500 9.5px/1.1 var(--font-ui, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif);
+  letter-spacing: .01em;
   cursor: pointer;
   pointer-events: auto;
-  transition: background-color .2s ease, color .2s ease;
+  transition: color .2s ease;
 }
 
 .mode-pill + .mode-pill {
-  border-left: 1px solid rgba(var(--bb), .32) !important;
+  box-shadow: inset 1px 0 0 rgba(var(--bb), .28);
 }
 
 .mode-pill:hover {
@@ -521,9 +591,18 @@
 }
 
 .mode-pill.is-active {
-  background: rgb(var(--bb)) !important;
-  color: var(--bb-ink) !important;
-  font-weight: 800;
+  color: #fff !important;
+  font-weight: 650;
+}
+
+.mode-pill.is-active::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 5px;
+  height: 1px;
+  background: rgb(var(--bb));
 }
 
 .mode-pill:focus-visible {
@@ -591,19 +670,10 @@
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@keyframes strobi-bubble-sweep {
-  to { background-position: 160% 0; }
-}
-
-@keyframes strobi-bubble-ping {
-  0% { opacity: .9; transform: scale(.6); }
-  70%, 100% { opacity: 0; transform: scale(1.45); }
-}
-
 @media (max-width: 760px) {
   .strobi-widget {
     width: min(188px, calc(100vw - 16px));
-    --strobi-bubble-room: calc(min(230px, 100dvh - 76px) + 98px);
+    --strobi-bubble-room: calc(min(224px, 100dvh - 76px) + 98px);
   }
 
   .strobi-mascot-wrap {
@@ -615,34 +685,47 @@
     height: calc(44px * var(--baew-avatar-scale));
   }
 
+  .strobi-widget {
+    --rest-w: min(188px, calc(100vw - 16px));
+    --wrap-w: 64px;
+  }
+
+  .strobi-widget.bubble-open {
+    width: min(300px, calc(100vw - 16px));
+  }
+
   .strobi-bubble {
-    max-height: min(230px, calc(100dvh - 76px));
-    padding: 10px 10px 9px 13px;
+    max-height: min(224px, calc(100dvh - 76px));
+  }
+
+  .bubble-scroll {
+    padding: 10px 12px 8px 14px;
+  }
+
+  .strobi-widget.bubble-open .strobi-mascot-wrap::before {
+    width: 100px;
+    height: 31px;
+    margin: -15.5px 0 0 -50px;
   }
 
   .strobi-bubble p {
-    font-size: 11.5px;
+    font-size: 12px;
     line-height: 1.5;
     margin: 8px 0 10px;
   }
 
   .bubble-label {
-    font-size: 8px;
+    font-size: 10.5px;
   }
 
   .bubble-primary,
   .bubble-secondary {
-    font-size: 9px;
+    font-size: 9.5px;
   }
 
   .mode-pill {
-    font-size: 7.5px;
-    padding: 5px 7px !important;
-  }
-
-  .bubble-foot {
-    margin-top: 8px;
-    padding-top: 7px;
+    font-size: 9px;
+    padding: 8px 6px !important;
   }
 
   .hide-strobi {
@@ -665,11 +748,5 @@
   .restore-strobi {
     animation: none !important;
     transition: none !important;
-  }
-
-  /* with no sweep to run, show the edge light where it would have ended */
-  .strobi-bubble::after {
-    background-position: 50% 0;
-    opacity: .5;
   }
 }

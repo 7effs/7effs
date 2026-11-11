@@ -1,6 +1,6 @@
 import { createAvatar } from '@bible-strong/avatar-react'
 import '@bible-strong/avatar-react/styles.css'
-import { useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent as ReactFocusEvent, type PointerEvent as ReactPointerEvent } from 'react'
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type FocusEvent as ReactFocusEvent, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react'
 import { flushSync } from 'react-dom'
 import definition from '../strobi.avatar.json'
 import { createBrain, type BrainAnswer, type Progress } from './baew/brain'
@@ -312,6 +312,11 @@ function answerCue(text: string, target: string, personality: Personality): Cue 
 function targetTitle(target: string): string {
   const entry = brain.entryForDomId(target)
   return entry ? entry.title : target.replace(/[-_]+/g, ' ') || 'this page'
+}
+
+/** The one place the guide names the site: set it a little brighter, nothing else. */
+function renderMessage(text: string): ReactNode {
+  return text.split(/(\bJAYE\b)/).map((part, i) => (part === 'JAYE' ? <b key={i} className="bubble-brand">{part}</b> : part))
 }
 
 export default function StrobiGuide() {
@@ -1281,6 +1286,13 @@ export default function StrobiGuide() {
       ? ({ '--strobi-home-dx': `${homeShift.dx}px`, '--strobi-home-lift': `${homeShift.lift}px` } as CSSProperties)
       : undefined
 
+  const modeSwitch = (
+    <div className="bubble-modes" role="group" aria-label="Baew personality mode">
+      <button className={`mode-pill ${personality === 'playful' ? 'is-active' : ''}`} aria-pressed={personality === 'playful'} onClick={() => switchPersonality('playful')}>Playful</button>
+      <button className={`mode-pill ${personality === 'freaky' ? 'is-active' : ''}`} aria-pressed={personality === 'freaky'} onClick={() => switchPersonality('freaky')}>Freaky</button>
+    </div>
+  )
+
   return (
     <>
       {!hidden && (
@@ -1304,19 +1316,23 @@ export default function StrobiGuide() {
               onBlur={handlePopupBlur}
             >
               <button className="bubble-close" aria-label="Dismiss Baew hint" onClick={closeBubble}>×</button>
+              <div className="bubble-scroll">
               <div className="bubble-heading-row">
                 <div className="bubble-label">
                   <span className="bubble-pulse" />
-                  {thinking ? 'BAEW · THINKING' : cue.kind === 'menu' ? 'BAEW · HELP' : cue.kind === 'casual' ? 'BAEW · ASIDE' : 'BAEW · NOTE'}
+                  Baew
+                  <span className="bubble-kind">· {thinking ? 'thinking' : cue.kind === 'menu' ? 'help' : cue.kind === 'casual' ? 'aside' : 'note'}</span>
                 </div>
+                <span className="bubble-context">{activeTitle}</span>
               </div>
-              <p>{cue.message}</p>
+              <p>{renderMessage(cue.message)}</p>
 
               {cue.kind === 'menu' ? (
                 <div className="quick-help-actions">
                   <button className="bubble-primary" onClick={() => void requestHelp(findActiveSection(activeSectionRef.current), {})}>Explain this section</button>
                   <button className="bubble-primary" onClick={() => void requestHelp(findActiveSection(activeSectionRef.current), { deeper: true })}>Go deeper</button>
                   <button className="bubble-secondary" onClick={() => { showCasual(true) }}>Surprise me</button>
+                  {modeSwitch}
                 </div>
               ) : (
                 <div className="bubble-actions">
@@ -1331,14 +1347,9 @@ export default function StrobiGuide() {
                     <button className="bubble-primary" onClick={presentMenu}>More help <span aria-hidden="true">↗</span></button>
                   )}
                   <button className="bubble-secondary" onClick={closeBubble}>Got it</button>
+                  {modeSwitch}
                 </div>
               )}
-              <div className="bubble-foot">
-                <span className="bubble-context">{activeTitle}</span>
-                <div className="bubble-modes" role="group" aria-label="Baew personality mode">
-                  <button className={`mode-pill ${personality === 'playful' ? 'is-active' : ''}`} aria-pressed={personality === 'playful'} onClick={() => switchPersonality('playful')}>Playful</button>
-                  <button className={`mode-pill ${personality === 'freaky' ? 'is-active' : ''}`} aria-pressed={personality === 'freaky'} onClick={() => switchPersonality('freaky')}>Freaky</button>
-                </div>
               </div>
             </section>
           )}
