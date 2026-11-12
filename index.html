@@ -2390,19 +2390,6 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <span class="sound-label" id="soundLabel">MUSIC OFF</span>
 <button aria-label="Play background music" aria-pressed="false" class="sound-button" id="soundButton" type="button"><span aria-hidden="true" class="sound-icon"></span> <span aria-hidden="true" class="sound-bars"><span></span><span></span><span></span></span></button>
 </div>
-<div class="jaye-readout" data-place="down" id="jayeReadout">
-<button aria-controls="jrMenu" aria-expanded="false" aria-haspopup="true" class="jr-trigger" type="button"><span class="jr-head"><i class="jr-dot"></i><span>SECTION</span><i aria-hidden="true" class="jr-caret"></i></span><span class="jr-main"><b class="jr-name">HOME</b><span class="jr-idx"> / 00</span></span><span class="jr-sr"> — choose a section</span></button>
-<nav aria-label="Sections" class="jr-menu" hidden id="jrMenu"><ul>
-<li><a data-short="HOME" href="#archive-home"><span class="jr-t">Home</span><span class="jr-n">00</span></a></li>
-<li><a data-short="ARCHIVE" href="#archiveInterfaces"><span class="jr-t">Archive</span><span class="jr-n">01</span></a></li>
-<li><a data-short="MEMORY" href="#demi-system"><span class="jr-t">Memory Orbit</span><span class="jr-n">10</span></a></li>
-<li><a data-short="CAT AI" href="#nodeAISection"><span class="jr-t">Cat AI</span><span class="jr-n">11</span></a></li>
-<li><a data-short="PARENT" href="#parent-interface-entry-wrap"><span class="jr-t">Parent Space</span><span class="jr-n">12—13</span></a></li>
-<li><a data-short="ANOMALY" href="#postAI-reading-memory"><span class="jr-t">The Anomaly Protocol</span><span class="jr-n">14</span></a></li>
-<li><a data-short="WORLDS" href="#postAI-impossible"><span class="jr-t">Experimental Worlds</span><span class="jr-n">15</span></a></li>
-<li><a data-short="GLIMPSE" href="#glimpse"><span class="jr-t">Glimpse</span><span class="jr-n">VOL.01</span></a></li>
-</ul></nav>
-</div>
 <audio id="siteAudio" loop="" preload="metadata">
 <source src="Music.mp3" type="audio/mpeg"/>
 </audio>
@@ -2430,7 +2417,21 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <div class="hero-copy">
 <p class="kicker"><span></span></p>
 <h1 class="hero-name-stack" id="jaye-wordmark"><span class="hero-title-name">Jaye<span class="hero-title-dot"></span></span><span class="hero-name-second">7effs<span class="hero-second-period"></span></span></h1>
-<div class="hero-intro"><p>A Private Index of Things Unrecorded.</p></div>
+<div class="hero-intro"><p>A Private Index of Things Unrecorded.</p>
+<div class="jaye-readout" data-place="down" id="jayeReadout">
+<button aria-controls="jrMenu" aria-expanded="false" aria-haspopup="true" class="jr-trigger" type="button"><span class="jr-head"><i class="jr-dot"></i><span>SECTION</span><i aria-hidden="true" class="jr-caret"></i></span><span class="jr-main"><b class="jr-name">HOME</b><span class="jr-idx"> / 00</span></span><span class="jr-sr"> — choose a section</span></button>
+<nav aria-label="Sections" class="jr-menu" hidden id="jrMenu"><ul>
+<li><a data-short="HOME" href="#archive-home"><span class="jr-t">Home</span><span class="jr-n">00</span></a></li>
+<li><a data-short="ARCHIVE" href="#archiveInterfaces"><span class="jr-t">Archive</span><span class="jr-n">01</span></a></li>
+<li><a data-short="MEMORY" href="#demi-system"><span class="jr-t">Memory Orbit</span><span class="jr-n">10</span></a></li>
+<li><a data-short="CAT AI" href="#nodeAISection"><span class="jr-t">Cat AI</span><span class="jr-n">11</span></a></li>
+<li><a data-short="PARENT" href="#parent-interface-entry-wrap"><span class="jr-t">Parent Space</span><span class="jr-n">12—13</span></a></li>
+<li><a data-short="ANOMALY" href="#postAI-reading-memory"><span class="jr-t">The Anomaly Protocol</span><span class="jr-n">14</span></a></li>
+<li><a data-short="WORLDS" href="#postAI-impossible"><span class="jr-t">Experimental Worlds</span><span class="jr-n">15</span></a></li>
+<li><a data-short="GLIMPSE" href="#glimpse"><span class="jr-t">Glimpse</span><span class="jr-n">VOL.01</span></a></li>
+</ul></nav>
+</div>
+</div>
 <div aria-hidden="true" class="hero-rule"></div>
 
 </div>
@@ -4709,7 +4710,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   'use strict';
   const svg = {
     archive: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9H32L40 17V39H8Z"/><path d="M32 9V17H40"/><path d="M14 20H30M14 26H27M14 32H23"/><path d="M8 14H4V43H35" opacity=".55"/></svg>',
-    gate: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 4C25.4 15.6 32.4 22.6 44 24C32.4 25.4 25.4 32.4 24 44C22.6 32.4 15.6 25.4 4 24C15.6 22.6 22.6 15.6 24 4Z"/><path d="M24 14V34M14 24H34" opacity=".5"/></svg>',
+    gate: '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1.5 16H8.5M8.5 16 17.5 7H29M8.5 16 17.5 25H29"/><circle cx="8.5" cy="16" r="1.9" fill="currentColor" stroke="none"/><circle cx="29" cy="7" r="1.3" fill="currentColor" stroke="none"/><circle cx="29" cy="25" r="1.3" fill="currentColor" stroke="none"/></svg>',
     personal: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="square" stroke-linejoin="miter"><path d="M8 8H40V40H8Z"/><path d="M15 15H33V33H15Z"/><path d="M15 15L33 33M33 15L15 33" opacity=".42"/><path d="M8 24H15M33 24H40"/></svg>',
     thoughts: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12H24L30 18H41V36H7Z"/><path d="M7 12V8H25L29 12"/><path d="M14 24H33M14 29H28"/><path d="M35 4L37 8L41 10L37 12L35 16L33 12L29 10L33 8Z" opacity=".72"/></svg>',
     beliefs: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round"><path d="M6 25C12 13 22 8 32 11C39 13 42 20 39 26C35 34 22 40 12 35"/><path d="M11 26C16 18 24 16 30 18C34 20 35 24 32 28C28 32 20 34 15 31"/><path d="M22 23L26 26L23 30"/><path d="M7 38L11 35L12 40" opacity=".62"/></svg>',
@@ -6660,11 +6661,8 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 #archive-home.jaye-entrance-peak .hero-floorline span:last-child{animation-duration:2.8s!important;animation-delay:12.8s!important}
 #archive-home.jaye-entrance-peak .jaye-peak-flash::before{animation-duration:2.7s!important;animation-delay:3.7s!important}
 #archive-home.jaye-entrance-peak .jaye-peak-flash::after{animation-duration:4.2s!important;animation-delay:2.6s!important}
-/* Long-running obsidian-like ambient motion after the entrance settles. */
+/* The hero scene is its own stacking context so its entrance sweep blends inside it. */
 #archive-home .hero-kinetic-scene{isolation:isolate}
-#archive-home .hero-kinetic-scene::before{content:"";position:absolute;inset:3% 2%;z-index:8;pointer-events:none;background:linear-gradient(112deg,transparent 0%,rgba(180,196,222,0) 30%,rgba(188,204,232,.07) 43%,rgba(242,247,255,.19) 47%,rgba(113,139,178,.08) 51%,transparent 66%);mix-blend-mode:screen;opacity:0;animation:jayeObsidianAmbient 10s ease-in-out 15s infinite}
-@keyframes jayeObsidianAmbient{0%,100%{opacity:0;transform:translateX(-42%) skewX(-14deg)}18%{opacity:.8}52%{opacity:.35;transform:translateX(30%) skewX(-14deg)}78%{opacity:.65;transform:translateX(80%) skewX(-14deg)}}
-@media(prefers-reduced-motion:reduce){#archive-home .hero-kinetic-scene::before{animation:none!important;display:none!important}}
 </style>
 
 
@@ -6691,7 +6689,6 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 #archive-home.jaye-entrance-peak .jaye-peak-flash::after{animation:jayeV3Sweep 4.6s cubic-bezier(.4,0,.2,1) 2s both!important}
 /* Keep the hero visibly alive after the long reveal, rather than becoming static. */
 #archive-home .hero-signature .master-emblem{animation:jayeV3IdleEmblem 8s ease-in-out 15s infinite}
-#archive-home .hero-kinetic-scene::before{animation:jayeV3Ambient 9s ease-in-out 15s infinite!important}
 #archive-home .hero-entry-grid>.cat-chat-mini{animation:jayeV3CardIdle 7s ease-in-out 15s infinite}
 #archive-home .hero-entry-grid>.archive-entry{animation:jayeV3CardIdle 7s ease-in-out 16s infinite}
 @keyframes jayeV3Logo{0%{opacity:0;transform:translate(-30px,-14px) scale(.7);filter:blur(9px)}50%{opacity:1;transform:translate(4px,0) scale(1.08);filter:brightness(1.9) blur(0)}72%{transform:translate(-2px,0) scale(.97)}100%{opacity:1;transform:none;filter:none}}
@@ -6708,7 +6705,6 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
 @keyframes jayeV3Card{0%{opacity:0;transform:translate3d(0,48px,0) scale(.92);filter:brightness(.45) blur(8px);box-shadow:0 0 0 rgba(130,165,220,0)}45%{opacity:1;transform:translate3d(0,-5px,0) scale(1.025);filter:brightness(1.4) blur(0);box-shadow:0 0 38px rgba(130,165,220,.22)}68%{transform:translateY(2px) scale(.995)}100%{opacity:1;transform:none;filter:none}}
 @keyframes jayeV3Flash{0%{opacity:0;transform:scale(.65)}35%{opacity:1;transform:scale(1.08)}100%{opacity:0;transform:scale(1.5)}}
 @keyframes jayeV3IdleEmblem{0%,100%{filter:drop-shadow(0 0 5px rgba(135,174,255,.08))}50%{filter:drop-shadow(0 0 18px rgba(135,174,255,.38))}}
-@keyframes jayeV3Ambient{0%,100%{opacity:0;transform:translateX(-65%) skewX(-18deg)}25%{opacity:.85}65%{opacity:.4;transform:translateX(35%) skewX(-18deg)}85%{opacity:.75;transform:translateX(90%) skewX(-18deg)}}
 @keyframes jayeV3CardIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 @media(prefers-reduced-motion:reduce){#archive-home *,#archive-home *::before,#archive-home *::after{animation:none!important;transition:none!important}}
 </style>
@@ -7781,12 +7777,13 @@ body>main #archiveInterfaces.archive-portal-v3::after{
 /* ---- 4. heading: bezel round the sigil, rule after the kicker, the stray "°" becomes an ornament --- */
 #archiveInterfaces .archive-launcher-heading{grid-template-columns:36px minmax(0,1fr)}
 #archiveInterfaces .archive-launcher-heading>.section-sigil{
-  /* a line star in the page's silver-blue, no disc or ring; same 32px slot as before so the section height does not move */
+  /* two-routes mark: one stem forking into two paths, in the page's silver; same 32px slot as before so the section height does not move */
   width:32px;height:32px;margin:8px 0;align-self:center;display:grid;place-items:center;overflow:visible;
   border:0;border-radius:0;background:none;box-shadow:none;color:var(--glacier-blue,#9fb6ee);
 }
 #archiveInterfaces .archive-launcher-heading>.section-sigil svg{overflow:visible;width:100%;height:100%;filter:drop-shadow(0 0 5px rgba(143,162,207,.35))}
-#archiveInterfaces .archive-launcher-heading .portal-title-kicker{display:flex;align-items:center;gap:14px;color:rgba(224,228,235,.92)}
+#archiveInterfaces .archive-launcher-heading .portal-title-kicker{display:flex;align-items:center;gap:14px;color:rgba(224,228,235,.92);grid-column:2;grid-row:1/span 2;align-self:center}
+#archiveInterfaces .archive-launcher-heading>p{grid-column:2;grid-row:1}
 #archiveInterfaces .archive-launcher-heading .portal-title-kicker::after{
   content:"";flex:1 1 auto;height:1px;
   background:linear-gradient(90deg,rgba(196,203,212,.5),rgba(137,150,170,.1) 70%,rgba(137,150,170,0));
@@ -7957,13 +7954,16 @@ body>main #archiveInterfaces.archive-portal-v3::after{
 })();
 </script>
 <style id="jaye-section-selector-v1">
-/* Section selector. The passive hero readout is now a small fixed control: it names the section the visitor is in and opens
+/* Section selector. The passive hero readout is now a small control: it names the section the visitor is in and opens
    a list of the page's own sections. Same material as before (hairline border, translucent navy, mono type, corner ticks).
-   It sits in one fixed slot: the top-right corner, directly under the Music chip, right edges aligned, at every width and scroll position. */
-.jaye-readout{position:fixed;z-index:140;top:65px;right:11px;width:124px;box-sizing:border-box;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);color:#dce6fa;transition:opacity .35s ease}
+   It lives inside the hero, on the right of the subtitle line just above the divider, and scrolls away with the hero. */
+.jaye-readout{position:absolute;right:0;bottom:3px;width:124px;box-sizing:border-box;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);color:#dce6fa;transition:opacity .35s ease}
 .jaye-readout.is-open{z-index:2147483001}
+/* while the list is open, lift the hero copy above the navigation cards that sit below it so the list is not covered */
+.hero-copy:has(.jaye-readout.is-open){z-index:9}
 @media(min-width:681px){.jaye-readout{width:130px}}
-@media(min-width:761px){.jaye-readout{top:calc(max(18px,env(safe-area-inset-top)) + 62px);right:max(22px,env(safe-area-inset-right))}}
+/* where the subtitle would run into it (narrow phones, narrow tablets) it sits just above the subtitle instead of beside it */
+@media(max-width:428px),(min-width:761px) and (max-width:800px){.jaye-readout{bottom:calc(100% + 8px)}}
 html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.demi-memory-open .jaye-readout,body[data-archive-view^="interface-"] .jaye-readout{visibility:hidden;opacity:0;pointer-events:none}
 .jaye-readout .jr-trigger{position:relative;display:grid;gap:4px;width:100%;margin:0;padding:6px 9px 7px 10px;box-sizing:border-box;font:inherit;color:inherit;text-align:left;-webkit-appearance:none;appearance:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;background:linear-gradient(180deg,rgba(14,24,52,.6),rgba(8,14,32,.52));border:1px solid rgba(143,162,207,.34);border-radius:2px;box-shadow:inset 0 1px rgba(226,235,255,.09);transition:border-color .16s ease}
 @media(min-width:681px){.jaye-readout .jr-trigger{gap:5px;padding:7px 10px 8px 11px}}
@@ -8050,7 +8050,12 @@ let open=false;
 function place(){
   menu.style.maxHeight='';
   const r=btn.getBoundingClientRect(),h=menu.offsetHeight,gap=8,edge=12;
-  const below=innerHeight-r.bottom-gap-edge,above=r.top-gap-edge;
+  /* room is measured to the viewport (less the fixed Switch Background chip) or to any clipping ancestor (the hero clips on wide screens) */
+  let lo=0,hi=innerHeight-40;
+  for(let n=root.parentElement;n&&n!==document.documentElement;n=n.parentElement){
+    if(getComputedStyle(n).overflowY!=='visible'){const c=n.getBoundingClientRect();lo=Math.max(lo,c.top);hi=Math.min(hi,c.bottom)}
+  }
+  const below=hi-r.bottom-gap-edge,above=r.top-lo-gap-edge;
   const up=h>below&&above>below;
   root.dataset.place=up?'up':'down';
   menu.style.maxHeight=Math.max(96,Math.floor(up?above:below))+'px';
