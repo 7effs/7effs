@@ -2390,6 +2390,19 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <span class="sound-label" id="soundLabel">MUSIC OFF</span>
 <button aria-label="Play background music" aria-pressed="false" class="sound-button" id="soundButton" type="button"><span aria-hidden="true" class="sound-icon"></span> <span aria-hidden="true" class="sound-bars"><span></span><span></span><span></span></span></button>
 </div>
+<div class="jaye-readout" data-place="down" id="jayeReadout">
+<button aria-controls="jrMenu" aria-expanded="false" aria-haspopup="true" class="jr-trigger" type="button"><span class="jr-head"><i class="jr-dot"></i><span>SECTION</span><i aria-hidden="true" class="jr-caret"></i></span><span class="jr-main"><b class="jr-name">HOME</b><span class="jr-idx"> / 00</span></span><span class="jr-sr"> — choose a section</span></button>
+<nav aria-label="Sections" class="jr-menu" hidden id="jrMenu"><ul>
+<li><a data-short="HOME" href="#archive-home"><span class="jr-t">Home</span><span class="jr-n">00</span></a></li>
+<li><a data-short="ARCHIVE" href="#archiveInterfaces"><span class="jr-t">Archive</span><span class="jr-n">01</span></a></li>
+<li><a data-short="MEMORY" href="#demi-system"><span class="jr-t">Memory Orbit</span><span class="jr-n">10</span></a></li>
+<li><a data-short="CAT AI" href="#nodeAISection"><span class="jr-t">Cat AI</span><span class="jr-n">11</span></a></li>
+<li><a data-short="PARENT" href="#parent-interface-entry-wrap"><span class="jr-t">Parent Space</span><span class="jr-n">12—13</span></a></li>
+<li><a data-short="ANOMALY" href="#postAI-reading-memory"><span class="jr-t">The Anomaly Protocol</span><span class="jr-n">14</span></a></li>
+<li><a data-short="WORLDS" href="#postAI-impossible"><span class="jr-t">Experimental Worlds</span><span class="jr-n">15</span></a></li>
+<li><a data-short="GLIMPSE" href="#glimpse"><span class="jr-t">Glimpse</span><span class="jr-n">VOL.01</span></a></li>
+</ul></nav>
+</div>
 <audio id="siteAudio" loop="" preload="metadata">
 <source src="Music.mp3" type="audio/mpeg"/>
 </audio>
@@ -2423,7 +2436,6 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </div>
 <div aria-hidden="true" class="hero-kinetic-scene">
 <div class="artifact-lightwell"></div>
-<div aria-label="Current section" class="jaye-readout" data-context="home" id="jayeReadout" role="img"><span class="jr-head"><i class="jr-dot"></i><span>SECTION</span></span><span class="jr-main"><b class="jr-name">HOME</b><span class="jr-idx"> / 00</span></span></div>
 <div class="artifact-caption artifact-caption--top"><span>OBJECT / 001</span><i>✳</i><span>FORM UNRESOLVED</span></div>
 <div class="artifact-caption artifact-caption--bottom"><span>FIG. A</span><span>THE IMPOSSIBLE ARCHIVE</span><span>Δ 07</span></div>
 </div>
@@ -7951,54 +7963,142 @@ body>main #archiveInterfaces.archive-portal-v3::after{
   requestAnimationFrame(frame);
 })();
 </script>
-<style id="jaye-hero-readout-v1">
-/* Hero context readout. It occupies the slot the Watcher eye used to fill: a small archival instrument that names the
-   section the visitor is actually in. Static, no animation loop; one short fade runs only when the context changes. */
-.hero-kinetic-scene .jaye-readout{position:absolute;left:50%;top:51%;z-index:9;transform:translate(-50%,-50%);box-sizing:border-box;width:130px;padding:7px 10px 8px 11px;display:grid;gap:5px;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);color:#dce6fa;background:linear-gradient(180deg,rgba(14,24,52,.6),rgba(8,14,32,.52));border:1px solid rgba(143,162,207,.34);border-radius:2px;box-shadow:inset 0 1px rgba(226,235,255,.09);pointer-events:none;user-select:none}
-.jaye-readout::before,.jaye-readout::after{content:"";position:absolute;width:6px;height:6px;pointer-events:none}
-.jaye-readout::before{left:-3px;top:-3px;border-left:1px solid #9fb6ee;border-top:1px solid #9fb6ee}
-.jaye-readout::after{right:-3px;bottom:-3px;border-right:1px solid #9fb6ee;border-bottom:1px solid #9fb6ee}
+<style id="jaye-section-selector-v1">
+/* Section selector. The passive hero readout is now a small fixed control: it names the section the visitor is in and opens
+   a list of the page's own sections. Same material as before (hairline border, translucent navy, mono type, corner ticks).
+   Vertical slot = where the readout sat in the hero at scroll 0; horizontal slot is moved toward the right gutter. */
+.jaye-readout{position:fixed;z-index:140;top:min(calc(144px + 38.6vw),346px);right:max(18px,calc(18vw - 62px),env(safe-area-inset-right));width:124px;transform:translateY(-50%);box-sizing:border-box;font-family:var(--font-mono,ui-monospace,SFMono-Regular,Menlo,Consolas,monospace);color:#dce6fa;transition:opacity .35s ease}
+.jaye-readout.is-open{z-index:2147483001}
+@media(min-width:681px){.jaye-readout{width:130px;top:clamp(346px,calc(144px + 26vw),550px);right:max(18px,calc(18vw - 65px),env(safe-area-inset-right))}}
+html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.demi-memory-open .jaye-readout,body[data-archive-view^="interface-"] .jaye-readout{visibility:hidden;opacity:0;pointer-events:none}
+.jaye-readout .jr-trigger{position:relative;display:grid;gap:4px;width:100%;margin:0;padding:6px 9px 7px 10px;box-sizing:border-box;font:inherit;color:inherit;text-align:left;-webkit-appearance:none;appearance:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;background:linear-gradient(180deg,rgba(14,24,52,.6),rgba(8,14,32,.52));border:1px solid rgba(143,162,207,.34);border-radius:2px;box-shadow:inset 0 1px rgba(226,235,255,.09);transition:border-color .16s ease}
+@media(min-width:681px){.jaye-readout .jr-trigger{gap:5px;padding:7px 10px 8px 11px}}
+.jaye-readout.is-open .jr-trigger{border-color:rgba(159,182,238,.58)}
+@media(hover:hover){.jaye-readout .jr-trigger:hover{border-color:rgba(159,182,238,.58)}}
+.jaye-readout .jr-trigger:focus-visible,.jaye-readout .jr-menu a:focus-visible{outline:1px solid #9fb6ee;outline-offset:3px}
+.jaye-readout .jr-menu a:focus-visible{outline-offset:-2px}
+.jaye-readout .jr-trigger::before,.jaye-readout .jr-trigger::after{content:"";position:absolute;width:6px;height:6px;pointer-events:none}
+.jaye-readout .jr-trigger::before{left:-3px;top:-3px;border-left:1px solid #9fb6ee;border-top:1px solid #9fb6ee}
+.jaye-readout .jr-trigger::after{right:-3px;bottom:-3px;border-right:1px solid #9fb6ee;border-bottom:1px solid #9fb6ee}
 .jaye-readout .jr-head{display:flex;align-items:center;gap:6px;font-size:7px;line-height:1;letter-spacing:.24em;color:rgba(143,162,207,.72)}
 .jaye-readout .jr-dot{flex:none;width:4px;height:4px;border-radius:50%;background:#7da2ff;box-shadow:0 0 0 2px rgba(125,162,255,.16)}
-.jaye-readout .jr-main{display:block;font-size:10.5px;line-height:1.1;letter-spacing:.11em;white-space:nowrap;overflow:hidden;text-overflow:clip}
+.jaye-readout .jr-caret{flex:none;margin-left:auto;width:4px;height:4px;border-right:1px solid currentColor;border-bottom:1px solid currentColor;transform:translateY(-1px) rotate(45deg);transition:transform .16s ease}
+.jaye-readout.is-open .jr-caret{transform:translateY(1px) rotate(-135deg)}
+.jaye-readout .jr-main{display:block;font-size:10px;line-height:1.1;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:clip}
+@media(min-width:681px){.jaye-readout .jr-main{font-size:10.5px;letter-spacing:.11em}}
 .jaye-readout .jr-name{font-weight:600;color:#e4ecfb}
 .jaye-readout .jr-idx{color:rgba(143,162,207,.82)}
 .jaye-readout.is-long .jr-main{font-size:9px;letter-spacing:.07em}
 .jaye-readout.is-swap .jr-main{animation:jrSwap .26s cubic-bezier(.2,.7,.2,1) both}
 @keyframes jrSwap{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
-@media(max-width:680px){.hero-kinetic-scene .jaye-readout{left:41%;width:124px;padding:6px 9px 7px 10px;gap:4px}.jaye-readout .jr-main{font-size:10px;letter-spacing:.1em}.jaye-readout.is-long .jr-main{font-size:9px;letter-spacing:.07em}}
-@media(prefers-reduced-motion:reduce){.jaye-readout.is-swap .jr-main{animation:none}}
+.jaye-readout .jr-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+/* The list: anchored to the selector's right edge, opens below it (above when there is no room; set in script). */
+.jaye-readout .jr-menu{position:absolute;right:0;top:calc(100% + 8px);width:204px;max-width:calc(100vw - 36px);box-sizing:border-box;padding:3px;overflow-y:auto;overscroll-behavior:contain;background:rgba(14,24,52,.01);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid rgba(143,162,207,.34);border-radius:2px;box-shadow:inset 0 1px rgba(226,235,255,.09)}
+.jaye-readout .jr-menu[hidden]{display:none}
+.jaye-readout[data-place="up"] .jr-menu{top:auto;bottom:calc(100% + 8px)}
+.jaye-readout .jr-menu ul{display:grid;margin:0;padding:0;list-style:none}
+.jaye-readout .jr-menu a{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:12px;min-height:33px;padding:0 9px;font-size:10px;line-height:1.1;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;white-space:nowrap;color:rgba(143,162,207,.88);border-radius:1px;-webkit-tap-highlight-color:transparent}
+@media(pointer:coarse){.jaye-readout .jr-menu a{min-height:38px}}
+.jaye-readout .jr-menu .jr-t{overflow:hidden;text-overflow:ellipsis}
+.jaye-readout .jr-menu .jr-n{color:rgba(143,162,207,.72);font-variant-numeric:tabular-nums}
+@media(hover:hover){.jaye-readout .jr-menu a:hover{color:#e4ecfb;background:rgba(125,162,255,.08)}}
+.jaye-readout .jr-menu a[aria-current]{color:#e4ecfb;background:rgba(125,162,255,.12);box-shadow:inset 2px 0 0 #7da2ff}
+.jaye-readout .jr-menu a[aria-current] .jr-n{color:rgba(190,206,244,.92)}
+@media(prefers-reduced-motion:reduce){.jaye-readout,.jaye-readout .jr-trigger,.jaye-readout .jr-caret{transition:none}.jaye-readout.is-swap .jr-main{animation:none}}
 </style>
-<script id="jaye-hero-readout-v1">
+<script id="jaye-section-selector-v1">
 (function(){
 'use strict';
-const el=document.getElementById('jayeReadout');if(!el)return;
-const nameEl=el.querySelector('.jr-name'),idxEl=el.querySelector('.jr-idx');if(!nameEl||!idxEl)return;
-/* Contexts come from the page's own identifiers: the hero entries read "01 / CHAT" and "02 / PLAY" (Experimental Worlds),
-   and the router already publishes body[data-archive-view] for the two Archive interfaces. */
-const SECTIONS=[['archive-home','home','HOME','00'],['archiveInterfaces','archive','ARCHIVE','03'],['nodeAISection','chat','CHAT','01'],['postAI-impossible','worlds','WORLDS','02']];
-const VIEWS={'interface-one':['ARCHIVE','INT.01'],'interface-two':['ARCHIVE','INT.02']};
-const live=new Map();let key='';
-function show(k,name,idx){
-  if(k===key)return;key=k;
-  nameEl.textContent=name;idxEl.textContent=' / '+idx;el.dataset.context=k;el.classList.toggle('is-long',(name+idx).length>12);
-  el.classList.remove('is-swap');void el.offsetWidth;el.classList.add('is-swap');
+/* The list is the markup: every link is a real in-page anchor, so navigation is the page's own (#id + smooth scroll).
+   Entries whose section is missing from the page are dropped, so the list can never point at a destination that is not there. */
+const root=document.getElementById('jayeReadout');if(!root)return;
+const btn=root.querySelector('.jr-trigger'),menu=root.querySelector('.jr-menu');
+const nameEl=root.querySelector('.jr-name'),idxEl=root.querySelector('.jr-idx');
+if(!btn||!menu||!nameEl||!idxEl)return;
+const items=[];
+menu.querySelectorAll('a[href^="#"]').forEach(a=>{
+  const el=document.getElementById(a.hash.slice(1));
+  if(el)items.push({a,el,name:a.dataset.short||a.querySelector('.jr-t').textContent.toUpperCase(),idx:a.querySelector('.jr-n').textContent});
+  else a.parentElement.remove();
+});
+if(!items.length){root.remove();return}
+
+/* Active section: a thin band a third of the way down the viewport, where a section lands once the selector has scrolled to it;
+   callbacks fire only when a section crosses it (no scroll listener). */
+const live=new Map();let current=-1,pick=-1,pickTimer=0;
+function show(i){
+  if(i===current)return;current=i;
+  const it=items[i];
+  nameEl.textContent=it.name;idxEl.textContent=' / '+it.idx;
+  root.classList.toggle('is-long',(it.name+it.idx).length>12);
+  items.forEach((x,k)=>{if(k===i)x.a.setAttribute('aria-current','location');else x.a.removeAttribute('aria-current')});
+  root.classList.remove('is-swap');void root.offsetWidth;root.classList.add('is-swap');
 }
-function resolve(){
-  const view=document.body.getAttribute('data-archive-view');
-  if(VIEWS[view]){show(view,VIEWS[view][0],VIEWS[view][1]);return}
-  let pick=null;
-  for(const s of SECTIONS){if(live.get(s[0]))pick=s;/* later sections in page order win when the band touches two */}
-  if(pick)show(pick[1],pick[2],pick[3]);
-  else if(!key)show('home','HOME','00');
-}
+show(0);
 if('IntersectionObserver' in window){
-  /* A thin band at the middle of the viewport: callbacks fire only when a section crosses it, so there is no scroll listener. */
-  const io=new IntersectionObserver(es=>{es.forEach(e=>live.set(e.target.id,e.isIntersecting));resolve()},{rootMargin:'-49% 0px -49% 0px',threshold:0});
-  SECTIONS.forEach(s=>{const t=document.getElementById(s[0]);if(t)io.observe(t)});
+  let atEnd=false;
+  const resolve=()=>{
+    let k=-1;items.forEach((it,i)=>{if(live.get(it.el))k=i});/* later sections in page order win when the band touches two */
+    /* The last section is short, so at the very end of the page the band never reaches it: the end wins, unless the visitor
+       just chose another section that is still under the band (a tall window can show Worlds and Glimpse together). */
+    if(atEnd&&!(pick>=0&&live.get(items[pick].el)))k=items.length-1;
+    if(k>=0)show(k);
+  };
+  const io=new IntersectionObserver(es=>{es.forEach(e=>live.set(e.target,e.isIntersecting));resolve()},{rootMargin:'-30% 0px -69% 0px',threshold:0});
+  items.forEach(it=>io.observe(it.el));
+  const end=document.querySelector('main > footer');
+  if(end)new IntersectionObserver(es=>{atEnd=es[es.length-1].isIntersecting;resolve()},{threshold:.9}).observe(end);
 }
-new MutationObserver(resolve).observe(document.body,{attributes:true,attributeFilter:['data-archive-view']});
-resolve();
+
+/* Dropdown. Document-level listeners exist only while it is open. */
+const links=items.map(it=>it.a);
+let open=false;
+function place(){
+  menu.style.maxHeight='';
+  const r=btn.getBoundingClientRect(),h=menu.offsetHeight,gap=8,edge=12;
+  const below=innerHeight-r.bottom-gap-edge,above=r.top-gap-edge;
+  const up=h>below&&above>below;
+  root.dataset.place=up?'up':'down';
+  menu.style.maxHeight=Math.max(96,Math.floor(up?above:below))+'px';
+}
+function onPointer(e){if(!root.contains(e.target))close(false)}
+function onKey(e){
+  if(e.key==='Escape'){e.preventDefault();close(true);return}
+  const i=links.indexOf(document.activeElement);
+  if(e.key==='Tab'||(i<0&&document.activeElement!==btn))return;
+  const last=links.length-1;let n=-1;
+  if(e.key==='ArrowDown')n=i<0?0:(i===last?0:i+1);
+  else if(e.key==='ArrowUp')n=i<0?last:(i===0?last:i-1);
+  else if(e.key==='Home')n=0;
+  else if(e.key==='End')n=last;
+  if(n>=0){e.preventDefault();links[n].focus()}
+}
+function openMenu(focusActive){
+  if(open)return;open=true;
+  menu.hidden=false;place();
+  btn.setAttribute('aria-expanded','true');root.classList.add('is-open');
+  document.addEventListener('pointerdown',onPointer,true);
+  document.addEventListener('keydown',onKey);
+  addEventListener('resize',onResize);
+  if(focusActive){const t=links[current]||links[0];t.focus()}
+}
+function close(refocus){
+  if(!open)return;open=false;
+  menu.hidden=true;btn.setAttribute('aria-expanded','false');root.classList.remove('is-open');
+  document.removeEventListener('pointerdown',onPointer,true);
+  document.removeEventListener('keydown',onKey);
+  removeEventListener('resize',onResize);
+  if(refocus)btn.focus();
+}
+function onResize(){close(false)}
+btn.addEventListener('click',()=>{open?close(false):openMenu(false)});
+btn.addEventListener('keydown',e=>{
+  if(open||(e.key!=='ArrowDown'&&e.key!=='ArrowUp'))return;
+  e.preventDefault();e.stopPropagation();openMenu(true);
+  if(e.key==='ArrowUp')links[links.length-1].focus();
+});
+menu.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;pick=links.indexOf(a);clearTimeout(pickTimer);pickTimer=setTimeout(()=>{pick=-1},2000);close(false)});
+root.addEventListener('focusout',e=>{if(open&&e.relatedTarget&&!root.contains(e.relatedTarget))close(false)});
 })();
 </script>
 <style id="jaye-demi-cat-glass-v1">
