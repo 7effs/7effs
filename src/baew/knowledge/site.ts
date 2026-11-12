@@ -3,7 +3,7 @@ import type { Faq } from './types.ts'
 export const SITE_NAME = 'JAYE'
 
 export const SITE_OVERVIEW =
-  'JAYE is a private archive website, described as “a private index of things unrecorded”. It combines a personal written Archive, a memory channel called Demi, a chat with Effs’s Cat, two linked analytical systems in Parent Space, the Anomaly Protocol, a puzzle game called The Impossible, and a listening room called Glimpse.'
+  'JAYE is a private archive website, described as “a private index of things unrecorded”. It combines a personal written Archive, a passphrase-protected memory channel, a chat with Effs’s Cat, two linked analytical systems in Parent Space, the Anomaly Protocol, a puzzle game called The Impossible, and a listening room called Glimpse.'
 
 // Answers to common questions that are about the site as a whole rather than one section.
 export const FAQS: Faq[] = [
@@ -25,7 +25,7 @@ export const FAQS: Faq[] = [
     questions: ['How is the page organised?', 'What order are the sections in?', 'How many sections are there?', 'What is the first section?', 'What is the last section?', 'Where should I start?', 'How do I navigate?'],
     keywords: ['order', 'organised', 'organized', 'navigate', 'navigation', 'start', 'begin', 'where', 'structure', 'map', 'sections', 'overview', 'layout'],
     answer:
-      'The page runs from top to bottom: the homepage, the Archive gateway, sections 02 to 09, Demi at node 10, After the Memory, the Cat chat, Parent Space with nodes 12 and 13, the Anomaly Protocol at 14, The Impossible at 15, Glimpse, and the footer. You can scroll in order or use the entry buttons on the homepage.',
+      'The page runs from top to bottom: the homepage, the Archive gateway, sections 02 to 09, the memory channel at node 10, After the Memory, the Cat chat, Parent Space with nodes 12 and 13, the Anomaly Protocol at 14, The Impossible at 15, Glimpse, and the footer. You can scroll in order or use the entry buttons on the homepage.',
   },
   {
     id: 'archive-headings',
@@ -60,7 +60,7 @@ export const FAQS: Faq[] = [
     questions: ['What is the password for Demi?', 'Can you open Demi for me?', 'How do I unlock Demi?'],
     keywords: ['password', 'passphrase', 'pin', 'unlock', 'open', 'demi', 'access', 'secret', 'code'],
     answer:
-      'I cannot open Demi, tell you its passphrase or describe what is inside. That access belongs to the site owner, and I do not have it. What I can do is explain where Demi sits in the Archive and what the doorway looks like.',
+      'I cannot open the memory channel, tell you its passphrase or describe what is inside. That access belongs to the site owner, and I do not have it. What I can do is explain where the channel sits in the Archive and what the doorway looks like.',
   },
   {
     id: 'ai-use',

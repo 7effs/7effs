@@ -300,7 +300,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It closes the numbered sections and sits with Things I Like under the heading “Now and Then”. After this section the page moves to Demi, a separate memory channel that sits behind a passphrase.',
+        text: 'It closes the numbered sections and sits with Things I Like under the heading “Now and Then”. After this section the page moves to a separate memory channel that sits behind a passphrase.',
       },
     ],
     keywords: ['memories', 'memory', 'remember', 'moments', 'past', 'nostalgia', 'people', '09', 'mistakes', 'difficult', 'erase', 'nights'],
@@ -310,7 +310,8 @@ export const SECTIONS: SectionEntry[] = [
   {
     id: 'demi',
     domIds: ['demi-system'],
-    title: 'Demi',
+    title: 'Memory channel',
+    aliases: ['Demi'],
     node: '10',
     group: 'special',
     access: 'gated',
@@ -318,8 +319,8 @@ export const SECTIONS: SectionEntry[] = [
     verification: 'partial',
     summary: 'Node 10, a memory channel presented as the last memory, which needs a passphrase to open.',
     explain:
-      'Demi is node 10, a memory channel presented as the last memory in the Archive. It sits behind a passphrase, so its contents are only open to visitors who have been given access. I can describe the doorway, but I cannot open it or share what is inside.',
-    recap: 'This is Demi, the passphrase-protected memory channel.',
+      'This is node 10, a memory channel presented as the last memory in the Archive. It sits behind a passphrase, so its contents are only open to visitors who have been given access. I can describe the doorway, but I cannot open it or share what is inside.',
+    recap: 'This is the passphrase-protected memory channel.',
     deeper: [
       {
         topic: 'how',
@@ -327,7 +328,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'notes',
-        text: 'Some controls on Demi are for the site owner only. I do not describe or operate them.',
+        text: 'Some controls on this channel are for the site owner only. I do not describe or operate them.',
       },
       {
         topic: 'connections',
@@ -347,14 +348,14 @@ export const SECTIONS: SectionEntry[] = [
     access: 'gated',
     localOnly: true,
     verification: 'partial',
-    summary: 'Section 11, a transition that stays locked until the visitor returns from the Demi memory channel.',
+    summary: 'Section 11, a transition that stays locked until the visitor returns from the memory channel.',
     explain:
-      'After the Memory is section 11, a transition that follows Demi. It starts locked and opens when you return from the Demi memory channel. Its heading, “The story stays. The system moves.”, marks the shift from the personal record to the interactive systems that come next.',
-    recap: 'This is After the Memory, the transition that follows Demi.',
+      'After the Memory is section 11, a transition that follows the memory channel. It starts locked and opens when you return from that channel. Its heading, “The story stays. The system moves.”, marks the shift from the personal record to the interactive systems that come next.',
+    recap: 'This is After the Memory, the transition that follows the memory channel.',
     deeper: [
       {
         topic: 'how',
-        text: 'There is no separate way to open it. Returning from the Demi memory channel is the only doorway into this section.',
+        text: 'There is no separate way to open it. Returning from the memory channel is the only doorway into this section.',
       },
       {
         topic: 'connections',

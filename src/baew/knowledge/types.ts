@@ -34,6 +34,8 @@ export interface SectionEntry {
   /** DOM element ids this entry describes. A footer-like area without an id has none. */
   domIds: string[]
   title: string
+  /** Other names a visitor may type for this area. Used only to match questions; never shown or spoken. */
+  aliases?: string[]
   /** The numbering the site itself uses ("02", "10", "12 to 13"), when it has one. */
   node?: string
   group: SectionGroup

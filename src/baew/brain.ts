@@ -244,14 +244,16 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
     let score = 0
     const keywords = new Set(entry.keywords.flatMap(contentTokens))
     const title = new Set(contentTokens(entry.title))
+    const aliases = new Set((entry.aliases ?? []).flatMap(contentTokens))
     for (const word of query) {
       if (keywords.has(word)) score += 3
-      if (title.has(word)) score += 3
+      if (title.has(word) || aliases.has(word)) score += 3
     }
     // Section numbers are written "07" on the page and often asked as "7".
     if (entry.node && [...query].some(word => /^\d+$/.test(word) && /^\d+$/.test(entry.node!) && Number(word) === Number(entry.node))) score += 4
     // The question is the title and nothing else ("memories"), so it beats an area that merely contains the word.
     if (score > 0 && title.size > 0 && query.size === title.size && [...query].every(word => title.has(word))) score += 2
+    else if (score > 0 && aliases.size > 0 && query.size === aliases.size && [...query].every(word => aliases.has(word))) score += 2
     return score
   }
 
