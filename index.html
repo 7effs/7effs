@@ -2839,7 +2839,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <div class="demi-arrival-line"></div>
 <div class="demi-arrival-sub">You are somewhere a random game encounter became a memory.</div>
 </div><div class="demi-story-copy final-section">
-<div class="section-number">10 /PAGE OF CAT</div>
+<div class="section-number">10 / PAGE OF CAT</div>
 <div class="final-intro">
 <div class="final-name">
 <span class="primary">Demi</span> <span class="secondary">/ Shree</span>
@@ -7238,6 +7238,7 @@ not a dark panel or framed card. */
 }
 #demiDestination .demi-story-copy>.section-number{
   color:#765638!important;font-weight:650!important;
+  font-size:.72rem!important;letter-spacing:.2em!important;
 }
 #demiDestination .demi-story-copy .final-intro{
   border-bottom:1px solid #c8baa6!important;
@@ -7249,40 +7250,64 @@ not a dark panel or framed card. */
   color:#765638!important;
 }
 #demiDestination .demi-story-copy .final-tag{
-  color:#62594d!important;
+  color:#62594d!important;font-size:.7rem!important;letter-spacing:.18em!important;font-weight:500!important;
 }
 #demiDestination .demi-story-copy .final-note{
   border-left:1px solid #c8baa6!important;
+  padding:2px 0 0 clamp(26px,3.6vw,56px)!important;
+  font-family:Georgia,"Times New Roman",serif!important;
 }
 #demiDestination .demi-story-copy .final-copy,
 #demiDestination .demi-story-copy .final-copy:first-child{
   color:#373128!important;
-  font-size:clamp(1rem,1.16vw,1.08rem)!important;
-  line-height:1.95!important;
+  font-size:clamp(1.06rem,1.2vw,1.17rem)!important;
+  line-height:1.74!important;
   letter-spacing:0!important;
+  max-width:56ch!important;
+  margin:0 0 1.2em!important;
+  text-wrap:pretty;
 }
+/* the opening line reads as a lead */
 #demiDestination .demi-story-copy .final-copy:first-child{
   color:#25221d!important;
-  font-size:clamp(1.08rem,1.38vw,1.22rem)!important;
-  line-height:1.85!important;
+  font-size:clamp(1.28rem,1.9vw,1.5rem)!important;
+  line-height:1.5!important;
+  margin-bottom:1.5em!important;
 }
+/* the brown stays; emphasis is now italic at normal weight instead of bold */
 #demiDestination .demi-story-copy .final-copy .demi-emphasis,
 #demiDestination .demi-story-copy .final-copy .demi-emphasis-soft,
-#demiDestination .demi-story-copy .final-copy .demi-break-line,
-#demiDestination .demi-story-copy .final-copy .demi-closing{
+#demiDestination .demi-story-copy .final-copy .demi-break-line{
   color:#765638!important;
-  font-weight:650!important;
+  font-weight:400!important;font-style:italic!important;
 }
+#demiDestination .demi-story-copy .final-copy br{display:none}
+#demiDestination .demi-story-copy .final-copy .demi-break-line{display:block;margin-top:.45em}
 #demiDestination .demi-story-copy .final-copy .demi-words{
-  color:#765638!important;font-size:1.08em!important;font-weight:700!important;
+  display:block;margin:.5em 0 .15em;
+  color:#765638!important;font-size:1.5em!important;font-weight:400!important;font-style:italic;line-height:1.25;
+}
+#demiDestination .demi-story-copy .final-copy .demi-closing{
+  display:block;color:#765638!important;font-size:1.34em!important;font-weight:400!important;line-height:1.35;
+}
+/* the dedication closes the letter: small, spaced, preceded by a short rule */
+#demiDestination .demi-story-copy .final-note>.final-copy:last-child{
+  display:flex;align-items:center;gap:14px;margin:2.6em 0 0!important;
+  font-family:Inter,"Helvetica Neue",Arial,sans-serif!important;
+  font-size:.72rem!important;font-weight:600!important;letter-spacing:.18em!important;line-height:1.4!important;
+  text-transform:uppercase;color:#765638!important;
+}
+#demiDestination .demi-story-copy .final-note>.final-copy:last-child::before{
+  content:"";flex:none;width:34px;height:1px;background:currentColor;opacity:.55;
 }
 #demiDestination .demi-story-copy .final-note,
 #demiDestination .demi-story-copy .final-signoff{
   color:#373128!important;
 }
 #demiDestination .demi-story-copy .final-signoff{
-  border-top:1px solid #c8baa6!important;padding-top:18px!important;
-  font-size:.82rem!important;letter-spacing:.035em!important;
+  border-top:1px solid #c8baa6!important;padding-top:20px!important;
+  font-family:Georgia,"Times New Roman",serif!important;font-style:italic;
+  font-size:1rem!important;letter-spacing:.01em!important;text-align:center;
 }
 /* An actual paper mat: restrained double rule, no clipped corners or glowing effects. */
 #demiDestination .demi-story-copy .memory-wrap{
@@ -7310,7 +7335,7 @@ not a dark panel or framed card. */
 #demiDestination .demi-story-copy .memory-mark{
   position:static!important;display:block!important;padding:4px 3px 10px!important;
   border:0!important;background:transparent!important;color:#765638!important;
-  font-size:.55rem!important;letter-spacing:.13em!important;
+  font-size:.66rem!important;letter-spacing:.13em!important;
 }
 #demiDestination .demi-story-copy .memory-image{
   width:100%!important;height:auto!important;max-height:670px!important;
@@ -7321,18 +7346,38 @@ not a dark panel or framed card. */
 #demiDestination .demi-story-copy .memory-caption{
   padding:12px 3px 4px!important;background:transparent!important;
   color:#62594d!important;border-top:1px solid #c8baa6!important;
-  font-size:.55rem!important;line-height:1.6!important;letter-spacing:.09em!important;
+  font-size:.66rem!important;line-height:1.6!important;letter-spacing:.09em!important;
+}
+/* Paper: a second hairline inside the outer rule, the same double rule the photo mat uses. */
+#demiDestination>.demi-story-copy::after{
+  content:"";position:absolute;inset:8px;border:1px solid rgba(118,86,56,.16);pointer-events:none;
+}
+/* Two columns: the name sits on the left, the letter has the right, and the divider between them keeps clear of the text. */
+@media(min-width:701px){
+  #demiDestination>.demi-story-copy{
+    grid-template-columns:minmax(0,5fr) minmax(0,7fr)!important;
+    column-gap:clamp(34px,5vw,84px)!important;row-gap:clamp(20px,2.6vw,34px)!important;align-items:start!important;
+    grid-template-rows:auto 1fr auto auto!important;
+  }
+  #demiDestination .demi-story-copy>.section-number{grid-column:1!important;grid-row:1!important}
+  #demiDestination .demi-story-copy .final-intro{grid-column:1!important;grid-row:2!important;align-self:start!important}
+  #demiDestination .demi-story-copy .final-note{grid-column:2!important;grid-row:1/span 2!important}
+  #demiDestination .demi-story-copy .memory-wrap{grid-column:2!important;grid-row:3!important;margin:clamp(8px,1.4vw,18px) 0 0!important}
+  #demiDestination .demi-story-copy .final-signoff{grid-column:1/-1!important;grid-row:4!important}
 }
 @media(max-width:700px){
   #demiDestination>.demi-story-copy{
     margin-top:20px!important;padding:23px 19px!important;
     background:#f7f2e9!important;
   }
-  #demiDestination .demi-story-copy .final-note{border-top:1px solid #c8baa6!important}
+  #demiDestination .demi-story-copy .final-note{
+    border-left:0!important;border-top:0!important;padding:22px 0 0!important;
+  }
   #demiDestination .demi-story-copy .final-copy,
   #demiDestination .demi-story-copy .final-copy:first-child{
-    font-size:1rem!important;line-height:1.9!important;
+    font-size:1.06rem!important;line-height:1.72!important;
   }
+  #demiDestination .demi-story-copy .final-copy:first-child{font-size:1.3rem!important;line-height:1.5!important}
   #demiDestination .demi-story-copy .memory-frame{padding:7px!important}
 }
 /* Minimal requested change: slightly reduce only the entrance “Hi” word. */
