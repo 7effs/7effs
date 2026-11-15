@@ -2160,7 +2160,7 @@ html body main #demiGate {
 </style>
 <style id="jaye-global-background-video-toggle-styles">
 /* Global background switch only — Parent Space Saturn and all section artwork stay untouched. */
-#jaye-global-video-background{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .85s cubic-bezier(.2,.7,.2,1),visibility .85s;contain:strict;background:#03050a}
+#jaye-global-video-background{position:fixed;inset:0 0 auto 0;width:100%;height:100vh;height:100lvh;object-fit:cover;object-position:center;z-index:0;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .85s cubic-bezier(.2,.7,.2,1),visibility .85s;contain:strict;background:#03050a}
 html.jaye-video-background-active #jaye-global-video-background{opacity:.72;visibility:visible}
 html.jaye-video-background-active #jaye-tornado-background{opacity:0!important;visibility:hidden;transition:opacity .85s cubic-bezier(.2,.7,.2,1),visibility .85s}
 #jaye-background-switch{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));right:max(14px,env(safe-area-inset-right));transform:scale(.95);transform-origin:bottom right;z-index:10020;display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:0 12px;border:1px solid rgba(221,229,241,.24);border-radius:2px;background:rgba(5,8,14,.54);color:rgba(236,241,249,.82);font:500 9px/1.1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.17em;text-transform:uppercase;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer;transition:background .3s,border-color .3s,color .3s,opacity .3s;}
@@ -2262,11 +2262,18 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
   if(!layer || layer.dataset.controllerReady==='true') return;
   layer.dataset.controllerReady='true';
   var root=document.documentElement;
+  /* The opening sequence plays once per browsing session: later loads in this tab skip it. */
+  var SEEN_KEY='jaye-entrance-seen';
+  function markSeen(){try{window.sessionStorage.setItem(SEEN_KEY,'1');}catch(e){}}
+  try{
+    if(window.sessionStorage.getItem(SEEN_KEY)==='1'){root.classList.add('jaye-entrance-played');layer.remove();return;}
+  }catch(e){}
   var skip=layer.querySelector('.jaye-intro-skip');
   var reduced=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var closed=false, timer=null, keyHandler=null;
   var oldOverflow=root.style.overflow;
   function releasePage(){
+    markSeen();
     root.classList.remove('jaye-intro-active');
     root.style.overflow=oldOverflow;
     if(keyHandler) document.removeEventListener('keydown',keyHandler);
@@ -6088,7 +6095,7 @@ body > .demi-butterfly .demi-butterfly-label{background:transparent!important;bo
 
 <!-- JAYE optional image-background feature: additive only; existing Saturn/video system is preserved. -->
 <style id="jaye-optional-image-backgrounds-v1">
-#jaye-image-background-layer{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0;visibility:hidden;background-position:center;background-size:cover;background-repeat:no-repeat;transition:opacity .65s ease,visibility .65s;contain:strict}
+#jaye-image-background-layer{position:fixed;inset:0 0 auto 0;height:100vh;height:100lvh;z-index:0;pointer-events:none;opacity:0;visibility:hidden;background-position:center;background-size:cover;background-repeat:no-repeat;transition:opacity .65s ease,visibility .65s;contain:strict}
 #jaye-image-background-layer::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,5,9,.18),rgba(3,5,9,.38));}
 html.jaye-image-background-active #jaye-image-background-layer{opacity:1;visibility:visible}
 html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-background-active #jaye-global-video-background{opacity:0!important;visibility:hidden!important}
@@ -6718,6 +6725,34 @@ body > .demi-butterfly .demi-butterfly-label { background:transparent !important
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',replay,{once:true});else replay();
  window.addEventListener('pageshow',function(){replay();});
+})();
+</script>
+<style id="jaye-entrance-once-v1-css">
+/* Once the entrance has played, anything that re-renders the hero (Archive views, history, bfcache) must show its finished state, not restart it.
+   A large negative delay makes each entrance animation start already finished (they all use fill-mode both); idle loops are unaffected.
+   The repeated class and doubled id raise specificity over the entrance rules above. */
+html.jaye-entrance-played.jaye-entrance-played.jaye-entrance-played #archive-home#archive-home,
+html.jaye-entrance-played.jaye-entrance-played.jaye-entrance-played #archive-home#archive-home::before,
+html.jaye-entrance-played.jaye-entrance-played.jaye-entrance-played #archive-home#archive-home::after,
+html.jaye-entrance-played.jaye-entrance-played.jaye-entrance-played #archive-home#archive-home *,
+html.jaye-entrance-played.jaye-entrance-played.jaye-entrance-played #archive-home#archive-home *::before,
+html.jaye-entrance-played.jaye-entrance-played.jaye-entrance-played #archive-home#archive-home *::after{animation-delay:-120s!important}
+</style>
+<script id="jaye-entrance-once-v1">
+(function(){
+  'use strict';
+  var root=document.documentElement,hero=document.getElementById('archive-home');
+  if(!hero)return;
+  function played(){root.classList.add('jaye-entrance-played');}
+  /* Restored from the back/forward cache: the page has already shown its entrance. */
+  window.addEventListener('pageshow',function(event){if(event.persisted)played();});
+  /* The hero is hidden by anything (Archive views, overlays) after it was on screen: it must not restart when it returns. */
+  if(!window.ResizeObserver)return;
+  var shown=false;
+  new ResizeObserver(function(entries){
+    var r=entries[entries.length-1].contentRect;
+    if(r.width>0&&r.height>0)shown=true;else if(shown)played();
+  }).observe(hero);
 })();
 </script>
 <style id="jaye-wordmark-j-legibility-fix-v1">
