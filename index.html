@@ -1861,29 +1861,29 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 #jaye-intro-v1{z-index:2147483647!important}
 #jaye-intro-v1 .jaye-intro-scene{perspective:1350px;transform-style:preserve-3d;background:#050505}
 #jaye-intro-v1 .jaye-intro-scene > :not(.jaye-v5-sequence){display:none!important}
-#jaye-intro-v1 .jaye-v5-sequence{position:absolute;inset:0;overflow:hidden;isolation:isolate;perspective:1350px;transform-style:preserve-3d;background:#050505;color:#f3f2ef}
+#jaye-intro-v1 .jaye-v5-sequence{position:absolute;inset:0;overflow:hidden;isolation:isolate;perspective:1350px;perspective-origin:var(--hi-cx) 50%;transform-style:preserve-3d;background:#050505;color:#f3f2ef;--hi-cx:23vw;--hi-dx:calc(var(--hi-cx) - 50vw)}
 #jaye-intro-v1 .jaye-v5-sequence *{box-sizing:border-box}
-#jaye-intro-v1 .jaye-v5-depth{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;perspective:1350px}
+#jaye-intro-v1 .jaye-v5-depth{position:absolute;inset:0;pointer-events:none;transform-style:preserve-3d;perspective:1350px;perspective-origin:var(--hi-cx) 50%}
 #jaye-intro-v1 .jaye-v5-frame{position:absolute;display:block;border:1px solid rgba(243,242,239,.13);opacity:0;transform:translateZ(-620px) scale(.42);transform-origin:center;will-change:transform,opacity}
-#jaye-intro-v1 .jaye-v5-frame--a{inset:5% 7%;border-color:rgba(243,242,239,.11)}
-#jaye-intro-v1 .jaye-v5-frame--b{inset:16% 19%;border-color:rgba(243,242,239,.18)}
-#jaye-intro-v1 .jaye-v5-frame--c{inset:27% 31%;border-color:rgba(243,242,239,.22)}
-#jaye-intro-v1 .jaye-v5-frame--d{inset:38% 42%;border-color:rgba(243,242,239,.27)}
+#jaye-intro-v1 .jaye-v5-frame--a{inset:5% auto 5% calc(var(--hi-cx) - 26vw);width:52vw;border-color:rgba(243,242,239,.11)}
+#jaye-intro-v1 .jaye-v5-frame--b{inset:16% auto 16% calc(var(--hi-cx) - 19vw);width:38vw;border-color:rgba(243,242,239,.18)}
+#jaye-intro-v1 .jaye-v5-frame--c{inset:27% auto 27% calc(var(--hi-cx) - 13vw);width:26vw;border-color:rgba(243,242,239,.22)}
+#jaye-intro-v1 .jaye-v5-frame--d{inset:38% auto 38% calc(var(--hi-cx) - 7vw);width:14vw;border-color:rgba(243,242,239,.27)}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-frame{animation:jayeV5FramePass 3.1s cubic-bezier(.2,.7,.15,1) var(--v5-delay,0s) both}
 #jaye-intro-v1 .jaye-v5-frame--a{--v5-delay:.08s}
 #jaye-intro-v1 .jaye-v5-frame--b{--v5-delay:.17s}
 #jaye-intro-v1 .jaye-v5-frame--c{--v5-delay:.26s}
 #jaye-intro-v1 .jaye-v5-frame--d{--v5-delay:.35s}
 #jaye-intro-v1 .jaye-v5-axis{position:absolute;display:block;background:rgba(243,242,239,.24);opacity:0}
-#jaye-intro-v1 .jaye-v5-axis--x{left:0;right:0;top:50%;height:1px;transform:scaleX(0);transform-origin:center}
-#jaye-intro-v1 .jaye-v5-axis--y{top:0;bottom:0;left:50%;width:1px;transform:scaleY(0);transform-origin:center}
+#jaye-intro-v1 .jaye-v5-axis--x{left:0;right:calc(100% - var(--hi-cx) - 44vw);top:50%;height:1px;background:linear-gradient(90deg,rgba(243,242,239,.24) 60%,rgba(243,242,239,0));transform:scaleX(0);transform-origin:var(--hi-cx) center}
+#jaye-intro-v1 .jaye-v5-axis--y{top:0;bottom:0;left:var(--hi-cx);width:1px;transform:scaleY(0);transform-origin:center}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-axis--x{animation:jayeV5AxisX 1.1s cubic-bezier(.16,1,.3,1) .12s both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-axis--y{animation:jayeV5AxisY 1.0s cubic-bezier(.16,1,.3,1) .2s both}
-#jaye-intro-v1 .jaye-v5-origin{position:absolute;left:50%;top:50%;width:3px;height:3px;background:#f3f2ef;transform:translate(-50%,-50%) scale(0);opacity:0;box-shadow:0 0 0 0 rgba(243,242,239,.25)}
+#jaye-intro-v1 .jaye-v5-origin{position:absolute;left:var(--hi-cx);top:50%;width:3px;height:3px;background:#f3f2ef;transform:translate(-50%,-50%) scale(0);opacity:0;box-shadow:0 0 0 0 rgba(243,242,239,.25)}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-origin{animation:jayeV5Origin 1.2s cubic-bezier(.16,1,.3,1) .08s both}
 
 /* The first event is HI: two solid forms meet at the center seam. */
-#jaye-intro-v1 .jaye-v5-greeting{position:absolute;left:0;right:0;top:50%;height:clamp(190px,47vh,560px);transform:translateY(-53%);display:grid;place-items:center;pointer-events:none;transform-style:preserve-3d;z-index:2}
+#jaye-intro-v1 .jaye-v5-greeting{position:absolute;left:0;right:calc(100% - var(--hi-cx)*2);top:50%;height:clamp(190px,47vh,560px);transform:translateY(-53%);display:grid;place-items:center;pointer-events:none;transform-style:preserve-3d;z-index:2}
 #jaye-intro-v1 .jaye-v5-hi-core{position:absolute;display:flex;align-items:center;justify-content:center;gap:.055em;opacity:0;font-size:clamp(154px,39vw,440px);font-weight:750;line-height:.76;letter-spacing:-.105em;white-space:nowrap;color:#f3f2ef;transform-style:preserve-3d}
 #jaye-intro-v1 .jaye-v5-hi-core span{display:block;opacity:0;will-change:transform,clip-path,opacity}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-hi-core{animation:jayeV5HiGroup 2.4s cubic-bezier(.16,1,.3,1) .38s both}
@@ -1891,9 +1891,9 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-hi-core span:last-child{animation:jayeV5HiRight .92s cubic-bezier(.16,1,.3,1) .55s both}
 #jaye-intro-v1 .jaye-v5-hi-echo{position:absolute;font-size:clamp(154px,39vw,440px);font-weight:750;line-height:.76;letter-spacing:-.105em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(243,242,239,.24);opacity:0;transform:translateZ(-280px) scale(.82);will-change:transform,opacity}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-hi-echo{animation:jayeV5HiEcho 1.85s cubic-bezier(.16,1,.3,1) .28s both}
-#jaye-intro-v1 .jaye-v5-hi-rule{position:absolute;width:min(44vw,370px);height:1px;top:calc(50% + clamp(150px,16vw,230px));background:rgba(243,242,239,.65);transform:scaleX(0);transform-origin:center;opacity:0}
+#jaye-intro-v1 .jaye-v5-hi-rule{position:absolute;left:calc(var(--hi-cx) - var(--hi-fs)*.395);width:min(44vw,370px);height:1px;top:calc(50% + clamp(150px,16vw,230px));background:rgba(243,242,239,.65);transform:scaleX(0);transform-origin:left center;opacity:0}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-hi-rule{animation:jayeV5Rule  .72s cubic-bezier(.16,1,.3,1) .86s both}
-#jaye-intro-v1 .jaye-v5-hi-index{position:absolute;top:calc(50% + clamp(200px,20vw,280px));font-size:9px;line-height:1.4;letter-spacing:.24em;color:#929292;white-space:nowrap;opacity:0;transform:translateY(6px)}
+#jaye-intro-v1 .jaye-v5-hi-index{position:absolute;left:calc(var(--hi-cx) - var(--hi-fs)*.395);top:calc(50% + clamp(200px,20vw,280px));font-size:9px;line-height:1.4;letter-spacing:.24em;color:#929292;white-space:nowrap;opacity:0;transform:translateY(6px)}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-hi-index{animation:jayeV5Meta .5s ease 1.02s both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-greeting{animation:jayeV5GreetingExit .62s cubic-bezier(.76,0,.24,1) 2.15s both}
 
@@ -1969,10 +1969,11 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 @keyframes jayeV5Exit{0%{clip-path:inset(0);transform:scale(1);opacity:1}58%{clip-path:inset(0 0 0 0);transform:scale(1.01);opacity:1}100%{clip-path:inset(49.5% 0 49.5% 0);transform:scale(1.02);opacity:0;visibility:hidden}}
 
 @media(max-width:600px){
-  #jaye-intro-v1 .jaye-v5-frame--a{inset:7% 4%}
-  #jaye-intro-v1 .jaye-v5-frame--b{inset:19% 16%}
-  #jaye-intro-v1 .jaye-v5-frame--c{inset:31% 29%}
-  #jaye-intro-v1 .jaye-v5-frame--d{inset:40% 39%}
+  #jaye-intro-v1 .jaye-v5-sequence{--hi-cx:26vw}
+  #jaye-intro-v1 .jaye-v5-frame--a{inset:7% auto 7% calc(var(--hi-cx) - 25vw);width:50vw}
+  #jaye-intro-v1 .jaye-v5-frame--b{inset:19% auto 19% calc(var(--hi-cx) - 19vw);width:38vw}
+  #jaye-intro-v1 .jaye-v5-frame--c{inset:31% auto 31% calc(var(--hi-cx) - 14vw);width:28vw}
+  #jaye-intro-v1 .jaye-v5-frame--d{inset:40% auto 40% calc(var(--hi-cx) - 9vw);width:18vw}
   #jaye-intro-v1 .jaye-v5-hi-core,#jaye-intro-v1 .jaye-v5-hi-echo{font-size:clamp(148px,43vw,260px)}
   #jaye-intro-v1 .jaye-v5-strip{height:13%;top:43.5%}
   #jaye-intro-v1 .jaye-v5-strip span{font-size:clamp(10px,2.5vw,14px);letter-spacing:.14em}
@@ -1991,11 +1992,11 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 
 <style id="jaye-intro-cinematic-peak-v6">
 /* V6: one connected visual motif — seam, cut, and final title. */
-#jaye-intro-v1 .jaye-v6-prism{position:absolute;inset:0;z-index:1;pointer-events:none;transform-style:preserve-3d;perspective:1100px;}
-#jaye-intro-v1 .jaye-v6-plane{position:absolute;left:50%;top:50%;display:block;height:clamp(250px,55vh,570px);width:clamp(220px,37vw,535px);border:1px solid rgba(243,242,239,.25);background:linear-gradient(180deg,rgba(243,242,239,.025),transparent 30%,rgba(243,242,239,.018));opacity:0;backface-visibility:hidden;transform-style:preserve-3d;will-change:transform,opacity;}
-#jaye-intro-v1 .jaye-v6-plane--left{transform:translate(-100%,-50%) rotateY(68deg) translateZ(-360px) scale(.74);transform-origin:right center;}
-#jaye-intro-v1 .jaye-v6-plane--front{width:min(76vw,1040px);height:min(61vh,650px);transform:translate(-50%,-50%) translateZ(-550px) scale(.68);}
-#jaye-intro-v1 .jaye-v6-plane--right{transform:translate(0,-50%) rotateY(-68deg) translateZ(-360px) scale(.74);transform-origin:left center;}
+#jaye-intro-v1 .jaye-v6-prism{position:absolute;inset:0;z-index:1;pointer-events:none;transform-style:preserve-3d;perspective:1100px;perspective-origin:var(--hi-cx) 50%;}
+#jaye-intro-v1 .jaye-v6-plane{position:absolute;left:var(--hi-cx);top:50%;display:block;height:clamp(250px,55vh,570px);width:clamp(220px,37vw,535px);border:1px solid rgba(243,242,239,.25);background:linear-gradient(180deg,rgba(243,242,239,.025),transparent 30%,rgba(243,242,239,.018));opacity:0;backface-visibility:hidden;transform-style:preserve-3d;will-change:transform,opacity;}
+#jaye-intro-v1 .jaye-v6-plane--left{width:clamp(110px,14vw,200px);transform:translate(-100%,-50%) rotateY(68deg) translateZ(-360px) scale(.74);transform-origin:right center;}
+#jaye-intro-v1 .jaye-v6-plane--front{width:min(50vw,700px);height:min(61vh,650px);transform:translate(-50%,-50%) translateZ(-550px) scale(.68);}
+#jaye-intro-v1 .jaye-v6-plane--right{width:clamp(150px,22vw,320px);transform:translate(0,-50%) rotateY(-68deg) translateZ(-360px) scale(.74);transform-origin:left center;}
 #jaye-intro-v1.jaye-intro-play .jaye-v6-plane--left{animation:jayeV6PlaneLeft 2.7s cubic-bezier(.16,1,.3,1) .08s both;}
 #jaye-intro-v1.jaye-intro-play .jaye-v6-plane--front{animation:jayeV6PlaneFront 2.7s cubic-bezier(.16,1,.3,1) .08s both;}
 #jaye-intro-v1.jaye-intro-play .jaye-v6-plane--right{animation:jayeV6PlaneRight 2.7s cubic-bezier(.16,1,.3,1) .08s both;}
@@ -2027,7 +2028,7 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 @keyframes jayeV6PlaneRight{0%{opacity:0;transform:translate(0,-50%) rotateY(-72deg) translateZ(-360px) scale(.74)}22%{opacity:.37}64%{opacity:.28;transform:translate(0,-50%) rotateY(-24deg) translateZ(20px) scale(1.02)}100%{opacity:0;transform:translate(0,-50%) rotateY(12deg) translateZ(250px) scale(1.12)}}
 @keyframes jayeV6HiLeft{0%{opacity:0;clip-path:inset(0 0 0 100%);transform:perspective(800px) translate3d(-20vw,0,280px) rotateY(62deg)}62%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(-1%,0,24px) rotateY(0)}83%{transform:perspective(800px) translate3d(.8%,0,-12px) rotateY(-2deg)}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0) rotateY(0)}}
 @keyframes jayeV6HiRight{0%{opacity:0;clip-path:inset(0 100% 0 0);transform:perspective(800px) translate3d(20vw,0,280px) rotateY(-62deg)}62%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(1%,0,24px) rotateY(0)}83%{transform:perspective(800px) translate3d(-.8%,0,-12px) rotateY(2deg)}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0) rotateY(0)}}
-@keyframes jayeV6SeamSlash{0%{opacity:0;transform:translate(-50%,-50%) rotate(0deg) scaleY(0)}8%{opacity:.3;transform:translate(-50%,-50%) rotate(0deg) scaleY(.24)}17%{opacity:.34;transform:translate(-50%,-50%) rotate(0deg) scaleY(.56)}25%{opacity:0;transform:translate(-50%,-50%) rotate(0deg) scaleY(.04)}69%{opacity:0;transform:translate(-50%,-50%) rotate(0deg) scaleY(.04)}77%{opacity:1;transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}86%{opacity:1;transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}100%{opacity:0;transform:translate(150vw,-50%) rotate(28deg) scaleY(.25)}}
+@keyframes jayeV6SeamSlash{0%{opacity:0;transform:translate(calc(-50% + var(--hi-dx)),-50%) rotate(0deg) scaleY(0)}8%{opacity:.3;transform:translate(calc(-50% + var(--hi-dx)),-50%) rotate(0deg) scaleY(.24)}17%{opacity:.34;transform:translate(calc(-50% + var(--hi-dx)),-50%) rotate(0deg) scaleY(.56)}25%{opacity:0;transform:translate(calc(-50% + var(--hi-dx)),-50%) rotate(0deg) scaleY(.04)}69%{opacity:0;transform:translate(-50%,-50%) rotate(0deg) scaleY(.04)}77%{opacity:1;transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}86%{opacity:1;transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}100%{opacity:0;transform:translate(150vw,-50%) rotate(28deg) scaleY(.25)}}
 @keyframes jayeV6PhraseLeft{0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-7vw,0,160px) rotateY(18deg);filter:blur(5px)}65%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,18px) rotateY(0);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,0) rotateY(0);filter:blur(0)}}
 @keyframes jayeV6PhraseRight{0%{opacity:0;clip-path:inset(0 0 0 100%);transform:translate3d(7vw,0,160px) rotateY(-18deg);filter:blur(5px)}65%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,18px) rotateY(0);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,0) rotateY(0);filter:blur(0)}}
 @keyframes jayeV6FinalFrame{0%{opacity:0;transform:perspective(1100px) translateZ(-850px) rotateY(-21deg) scale(.74)}42%{opacity:.34;transform:perspective(1100px) translateZ(-100px) rotateY(5deg) scale(1.02)}68%{opacity:.24;transform:perspective(1100px) translateZ(20px) rotateY(0) scale(1)}100%{opacity:.14;transform:perspective(1100px) translateZ(0) rotateY(0) scale(1)}}
@@ -2038,7 +2039,9 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 @keyframes jayeV6TitleSweep{0%{opacity:0;transform:translateX(-160%) skewX(-16deg)}12%{opacity:.9}58%{opacity:.36}100%{opacity:0;transform:translateX(520%) skewX(-16deg)}}
 @media(max-width:600px){
   #jaye-intro-v1 .jaye-v6-plane{height:clamp(250px,52vh,420px);width:clamp(180px,43vw,260px)}
-  #jaye-intro-v1 .jaye-v6-plane--front{width:88vw;height:56vh}
+  #jaye-intro-v1 .jaye-v6-plane--left{width:clamp(70px,16vw,110px)}
+  #jaye-intro-v1 .jaye-v6-plane--right{width:clamp(120px,32vw,170px)}
+  #jaye-intro-v1 .jaye-v6-plane--front{width:54vw;height:56vh}
   #jaye-intro-v1 .jaye-v6-final-frame{left:6vw;right:6vw;top:27%;height:43%;}
   #jaye-intro-v1 .jaye-v5-wordmark,#jaye-intro-v1 .jaye-v5-wordmark-echo{font-size:clamp(64px,20.5vw,86px);}
   #jaye-intro-v1 .jaye-v5-wordmark small{position:absolute;left:50%;top:calc(100% + 12px);transform:translateX(-50%);margin:0;font-size:7px;letter-spacing:.19em;writing-mode:horizontal-tb;white-space:nowrap;}
@@ -7416,15 +7419,13 @@ not a dark panel or framed card. */
   #demiDestination .demi-story-copy .memory-frame{padding:7px!important}
 }
 /* Minimal requested change: slightly reduce only the entrance “Hi” word. */
+#jaye-intro-v1 .jaye-v5-sequence{--hi-fs:clamp(136px,34vw,385px)}
 #jaye-intro-v1 .jaye-v5-hi-core,
 #jaye-intro-v1 .jaye-v5-hi-echo{
-  font-size:clamp(136px,34vw,385px);
+  font-size:var(--hi-fs);
 }
 @media (max-width:760px){
-  #jaye-intro-v1 .jaye-v5-hi-core,
-  #jaye-intro-v1 .jaye-v5-hi-echo{
-    font-size:clamp(126px,37vw,225px);
-  }
+  #jaye-intro-v1 .jaye-v5-sequence{--hi-fs:clamp(126px,37vw,225px)}
 }
 </style>
 
