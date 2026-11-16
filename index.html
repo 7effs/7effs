@@ -8388,6 +8388,18 @@ root.addEventListener('focusout',e=>{if(open&&e.relatedTarget&&!root.contains(e.
   #nodeAISection .node-ai-bubble,#nodeAISection .node-ai-bubble.waiting,#nodeAISection .node-ai-live-label:first-child::before{animation:none}
 }
 </style>
+<style id="jaye-ux-polish-v1">
+/* UI UX Pro Max pass (small, no redesign):
+   - touch screens only: the in-page buttons of Cat AI and the challenge game reach the 44px minimum touch height; mouse layouts are unchanged
+   - reduced motion: the Deviation butterfly's idle float and label glow stop too (everything else already did) */
+@media (pointer:coarse){
+  #nodeAISection .node-ai-chip,#nodeAISection #nodeAINewWhisper,#nodeAISection #nodeAICopyChat,#nodeAISection #nodeAIClearChat,#nodeAISection #nodeAIMode,
+  #ja-language-14,#ja-anomaly-export,#ja-anomaly-next,#ja-anomaly-answer,.ja-btn{min-height:44px}
+}
+@media (prefers-reduced-motion:reduce){
+  .demi-butterfly-stage,body > .demi-butterfly .demi-butterfly-stage,body > .demi-butterfly .demi-butterfly-label,#demiDestination .demi-butterfly-stage::after{animation:none!important}
+}
+</style>
 <!-- jbook:start -->
 <style id="jaye-switch-main-only-v1">
 /* The global background switch belongs to the main page only; it is not shown over the Archive reading pages. */
