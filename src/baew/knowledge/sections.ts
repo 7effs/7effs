@@ -95,7 +95,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'Beliefs opens the Personal Record and sits with The Things I Do under the heading “Curiosity”. The sections after them move from ideas and activities to favourites and people.',
+        text: 'Beliefs opens the Personal Record and is followed by The Things I Do. The sections after them move from ideas and activities to favourites and people.',
       },
     ],
     keywords: ['beliefs', 'belief', 'believe', 'believes', 'think', 'thinking', 'opinions', 'curious', 'curiosity', 'questions', 'ideas', 'mind', '02', 'smart', 'intelligence', 'knowing', 'asking'],
@@ -126,7 +126,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It follows Beliefs under the heading “Curiosity” and leads into A Favourites, which is more specific about what the author likes.',
+        text: 'It follows Beliefs and leads into A Favourites, which is more specific about what the author likes.',
       },
     ],
     keywords: ['things', 'do', 'tried', 'hobbies', 'hobby', 'activities', 'learning', 'talent', 'interests', '03', 'trying', 'started', 'kept', 'changing'],
@@ -161,7 +161,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It follows The Things I Do and sits with The People I Got Lucky With under the heading “What I Keep Close”.',
+        text: 'It follows The Things I Do and is followed by The People I Got Lucky With.',
       },
     ],
     keywords: ['favourites', 'favorites', 'favourite', 'favorite', 'colour', 'color', 'blue', 'music', 'games', 'animals', 'drinks', 'kendrick', '04', 'milk', 'water', 'dogs', 'dog', 'bunnies', 'bunny', 'pets', 'volleyball', 'football', 'cricket', 'badminton', 'chess', 'roblox', 'free fire', 'genres', 'artists', 'sports'],
@@ -188,7 +188,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It closes Interface 01, where it sits with A Favourites under the heading “What I Keep Close”. Interface 02, The Continuing Record, picks up with smaller details and with memories.',
+        text: 'It closes Interface 01, right after A Favourites. Interface 02, The Continuing Record, picks up with smaller details and with memories.',
       },
     ],
     keywords: ['people', 'friends', 'friendship', 'friendships', 'lucky', 'gratitude', 'blessed', 'relationships', '05', 'granted'],
@@ -219,7 +219,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It opens Interface 02 and sits with Things I’m Still Figuring Out under the heading “Not the Whole Story”. That next section turns from small pleasures to open questions about the author themself.',
+        text: 'It opens Interface 02 and is followed by Things I’m Still Figuring Out. That next section turns from small pleasures to open questions about the author themself.',
       },
     ],
     keywords: ['little', 'things', 'small', 'simple', 'everyday', 'pleasures', 'conversations', 'gaming', '06', 'complicated', 'explanation'],
@@ -246,7 +246,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It sits with Little Things under the heading “Not the Whole Story” and leads into Things I Like, which returns to what currently interests the author.',
+        text: 'It follows Little Things and leads into Things I Like, which returns to what currently interests the author.',
       },
     ],
     keywords: ['figuring', 'figure', 'unsure', 'growing', 'growth', 'change', 'uncertain', 'learning', 'myself', '07', 'understand', 'story', 'becoming'],
@@ -273,7 +273,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It sits with Memories under the heading “Now and Then” and leads into it. Memories is the last of the numbered personal sections, so the Archive ends on remembered moments rather than on opinions.',
+        text: 'It is followed by Memories, the last of the numbered personal sections, so the Archive ends on remembered moments rather than on opinions.',
       },
     ],
     keywords: ['like', 'likes', 'interests', 'interest', 'technology', 'games', 'music', 'animals', 'hobbies', '08', 'explore', 'impressive'],
@@ -300,7 +300,7 @@ export const SECTIONS: SectionEntry[] = [
       },
       {
         topic: 'connections',
-        text: 'It closes the numbered sections and sits with Things I Like under the heading “Now and Then”. After this section the page moves to a separate memory channel that sits behind a passphrase.',
+        text: 'It closes the numbered sections, right after Things I Like. After this section the page moves to a separate memory channel that sits behind a passphrase.',
       },
     ],
     keywords: ['memories', 'memory', 'remember', 'moments', 'past', 'nostalgia', 'people', '09', 'mistakes', 'difficult', 'erase', 'nights'],

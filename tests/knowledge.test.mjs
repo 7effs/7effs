@@ -7,12 +7,12 @@ import { wordCount } from '../src/baew/brain.ts'
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
 const entries = KNOWLEDGE.sections
 
-// The four Archive headings and the two numbered sections each one holds (the page's own wording and order).
-const ARCHIVE_CHAPTERS = [
-  { title: 'Curiosity', ids: ['archive-one-beliefs', 'archive-one-things-i-do'] },
-  { title: 'What I Keep Close', ids: ['archive-one-favourites', 'archive-one-people'] },
-  { title: 'Not the Whole Story', ids: ['archive-two-little-things', 'archive-two-figuring-out'] },
-  { title: 'Now and Then', ids: ['archive-two-things-i-like', 'archive-two-memories'] },
+// The Archive's oversized chapter display titles were removed from the page, so the knowledge must never cite them.
+const REMOVED_HEADINGS = ['Curiosity', 'What I Keep Close', 'Not the Whole Story', 'Now and Then']
+// The eight numbered sections in page order, split across the two interfaces.
+const ARCHIVE_ORDER = [
+  'archive-one-beliefs', 'archive-one-things-i-do', 'archive-one-favourites', 'archive-one-people',
+  'archive-two-little-things', 'archive-two-figuring-out', 'archive-two-things-i-like', 'archive-two-memories',
 ]
 
 test('ids are unique and every related id exists', () => {
@@ -86,7 +86,7 @@ test('personal sections are described in the third person', () => {
   for (const id of ['beliefs', 'things-i-do', 'favourites', 'people', 'little-things', 'figuring-out', 'things-i-like', 'memories']) {
     const e = entries.find(x => x.id === id)
     // Titles are the page's own wording ("The Things I Do"), so they are removed before looking for first person.
-    const titles = [...entries.map(x => x.title), ...ARCHIVE_CHAPTERS.map(c => c.title)]
+    const titles = [...entries.map(x => x.title)]
     let all = [e.explain, e.recap, ...e.deeper.map(d => d.text)].join(' ')
     for (const t of titles) all = all.split(t).join('')
     assert.ok(!/\b(I|my|me|myself)\b/.test(all), `${id} speaks in the first person`)
@@ -98,28 +98,21 @@ test('site-specific claims match the page text', () => {
   for (const s of must) assert.ok(html.includes(s) || html.toLowerCase().includes(s.toLowerCase()), `page does not contain "${s}"`)
 })
 
-test('the four Archive headings are on the page, in order, each holding the two sections the knowledge says', () => {
-  const tokens = [...html.matchAll(/<h2 class="archive-chapter-title" id="[^"]+">([^<]+)<\/h2>|<section[^>]*\bid="(archive-(?:one|two)-[a-z-]+)"/g)]
-  const chapters = []
-  for (const m of tokens) {
-    if (m[1]) chapters.push({ title: m[1].replace(/\.$/, ''), ids: [] })
-    else chapters.at(-1).ids.push(m[2])
-  }
-  assert.equal(chapters.length, 4, 'exactly four chapter headings')
-  assert.deepEqual(chapters, ARCHIVE_CHAPTERS)
-  // All eight headings stay in the DOM (routing focus, screen readers, Baew's context); only four show.
-  // The second section of each chapter continues under the first one's title, so its own is visually folded.
-  const titles = [...html.matchAll(/<h3 class="archive-section-title( is-folded)?" id="([^"]+)-title"/g)].map(m => ({ id: m[2], folded: Boolean(m[1]) }))
-  assert.equal(titles.length, 8, 'all eight section titles are kept in the page')
-  assert.deepEqual(titles.filter(t => t.folded).map(t => t.id), ['archive-one-things-i-do', 'archive-one-people', 'archive-two-figuring-out', 'archive-two-memories'], 'the 2nd section of each chapter folds its title')
-  assert.equal(titles.filter(t => !t.folded).length, 4, 'four section titles stay visible')
-  // Every section's own page text mentions the heading it sits under, and nothing else claims a different heading.
-  for (const c of ARCHIVE_CHAPTERS) for (const id of c.ids) {
-    const entry = entries.find(e => e.domIds.includes(id))
-    const all = [entry.explain, entry.recap, ...entry.deeper.map(d => d.text)].join(' ')
-    assert.ok(all.includes(`“${c.title}”`), `${entry.id} should name its heading “${c.title}”`)
-    for (const other of ARCHIVE_CHAPTERS.filter(x => x !== c)) assert.ok(!all.includes(`“${other.title}”`), `${entry.id} names the wrong heading`)
-  }
+test('the Archive has no chapter display titles; the eight sections, their order and the knowledge agree', () => {
+  assert.doesNotMatch(html, /archive-chapter-title/, 'the four oversized chapter titles are gone from the page and its styles')
+  const ids = [...html.matchAll(/<section[^>]*\bid="(archive-(?:one|two)-[a-z-]+)"/g)].map(m => m[1])
+  assert.deepEqual(ids, ARCHIVE_ORDER, 'eight sections, Interface 01 then Interface 02')
+  const titles = [...html.matchAll(/<h3 class="archive-section-title( is-folded)?" id="([^"]+)-title"/g)]
+  assert.equal(titles.length, 8, 'the eight ordinary section titles are kept')
+  // nothing the knowledge says may cite a heading that no longer exists
   const faq = KNOWLEDGE.faqs.find(f => f.id === 'archive-headings')
-  for (const c of ARCHIVE_CHAPTERS) assert.ok(faq.answer.includes(`“${c.title}”`), `FAQ misses ${c.title}`)
+  const everything = [...entries.flatMap(e => [e.explain, e.recap, ...e.deeper.map(d => d.text)]), ...KNOWLEDGE.faqs.map(f => f.answer)].join(' ')
+  for (const t of REMOVED_HEADINGS) assert.ok(!everything.includes(`“${t}”`), `the knowledge still cites the removed heading “${t}”`)
+  assert.doesNotMatch(everything, /under the heading|under four headings/)
+  // the FAQ names every section and the interface that holds it
+  for (const id of ARCHIVE_ORDER) {
+    const entry = entries.find(e => e.domIds.includes(id))
+    assert.ok(faq.answer.includes(entry.title), `FAQ names ${entry.title}`)
+  }
+  assert.ok(faq.answer.includes('Interface 01') && faq.answer.includes('Interface 02'))
 })

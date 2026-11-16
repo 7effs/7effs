@@ -2,32 +2,57 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
-// Guards for the opening sequence: the HI scene is composed around one vanishing point in the left third, and every
+// Guards for the opening sequence: the "Hi" scene is plain and anchored in the left third (a wall, the word, a plinth), and every
 // later scene (strip, phrases, cut, wipes, centred JAYE reveal) keeps its structure and timing.
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
-const css = [...html.matchAll(/<style id="(?:jaye-intro-cinematic-peak-v[56])">([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n')
-const rule = (sel) => {
-  const i = css.indexOf(sel + '{')
-  assert.ok(i >= 0, `${sel} must exist`)
-  return css.slice(i, css.indexOf('}', i))
+const css = [...html.matchAll(/<style id="(?:jaye-intro-cinematic-peak-v[56])">([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n').replace(/\/\*[\s\S]*?\*\//g, '')
+const hi = (html.match(/<style id="jaye-intro-hi-v8">([\s\S]*?)<\/style>/)?.[1] ?? '').replace(/\/\*[\s\S]*?\*\//g, '')
+const rule = (sel, src = css) => {
+  // the rule whose whole selector is exactly this one (grouped selector lists are skipped)
+  const m = [...src.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find(x => x[1].trim() === sel)
+  assert.ok(m, `${sel} must exist`)
+  return m[2]
 }
+const greeting = html.match(/<div class="jaye-v5-greeting">([\s\S]*?)<\/div>\s*<\/div>|<div class="jaye-v5-greeting">([\s\S]*?)<div class="jaye-v5-strip">/)?.[0] ?? ''
 
-test('the HI composition has one vanishing point, inside the left third', () => {
+test('the greeting reads "Hi", not "HI", and the old HI scenery is gone', () => {
+  assert.match(html, /<div class="jaye-v5-hi-core"><span>H<\/span><span>i<\/span><\/div>/)
+  assert.doesNotMatch(greeting, /<span>I<\/span>|>HI<|hi-echo/, 'no capital I, no HI echo copy')
+  assert.doesNotMatch(html, /jaye-v7|jayeV7|jaye-v6-plane|jaye-v6-prism|jaye-v5-frame|jaye-v5-axis|jaye-v5-origin|hi-echo/, 'earlier HI scenery and the HUD marks are removed, not hidden')
+  assert.doesNotMatch(hi, /brk|ticks|dim|latch|rail/, 'no brackets, tick rulers, dimension lines, pins or rails')
+})
+
+test('the scene is two plain structures anchored to the one point inside the left third', () => {
   const vars = [...html.matchAll(/--hi-cx:(\d+(?:\.\d+)?)vw/g)].map(m => Number(m[1]))
   assert.ok(vars.length >= 2, 'desktop and mobile values')
   for (const v of vars) assert.ok(v > 14 && v <= 33.3, `--hi-cx ${v}vw sits in the left third`)
+  assert.equal((html.match(/class="jaye-v8-(?:wall|plinth)"/g) ?? []).length, 2)
+  assert.match(rule('#jaye-intro-v1 .jaye-v8-wall', hi), /left:0;[^}]*width:max\(10px,calc\(var\(--hi-cx\) - var\(--hi-fs\)\*\.52\)\)/)
+  assert.match(rule('#jaye-intro-v1 .jaye-v8-plinth', hi), /left:0;width:calc\(var\(--hi-cx\) \+ var\(--hi-fs\)\*\.47\)/)
+  for (const sel of ['#jaye-intro-v1 .jaye-v5-greeting', '#jaye-intro-v1 .jaye-v5-hi-rule', '#jaye-intro-v1 .jaye-v5-hi-index']) assert.match(rule(sel), /var\(--hi-cx\)/, sel)
+  assert.match(rule('#jaye-intro-v1 .jaye-v5-sequence'), /perspective-origin:var\(--hi-cx\) 50%/)
+  // nothing travels toward the middle: every horizontal move starts left of the word and ends on it
+  const moves = [...hi.matchAll(/translate3d\((-?[\d.]+)(vw|%)/g)].map(m => Number(m[1]))
+  assert.ok(moves.every(v => Math.abs(v) <= 12), 'only small offsets and the 12vw run in from the left edge')
+  assert.match(hi, /@keyframes jayeV8H\{0%\{[^}]*translate3d\(-12vw,0,0\)/, 'H runs in from the left')
 })
 
-test('the surrounding geometry follows that point instead of the screen centre', () => {
-  for (const sel of ['#jaye-intro-v1 .jaye-v5-greeting', '#jaye-intro-v1 .jaye-v5-axis--y', '#jaye-intro-v1 .jaye-v5-origin',
-    '#jaye-intro-v1 .jaye-v5-hi-rule', '#jaye-intro-v1 .jaye-v5-hi-index', '#jaye-intro-v1 .jaye-v6-plane']) {
-    assert.match(rule(sel), /var\(--hi-cx\)/, sel)
+test('the four phases keep their order and the greeting still leaves at 2.15 s', () => {
+  assert.match(hi, /\.jaye-v8-wall\{animation:jayeV8Wall 2\.7s [^;]*? \.04s both\}/, 'P1 wall rises 0.04-0.84 s')
+  assert.match(hi, /\.jaye-v5-hi-core span:first-child\{animation:jayeV8H 1s [^;]*? \.46s both\}/, 'P2 H')
+  assert.match(hi, /\.jaye-v5-hi-core span:last-child\{animation:jayeV8i 1s [^;]*? \.70s both\}/, 'P2 i')
+  assert.match(hi, /\.jaye-v8-plinth\{animation:jayeV8Plinth 1\.6s [^;]*? 1s both\}/, 'P3 plinth')
+  assert.match(css, /\.jaye-v5-greeting\{animation:jayeV5GreetingExit \.62s [^;]*? 2\.15s both\}/, 'P4 exit unchanged')
+})
+
+test('only cheap properties animate and the clip box never cuts the glyphs', () => {
+  const frames = [...hi.matchAll(/@keyframes (jayeV8\w+)\{([\s\S]*?)\n/g)]
+  assert.ok(frames.length >= 5)
+  for (const [, name, body] of frames) {
+    for (const p of body.matchAll(/([a-z-]+):/g)) assert.ok(['opacity', 'transform', 'clip-path'].includes(p[1]), `${name} animates ${p[1]}`)
   }
-  assert.match(rule('#jaye-intro-v1 .jaye-v5-depth'), /perspective-origin:var\(--hi-cx\) 50%/)
-  assert.match(rule('#jaye-intro-v1 .jaye-v6-prism'), /perspective-origin:var\(--hi-cx\) 50%/)
-  assert.match(rule('#jaye-intro-v1 .jaye-v5-sequence'), /perspective-origin:var\(--hi-cx\) 50%/)
-  for (const f of ['a', 'b', 'c', 'd']) assert.match(rule(`#jaye-intro-v1 .jaye-v5-frame--${f}`), /var\(--hi-cx\)/, `frame ${f}`)
-  assert.match(css, /@keyframes jayeV6SeamSlash\{0%\{opacity:0;transform:translate\(calc\(-50% \+ var\(--hi-dx\)\)/, 'the seam parts H and I on the new axis')
+  assert.doesNotMatch(hi, /filter|backdrop|perspective|preserve-3d|translateZ|box-shadow/)
+  assert.match(hi, /clip-path:inset\(-12% -12% -12% -12%\)/, 'open state is padded past the line box')
 })
 
 test('later scenes keep their timing and the final reveal stays centred', () => {
@@ -51,10 +76,11 @@ test('later scenes keep their timing and the final reveal stays centred', () => 
   assert.match(rule('#jaye-intro-v1 .jaye-v5-strip'), /left:0;top:43%;width:100%/)
 })
 
-test('HI keeps its typography and the opening adds no dependency or element', () => {
+test('"Hi" keeps its typography and the opening adds no dependency', () => {
   assert.match(html, /--hi-fs:clamp\(136px,34vw,385px\)/)
   assert.match(html, /--hi-fs:clamp\(126px,37vw,225px\)/)
   assert.match(rule('#jaye-intro-v1 .jaye-v5-hi-core'), /font-weight:750;line-height:\.76;letter-spacing:-\.105em/)
-  assert.equal((html.match(/class="jaye-v5-hi-(?:echo|core|rule|index)"/g) ?? []).length, 4, 'same four HI elements')
+  assert.equal((html.match(/class="jaye-v5-hi-(?:core|rule|index)"/g) ?? []).length, 3, 'core, rule and index remain')
   assert.match(html, /<span class="jaye-v5-hi-index">A PRESENCE \/ 001<\/span>/)
+  assert.doesNotMatch(hi, /@import|https?:\/\/|url\(/)
 })

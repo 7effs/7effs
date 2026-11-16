@@ -1,9 +1,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
+import { createHash } from 'node:crypto'
 
-// Guards for the Archive notebook (page-turn) layer in index.html: the reading content, section ids, links and the outer
-// Archive stay exactly as they were, and the layer is self-contained, scoped and cleans up after itself.
+// Guards for the Archive notebook layer in index.html: pages change with PREV / NEXT and nothing else (no swipe, turn or crumple),
+// the reading content, section ids, links and the outer Archive stay exactly as they were, and the layer is self-contained and scoped.
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
 const fixture = JSON.parse(readFileSync(new URL('./fixtures/archive-book-content.json', import.meta.url), 'utf8'))
 
@@ -11,7 +12,8 @@ const SECTIONS = Object.keys(fixture.sections)
 const CHAPTERS = Object.keys(fixture.chapters)
 
 function norm(h) {
-  return h.replace(/<br\s*\/?>/g, ' ').replace(/<[^>]+>/g, ' ')
+  // an editorial mark is a plain inline span inside a sentence: it must not add a space to the text
+  return h.replace(/<span class="jm-[a-z]+">([\s\S]*?)<\/span>/g, '$1').replace(/<br\s*\/?>/g, ' ').replace(/<[^>]+>/g, ' ')
     .replace(/&amp;/g, '&').replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ')
     .replace(/\s+/g, ' ').trim()
 }
@@ -76,20 +78,22 @@ test('the outer Archive is never styled by the layer', () => {
   }
 })
 
-test('pages turn with CSS 3D, not a slide or fade', () => {
-  assert.match(script, /perspective\(/)
-  assert.match(script, /rotateY\(/)
-  assert.doesNotMatch(script, /translateX\(\s*-?\d+(\.\d+)?%/, 'no percentage slide')
+test('pages change at once: no turn, swipe, fold, rotation, fade or slide', () => {
+  assert.doesNotMatch(script, /perspective\(|rotate[XYZ]?\(|translate[XYZ]?\(|requestAnimationFrame|\.animate\(|setImp|jb-sheet|jb-under|jb-twin|data-jb-turning/)
+  assert.doesNotMatch(style, /@keyframes|perspective|rotate[XY]\(|will-change|jb-sheet|jb-under|jb-back|jb-twin|data-jb-turning|jb-abs/)
+  assert.doesNotMatch(style.replace(/transition:none/g, ''), /transition\s*:/, 'the only transition declarations left switch transitions off')
+  assert.match(script, /function go\(b,to,o\)[\s\S]*?apply\(b,to\);sync\(b\)/, 'go() applies the new page immediately')
 })
 
-test('input is scoped, cancellable and cleaned up', () => {
+test('input is only PREV / NEXT and the arrow keys, scoped and cleaned up', () => {
   assert.match(script, /new AbortController/)
   assert.match(script, /\.abort\(\)/)
   assert.match(script, /signal:sig/)
-  assert.match(script, /pointercancel/)
-  assert.match(script, /prefers-reduced-motion/)
-  assert.match(style, /touch-action:pan-y pinch-zoom/, 'vertical scrolling and pinch-zoom stay with the browser')
-  assert.doesNotMatch(style, /touch-action:\s*none/)
+  assert.match(script, /jbook-prev/)
+  assert.match(script, /jbook-next/)
+  assert.match(script, /ArrowRight/)
+  assert.doesNotMatch(script, /pointer(down|move|up|cancel)|touch(start|move|end)|\bwheel\b|contextmenu|setPointerCapture/, 'no swipe, drag, wheel or long-press handlers')
+  assert.doesNotMatch(style, /touch-action:\s*(none|pan|pinch)/, 'scrolling and pinch-zoom are left entirely to the browser')
 })
 
 test('without the script the original layout is untouched (every rule needs [data-jbook])', () => {
@@ -119,20 +123,52 @@ test('the page art is a small set of original decorative drawings', () => {
   assert.match(script, /setAttribute\('aria-hidden','true'\)/, 'the drawing is hidden from assistive technology')
 })
 
-test('the paper crumple is dependency-free, opt-in by press-and-hold and removes itself', () => {
-  assert.doesNotMatch(script, /three|gsap|WebGL|getContext\('webgl/i)
-  assert.match(script, /getContext\('2d'\)/)
-  assert.match(script, /function crHold[\s\S]*?reduced\(\)/, 'not used with reduced motion')
-  assert.match(script, /function crEnd[\s\S]*?canvas\.remove\(\)/, 'the canvas is removed when it is done')
-  assert.match(script, /function crWatch/, 'slow frames lower the detail')
-  assert.match(script, /crCancel\(true\);\s*var from=b\.idx/, 'a page turn clears any crumple first')
+test('the paper crumple and its black backdrop are gone, not hidden', () => {
+  assert.doesNotMatch(script, /crumpl|crHold|crDraw|crMesh|crBegin|crEnd|crWatch|jb-dark|is-dark|getContext|createElement\('canvas'\)|CanvasRenderingContext2D/i)
+  assert.doesNotMatch(style, /crumpl|jb-dark|is-dark|#050506|jb-crumple|cursor:\s*grab/i)
+  assert.doesNotMatch(html, /jb-crumple|class="jb-dark"/)
+  assert.doesNotMatch(script, /three|gsap|WebGL/i)
 })
 
-test('while a drawing is crumpled the page behind it goes black and the sheet is filled with paper', () => {
-  assert.match(script, /className='jb-dark'/, 'a black backdrop element exists for each page')
-  assert.match(style, /\.jb-art\.is-dark~\.jb-dark\{opacity:1/)
-  assert.match(style, /\.jb-dark\{[^}]*background:#050506!important/)
-  assert.match(script, /classList\.add\('is-crumpling','is-dark'\)/)
-  assert.match(script, /function crSettle[\s\S]*?classList\.remove\('is-dark'\)/, 'the page returns as soon as the sheet starts to open')
-  assert.match(script, /fillStyle=paper/, 'the folded sheet is paper, not just ink')
+test('the four oversized chapter display titles are removed, with their styles, and the rows keep ids and range labels', () => {
+  assert.doesNotMatch(html, /archive-chapter-title/, 'no heading element or style with that class remains')
+  for (const id of CHAPTERS) assert.match(block(id, 'div'), /archive-chapter-range/, `${id} keeps its page range`)
+  // the ordinary card titles inside the pages are not display titles and stay
+  assert.equal([...html.matchAll(/<h3 class="archive-section-title/g)].length, 8)
+})
+
+test('the existing blue highlight markers are byte-for-byte what they were', () => {
+  const sha = t => createHash('sha256').update(t).digest('hex').slice(0, 12)
+  const lines = style.split('\n').map(l => l.trim())
+  for (const [prefix, hash] of [['--jb-hl:', '42cef035e518'], ['--jb-hl-beat:', '02a8271e66f3'], ['font-weight:400!important;color:var(--jb-ink)!important;padding:0 .12em', '533f6378fdb4'], ['background:var(--jb-hl) 0 56%', '709ed420f752']]) {
+    const l = lines.find(x => x.startsWith(prefix))
+    assert.ok(l, `${prefix} present`)
+    assert.equal(sha(l), hash, `${prefix} unchanged`)
+  }
+  assert.ok(style.includes('background:var(--jb-hl-beat) 0 56%/100% 92% no-repeat!important}'))
+  // the editorial marks never touch <strong>
+  assert.doesNotMatch(selectorsOf(style).filter(s => /\.jm-/.test(s)).join('\n'), /strong/)
+})
+
+test('a few static editorial marks: plain classes, SVG backgrounds, no script, no animation, text unchanged', () => {
+  const marks = [...html.matchAll(/class="[^"]*?\b(jm-(?:u|hl|s|o|x|m))\b/g)].map(m => m[1])
+  assert.ok(marks.length >= 10 && marks.length <= 18, `a small number of marks (${marks.length})`)
+  for (const k of ['jm-u', 'jm-hl', 'jm-s', 'jm-o', 'jm-x', 'jm-m']) assert.ok(marks.includes(k), `${k} is used`)
+  const rules = selectorsOf(style).filter(s => /\.jm-/.test(s))
+  assert.ok(rules.length >= 6)
+  for (const r of rules) assert.match(r, /data-jbook/, 'marks only show on the notebook pages')
+  const css = style.slice(style.indexOf('--jm-u:'))
+  assert.doesNotMatch(css, /animation|transition|@keyframes|filter|backdrop|will-change/)
+  assert.doesNotMatch(script, /jm-/, 'no script paints or moves a mark')
+})
+
+test('touch screens: long-press selection is blocked on archive reading text only, and text is never inflated', () => {
+  const g = html.match(/<style id="jaye-archive-touch-guard-v1">([\s\S]*?)<\/style>/)?.[1] ?? ''
+  assert.match(g, /@media\(hover:none\) and \(pointer:coarse\)\{/, 'coarse, hover-less pointers only')
+  assert.match(g, /user-select:none!important/)
+  assert.match(g, /-webkit-touch-callout:none/)
+  assert.match(g, /:not\(input\):not\(textarea\):not\(\[contenteditable\]\)/, 'form fields keep their behaviour')
+  for (const s of selectorsOf(g.replace(/\/\*[\s\S]*?\*\//g, ''))) assert.match(s, /archive-interface-(one|two)/, `only the two Archive interfaces: ${s.slice(0, 80)}`)
+  assert.match(g, /text-size-adjust:100%/)
+  assert.doesNotMatch(g, /\bbody\s*\{|\bhtml\s*\{|\*\s*\{/, 'never site-wide')
 })
