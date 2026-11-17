@@ -982,7 +982,6 @@ export default function StrobiGuide() {
     let pointer = { x: -9999, y: -9999, mouse: false }
 
     const schedule = (delay: number) => {
-      if (!active) return
       if (timer !== undefined) window.clearTimeout(timer)
       timer = window.setTimeout(check, delay)
     }
@@ -1171,6 +1170,7 @@ export default function StrobiGuide() {
     let relayout = false // the viewport or fonts changed: pick the nearest clear spot afresh
 
     const schedule = (delay: number) => {
+      if (!active) return
       if (timer !== undefined) window.clearTimeout(timer)
       timer = window.setTimeout(check, delay)
     }
