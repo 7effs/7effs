@@ -18,20 +18,12 @@
   --baew-avatar-scale: 1.298;
   position: fixed;
   z-index: 2147483000;
-  /* Resting / home anchor: BOTTOM-LEFT, clear of the safe areas. This is the only place the home
-     corner is defined. The component never restores a corner from JS: it only writes inline
-     left/top (with right/bottom: auto) once she has been dragged or has floated, exactly as before,
-     and drops back to this rule whenever no position has been set. The page's "Switch background"
-     button keeps the bottom-right corner. */
-  /* Home clearance: --strobi-home-dx / --strobi-home-lift are 0 (and normally unset) while the corner
-     is clear. When text, an icon, a card or a control sits under it, JS sets them to the smallest
-     rise (and, on the narrowest phones, nudge) that frees her, so the corner stays the anchor and the
-     offsets are measured from it. */
-  --strobi-bubble-room: calc(min(236px, 100dvh - 82px) + 103px);
-  left: calc(max(8px, env(safe-area-inset-left)) + var(--strobi-home-dx, 0px));
+  /* Fixed resting anchor: bottom-left, respecting device safe areas.
+     The existing idle glide and user-triggered drag may temporarily position the widget elsewhere. */
+  left: max(8px, env(safe-area-inset-left));
   top: auto;
   right: auto;
-  bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--strobi-home-lift, 0px));
+  bottom: max(8px, env(safe-area-inset-bottom));
   width: min(204px, calc(100vw - 16px));
   display: flex;
   flex-direction: column;
@@ -40,15 +32,8 @@
   pointer-events: none;
   transition: left 180ms cubic-bezier(.22, 1, .36, 1),
               top 180ms cubic-bezier(.22, 1, .36, 1),
-              bottom 180ms cubic-bezier(.22, 1, .36, 1),
               opacity .22s ease;
   will-change: left, top;
-}
-
-/* While a popup is open it grows upward from her, so a lifted home is capped to what leaves the
-   popup room to stay on screen (and returns to the full lift when it closes). */
-.strobi-widget.bubble-open {
-  bottom: calc(max(8px, env(safe-area-inset-bottom)) + min(var(--strobi-home-lift, 0px), max(0px, calc(100dvh - var(--strobi-bubble-room)))));
 }
 
 .strobi-widget.is-positioned {
@@ -621,11 +606,10 @@
 .restore-strobi {
   position: fixed;
   z-index: 2147483000;
-  /* Baew's collapsed state rests where Baew rests: bottom-left, raised the same way (see
-     --strobi-home-*) only if page content would otherwise sit under it. */
-  left: calc(max(8px, env(safe-area-inset-left)) + var(--strobi-pill-dx, 0px));
+  /* The restore pill shares Baew's fixed bottom-left safe-area anchor. */
+  left: max(8px, env(safe-area-inset-left));
   right: auto;
-  bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--strobi-pill-lift, 0px));
+  bottom: max(8px, env(safe-area-inset-bottom));
   border-radius: 999px;
   border: 1px solid var(--jaye-edge, rgba(214, 224, 240, .2)) !important;
   background: var(--jaye-glass, rgba(11, 13, 20, .86)) !important;
@@ -638,8 +622,7 @@
   cursor: pointer;
   box-shadow: var(--jaye-highlight, inset 0 1px 0 rgba(255, 255, 255, .08)), 0 6px 18px -6px rgba(0, 0, 0, .6);
   font-family: Inter, system-ui, sans-serif;
-  transition: border-color .2s ease, background-color .2s ease,
-              left 180ms cubic-bezier(.22, 1, .36, 1), bottom 180ms cubic-bezier(.22, 1, .36, 1);
+  transition: border-color .2s ease, background-color .2s ease;
 }
 
 .restore-strobi:hover,
@@ -673,7 +656,6 @@
 @media (max-width: 760px) {
   .strobi-widget {
     width: min(188px, calc(100vw - 16px));
-    --strobi-bubble-room: calc(min(224px, 100dvh - 76px) + 98px);
   }
 
   .strobi-mascot-wrap {

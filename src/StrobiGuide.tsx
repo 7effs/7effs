@@ -6,7 +6,7 @@ import definition from '../strobi.avatar.json'
 import { createBrain, type BrainAnswer, type Progress } from './baew/brain'
 import { sanitizeReply, startHandoff, type HandoffHandle } from './baew/handoff'
 import { askOnline, buildPrompt, type PromptIntent } from './baew/online'
-import { findHomeShift, getContentBoxes, getControlBoxes, overlapArea, type Box, type HomeShift } from './baew/clearance'
+import { getControlBoxes, overlapArea, type Box } from './baew/clearance'
 import './widget.css'
 
 const Avatar = createAvatar(definition)
@@ -67,10 +67,6 @@ const FLOAT_MIN_MS = 2800
 const FLOAT_MAX_MS = 6500
 const FLOAT_EDGE_MARGIN = 12      // keep clear of the screen edges
 const FLOAT_AVOID_PAD = 12        // breathing room around controls Baew should not cover
-
-// Home clearance: Baew's resting corner is bottom-left (CSS). If page text, an icon, a card or a control
-// sits under it she rises to the nearest clear spot, and returns to the corner once it is clear again.
-const HOME_SETTLE_MS = 450    // quiet time after a scroll / resize before she re-checks
 
 const SESSION_MEMORY_KEY = 'baew-guide-session-v1'
 const PROGRESS_KEY = 'baew-guide-progress-v1'
@@ -338,13 +334,8 @@ export default function StrobiGuide() {
   const [personality, setPersonality] = useState<Personality>('playful')
   const [dragging, setDragging] = useState(false)
   const [floatMs, setFloatMs] = useState<number | null>(null)
-  const [homeShift, setHomeShift] = useState<HomeShift>({ dx: 0, lift: 0 })
-  const [pillShift, setPillShift] = useState<HomeShift>({ dx: 0, lift: 0 })
 
   const widgetRef = useRef<HTMLDivElement | null>(null)
-  const homeShiftRef = useRef<HomeShift>({ dx: 0, lift: 0 })
-  const pillShiftRef = useRef<HomeShift>({ dx: 0, lift: 0 })
-  const pillRef = useRef<HTMLButtonElement | null>(null)
   const floatFreezeRef = useRef<(sync?: boolean) => void>(() => {})
   const seenSections = useRef(new Set<string>())
   const activeSectionRef = useRef('archive-home')
@@ -1162,87 +1153,6 @@ export default function StrobiGuide() {
     }
   }, [])
 
-  // Home clearance. Self-contained like the idle float: it only ever touches a Baew who is still at her
-  // CSS home, and stands down for good the moment she has been dragged or has floated off. It never
-  // writes left/top, only the two offsets the home rule in widget.css reads, so the corner stays the
-  // anchor (resize, rotation and safe areas keep working) and drag / float / popups are untouched.
-  // While she is hidden the same check keeps the small "Baew" restore pill off the page content too.
-  useEffect(() => {
-    const pill = hidden
-    const shiftRef = pill ? pillShiftRef : homeShiftRef
-    const setShift = pill ? setPillShift : setHomeShift
-    let timer: number | undefined
-    let placed = false
-    let stopIntroWait: (() => void) | undefined
-    let relayout = false // the viewport or fonts changed: pick the nearest clear spot afresh
-
-    const schedule = (delay: number) => {
-      if (timer !== undefined) window.clearTimeout(timer)
-      timer = window.setTimeout(check, delay)
-    }
-
-    const check = () => {
-      timer = undefined
-      const widget = pill ? pillRef.current : widgetRef.current
-      if (!widget || (!pill && positionRef.current)) return
-      if (introActive()) { // opening intro: wait for it to end instead of polling
-        if (!stopIntroWait) stopIntroWait = afterIntro(() => { stopIntroWait = undefined; schedule(100) })
-        return
-      }
-      if (getComputedStyle(widget).visibility === 'hidden') { schedule(500); return }
-      if (!pill && (dragRef.current || bubbleOpenRef.current || thinkingRef.current)) { schedule(900); return }
-      const wrap = pill ? widget : widget.querySelector<HTMLElement>('.strobi-mascot-wrap')
-      if (!wrap) return
-      const viewWidth = document.documentElement.clientWidth
-      const viewHeight = document.documentElement.clientHeight
-      const box = widget.getBoundingClientRect()
-      const current = shiftRef.current
-      const parts = [wrap, pill ? null : widget.querySelector<HTMLElement>('.hide-strobi')]
-        .filter((part): part is HTMLElement => part !== null)
-        .map(part => part.getBoundingClientRect())
-      const footprint: Box = {
-        left: Math.min(...parts.map(part => part.left)) - box.left,
-        top: Math.min(...parts.map(part => part.top)) - box.top,
-        right: Math.max(...parts.map(part => part.right)) - box.left,
-        bottom: Math.max(...parts.map(part => part.bottom)) - box.top,
-      }
-      const home = { left: box.left - current.dx, top: box.top + current.lift, width: box.width }
-      const keep = relayout ? { dx: 0, lift: 0 } : current
-      relayout = false
-      const next = findHomeShift(footprint, home, viewWidth, getContentBoxes(viewWidth, viewHeight), keep)
-      if (Math.abs(next.dx - current.dx) > 0.5 || Math.abs(next.lift - current.lift) > 0.5) {
-        shiftRef.current = next
-        if (placed) {
-          setShift(next)
-        } else {
-          // First placement: she is only just appearing, so put her there without a slide.
-          widget.style.transition = 'none'
-          flushSync(() => setShift(next))
-          void widget.offsetWidth
-          widget.style.transition = ''
-        }
-      }
-      if (!placed) {
-        placed = true
-        schedule(1500) // once more after the page's own entrance motion has settled
-      }
-    }
-
-    const onScroll = () => schedule(HOME_SETTLE_MS)
-    const onResize = () => { relayout = true; schedule(HOME_SETTLE_MS) }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    window.addEventListener('resize', onResize)
-    void document.fonts?.ready.then(() => { relayout = true; schedule(150) })
-    schedule(pill ? 60 : 600)
-
-    return () => {
-      if (timer !== undefined) window.clearTimeout(timer)
-      stopIntroWait?.()
-      window.removeEventListener('scroll', onScroll)
-      window.removeEventListener('resize', onResize)
-    }
-  }, [hidden])
-
   // A bubble opening (casual hello, menu, thinking) means Baew has something to say: stand still.
   useEffect(() => {
     if (bubbleOpen || thinking) floatFreezeRef.current(false)
@@ -1282,9 +1192,7 @@ export default function StrobiGuide() {
         bottom: 'auto',
         ...(floatMs !== null ? { '--strobi-float-ms': `${floatMs}ms` } : {}),
       } as CSSProperties)
-    : homeShift.dx > 0 || homeShift.lift > 0
-      ? ({ '--strobi-home-dx': `${homeShift.dx}px`, '--strobi-home-lift': `${homeShift.lift}px` } as CSSProperties)
-      : undefined
+    : undefined
 
   const modeSwitch = (
     <div className="bubble-modes" role="group" aria-label="Baew personality mode">
@@ -1393,11 +1301,7 @@ export default function StrobiGuide() {
 
       {hidden && (
         <button
-          ref={pillRef}
           className="restore-strobi"
-          style={pillShift.dx > 0 || pillShift.lift > 0
-            ? ({ '--strobi-pill-dx': `${pillShift.dx}px`, '--strobi-pill-lift': `${pillShift.lift}px` } as CSSProperties)
-            : undefined}
           onClick={() => {
             manualHiddenRef.current = false
             introShown.current = true
