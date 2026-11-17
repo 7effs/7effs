@@ -5,6 +5,7 @@ name: Build Strobi Widget
   push:
     paths:
       - "src/**"
+      - "tests/**"
       - "strobi.avatar.json"
       - "package.json"
       - "vite.widget.config.ts"
