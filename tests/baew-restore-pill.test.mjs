@@ -6,9 +6,12 @@ const guide = readFileSync(new URL('../src/StrobiGuide.tsx', import.meta.url), '
 const css = readFileSync(new URL('../src/widget.css', import.meta.url), 'utf8')
 
 test('the collapsed Baew restore pill remains anchored to the viewport', () => {
-  const block = css.match(/\.restore-strobi\s*\{([\s\S]*?)\n\}/)?.[1]
-  assert.ok(block, 'restore pill CSS block exists')
-  assert.match(block, /position:\s*fixed/)
+  // There is an earlier reset rule with the same selector. Select the actual
+  // positioning rule rather than the first matching block in the stylesheet.
+  const block = [...css.matchAll(/\.restore-strobi\s*\{([\s\S]*?)\n\}/g)]
+    .map(match => match[1])
+    .find(rule => /position:\s*fixed/.test(rule))
+  assert.ok(block, 'restore pill fixed-position CSS rule exists')
   assert.match(block, /left:\s*max\(8px,\s*env\(safe-area-inset-left\)\)/)
   assert.match(block, /bottom:\s*max\(8px,\s*env\(safe-area-inset-bottom\)\)/)
   assert.doesNotMatch(block, /transition:[^;]*(?:left|bottom)/)
