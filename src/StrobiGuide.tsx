@@ -38,6 +38,7 @@ type DragState = {
   startLeft: number
   startTop: number
   moved: boolean
+  samples: Array<{ x: number; y: number; t: number }>   // the last ~100 ms of pointer positions, for the release velocity
 }
 
 // Every area Baew can explain: the main sections, the homepage header, the Parent Space doorway, and the two
@@ -67,6 +68,13 @@ const FLOAT_MIN_MS = 2800
 const FLOAT_MAX_MS = 6500
 const FLOAT_EDGE_MARGIN = 12      // keep clear of the screen edges
 const FLOAT_AVOID_PAD = 12        // breathing room around controls Baew should not cover
+// Flick: let go of Baew while the pointer is still moving fast and she coasts a little further, then stops.
+const FLICK_WINDOW_MS = 100       // velocity is read from this much of the end of the drag
+const FLICK_STALE_MS = 80         // a pause before lifting off means no throw
+const FLICK_MIN_SPEED = 0.45      // px per ms (450 px/s): slower releases simply stay where they were let go
+const FLICK_PROJECT_MS = 200      // how far ahead of the release point her speed carries her
+const FLICK_MAX_PX = 260
+const FLICK_MIN_PX = 14           // a shorter coast than this is not worth animating
 
 // Home clearance: Baew's resting corner is bottom-left (CSS). If page text, an icon, a card or a control
 // sits under it she rises to the nearest clear spot, and returns to the corner once it is clear again.
@@ -338,6 +346,7 @@ export default function StrobiGuide() {
   const [personality, setPersonality] = useState<Personality>('playful')
   const [dragging, setDragging] = useState(false)
   const [floatMs, setFloatMs] = useState<number | null>(null)
+  const [flickMs, setFlickMs] = useState<number | null>(null)
   const [homeShift, setHomeShift] = useState<HomeShift>({ dx: 0, lift: 0 })
   const [pillShift, setPillShift] = useState<HomeShift>({ dx: 0, lift: 0 })
 
@@ -382,6 +391,7 @@ export default function StrobiGuide() {
   const messageSerial = useRef(0)
   const dragRef = useRef<DragState | null>(null)
   const dragMovedRef = useRef(false)
+  const flickTimerRef = useRef<number | undefined>(undefined)
 
   useEffect(() => { bubbleOpenRef.current = bubbleOpen }, [bubbleOpen])
   useEffect(() => { thinkingRef.current = thinking }, [thinking])
@@ -755,6 +765,15 @@ export default function StrobiGuide() {
     if (!rect) return
     event.preventDefault()
     dragMovedRef.current = false
+    if (flickTimerRef.current !== undefined) {
+      // Grabbed mid-coast: pin her to where she is right now so she does not jump to the end of the throw.
+      window.clearTimeout(flickTimerRef.current)
+      flickTimerRef.current = undefined
+      const here = clampPosition(rect.left, rect.top, rect.width, rect.height)
+      positionRef.current = here
+      setFlickMs(null)
+      setPosition(here)
+    }
     setDragging(true)
     dragRef.current = {
       pointerId: event.pointerId,
@@ -763,6 +782,7 @@ export default function StrobiGuide() {
       startLeft: rect.left,
       startTop: rect.top,
       moved: false,
+      samples: [{ x: event.clientX, y: event.clientY, t: event.timeStamp }],
     }
     try { event.currentTarget.setPointerCapture(event.pointerId) } catch { /* capture is optional */ }
   }, [])
@@ -775,6 +795,8 @@ export default function StrobiGuide() {
     if (!drag.moved && Math.hypot(deltaX, deltaY) < 6) return
     drag.moved = true
     dragMovedRef.current = true
+    drag.samples.push({ x: event.clientX, y: event.clientY, t: event.timeStamp })
+    while (drag.samples.length > 2 && event.timeStamp - drag.samples[0].t > FLICK_WINDOW_MS) drag.samples.shift()
     const width = widgetRef.current?.getBoundingClientRect().width ?? 188
     const height = widgetRef.current?.getBoundingClientRect().height ?? 90
     const next = clampPosition(drag.startLeft + deltaX, drag.startTop + deltaY, width, height)
@@ -782,9 +804,40 @@ export default function StrobiGuide() {
     setPosition(next)
   }, [])
 
+  // A quick throw: she carries on in the direction of the release with a strong ease-out and stops inside the screen.
+  // Slow, held or paused releases, reduced motion, and a coast too short to see all leave her exactly where she was let go.
+  const flick = useCallback((drag: DragState, releasedAt: number) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const last = drag.samples[drag.samples.length - 1]
+    const first = drag.samples[0]
+    if (!last || !first || last === first || releasedAt - last.t > FLICK_STALE_MS) return
+    const dt = last.t - first.t
+    if (dt <= 0) return
+    const vx = (last.x - first.x) / dt
+    const vy = (last.y - first.y) / dt
+    const speed = Math.hypot(vx, vy)
+    const here = positionRef.current
+    const widget = widgetRef.current
+    if (speed < FLICK_MIN_SPEED || !here || !widget) return
+    const box = widget.getBoundingClientRect()
+    const reach = Math.min(FLICK_MAX_PX, speed * FLICK_PROJECT_MS)
+    const target = clampPosition(here.left + (vx / speed) * reach, here.top + (vy / speed) * reach, box.width, box.height)
+    const distance = Math.hypot(target.left - here.left, target.top - here.top)
+    if (distance < FLICK_MIN_PX) return
+    const duration = Math.round(Math.min(760, 360 + distance * 1.6))
+    positionRef.current = target
+    setFlickMs(duration)
+    setPosition(target)
+    flickTimerRef.current = window.setTimeout(() => {
+      flickTimerRef.current = undefined
+      setFlickMs(null)
+    }, duration + 60)
+  }, [])
+
   const handleDragEnd = useCallback((event: ReactPointerEvent<HTMLButtonElement>) => {
     if (dragRef.current?.pointerId !== event.pointerId) return
-    const wasMoved = dragRef.current.moved
+    const drag = dragRef.current
+    const wasMoved = drag.moved
     dragRef.current = null
     setDragging(false)
     if (!wasMoved) dragMovedRef.current = false
@@ -792,7 +845,8 @@ export default function StrobiGuide() {
     try {
       if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId)
     } catch { /* pointer may already have been released */ }
-  }, [registerActivity])
+    if (wasMoved && event.type === 'pointerup') flick(drag, event.timeStamp)
+  }, [flick, registerActivity])
 
   useEffect(() => {
     const observer = new IntersectionObserver(entries => {
@@ -1281,6 +1335,7 @@ export default function StrobiGuide() {
         right: 'auto',
         bottom: 'auto',
         ...(floatMs !== null ? { '--strobi-float-ms': `${floatMs}ms` } : {}),
+        ...(flickMs !== null ? { '--strobi-flick-ms': `${flickMs}ms` } : {}),
       } as CSSProperties)
     : homeShift.dx > 0 || homeShift.lift > 0
       ? ({ '--strobi-home-dx': `${homeShift.dx}px`, '--strobi-home-lift': `${homeShift.lift}px` } as CSSProperties)
@@ -1299,7 +1354,7 @@ export default function StrobiGuide() {
         <div
           ref={widgetRef}
           id="strobi-widget"
-          className={`strobi-widget ${quiet ? 'is-quiet' : ''} ${bubbleOpen ? 'bubble-open' : ''} ${position ? 'is-positioned' : ''} ${dragging ? 'is-dragging' : ''} ${floatMs !== null ? 'is-floating' : ''}`}
+          className={`strobi-widget ${quiet ? 'is-quiet' : ''} ${bubbleOpen ? 'bubble-open' : ''} ${position ? 'is-positioned' : ''} ${dragging ? 'is-dragging' : ''} ${floatMs !== null ? 'is-floating' : ''} ${flickMs !== null ? 'is-flicking' : ''}`}
           aria-label="Baew website guide"
           data-vibe={personality}
           style={widgetStyle}

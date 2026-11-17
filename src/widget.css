@@ -64,6 +64,14 @@
               opacity .22s ease;
 }
 
+/* Flick: after a quick throw she coasts to a stop. A strong ease-out (fast off the hand, a soft landing) instead of the
+   symmetrical drift used for the idle glide. Grabbing her again stops the coast where she is. */
+.strobi-widget.is-flicking {
+  transition: left var(--strobi-flick-ms, 520ms) cubic-bezier(.23, 1, .32, 1),
+              top var(--strobi-flick-ms, 520ms) cubic-bezier(.23, 1, .32, 1),
+              opacity .22s ease;
+}
+
 .strobi-widget.is-dragging {
   transition: none !important;
 }

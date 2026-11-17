@@ -4851,34 +4851,34 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   ['playing','error','pause','ended','canplay'].forEach(function(type){backgroundAudio.addEventListener(type,clearAudioWatchdog);});
  }
  if (reduce || !hover) return;
+ /* Pointer parallax. The two follow-the-cursor effects (hero artifact, Saturn doorway) used to jump to the pointer on every move and
+    snap home on leave. They now ease toward the pointer (a ~110 ms time constant, so fast moves feel weighted and a leave glides home)
+    in one frame loop that runs only while something is still moving. Same variables, same distances, same hover-and-fine-pointer gate. */
+ function follow(host, target, nameX, nameY){
+  let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, last = 0;
+  function put(){target.style.setProperty(nameX, cx.toFixed(3));target.style.setProperty(nameY, cy.toFixed(3));}
+  function tick(now){
+   const dt = Math.min(.05, (now-last)/1000 || .016), k = 1-Math.exp(-dt*9);
+   last = now;
+   cx += (tx-cx)*k; cy += (ty-cy)*k;
+   if (Math.abs(tx-cx) < .002 && Math.abs(ty-cy) < .002) {cx = tx;cy = ty;put();raf = 0;return;}
+   put();
+   raf = requestAnimationFrame(tick);
+  }
+  function wake(){if(!raf){last = performance.now();raf = requestAnimationFrame(tick);}}
+  host.addEventListener('pointermove', function(e){
+   const r = host.getBoundingClientRect();
+   tx = Math.max(-1, Math.min(1, ((e.clientX-r.left)/r.width-.5)*2));
+   ty = Math.max(-1, Math.min(1, ((e.clientY-r.top)/r.height-.5)*2));
+   wake();
+  }, {passive:true});
+  host.addEventListener('pointerleave', function(){tx = 0;ty = 0;wake();}, {passive:true});
+ }
  const hero = document.querySelector('.artifact-hero');
  const artifact = document.querySelector('.artifact-figure');
- if (hero && artifact) {
-  let frame = 0, x = 0, y = 0;
-  hero.addEventListener('pointermove', function(e){
-   const r = hero.getBoundingClientRect();
-   x = Math.max(-1, Math.min(1, ((e.clientX-r.left)/r.width-.5)*2));
-   y = Math.max(-1, Math.min(1, ((e.clientY-r.top)/r.height-.5)*2));
-   if(frame) return;
-   frame = requestAnimationFrame(function(){
-    artifact.style.setProperty('--px', x.toFixed(3));
-    artifact.style.setProperty('--py', y.toFixed(3));
-    frame = 0;
-   });
-  }, {passive:true});
-  hero.addEventListener('pointerleave', function(){artifact.style.setProperty('--px','0');artifact.style.setProperty('--py','0');},{passive:true});
- }
+ if (hero && artifact) follow(hero, artifact, '--px', '--py');
  const saturnEntry = document.getElementById('parent-interface-open');
- if (saturnEntry) {
-  saturnEntry.addEventListener('pointermove', function(e){
-   const r = saturnEntry.getBoundingClientRect();
-   const x = Math.max(-1, Math.min(1, ((e.clientX-r.left)/r.width-.5)*2));
-   const y = Math.max(-1, Math.min(1, ((e.clientY-r.top)/r.height-.5)*2));
-   saturnEntry.style.setProperty('--saturn-x', x.toFixed(3));
-   saturnEntry.style.setProperty('--saturn-y', y.toFixed(3));
-  }, {passive:true});
-  saturnEntry.addEventListener('pointerleave', function(){saturnEntry.style.setProperty('--saturn-x','0');saturnEntry.style.setProperty('--saturn-y','0');},{passive:true});
- }
+ if (saturnEntry) follow(saturnEntry, saturnEntry, '--saturn-x', '--saturn-y');
 })();
 </script>
 
@@ -8388,6 +8388,102 @@ root.addEventListener('focusout',e=>{if(open&&e.relatedTarget&&!root.contains(e.
   #nodeAISection .node-ai-bubble,#nodeAISection .node-ai-bubble.waiting,#nodeAISection .node-ai-live-label:first-child::before{animation:none}
 }
 </style>
+<script id="jaye-press-feedback-v1">
+/* Press feedback (motion pass 1). One delegated pointer listener gives every real control a small scale-down while it is held and an
+   ease-out return when it is let go, so a tap is felt before the page answers. It drives the independent `scale` property through the
+   Web Animations API: compositor-friendly, no layout, nothing runs while nothing is pressed, and it composes with each control's own
+   hover / transform rules. Controls that already have a press state of their own are left alone.
+   The pointerdown handler itself only looks the control up; the one style + layout read per control (how far it may shrink) happens
+   when the press actually starts and is remembered, and the return reads the animation, not the style, so a press never forces a
+   style recalculation on release. */
+(function(){
+ 'use strict';
+ if(!window.matchMedia||!('animate' in Element.prototype))return;
+ var calm=matchMedia('(prefers-reduced-motion: reduce)');
+ var PRESS='a[href],button,summary,[role="button"],label.ja-btn';
+ var SKIP='[disabled],[aria-disabled="true"],.sound-button,#jaye-background-switch,.strobi-mascot,.bubble-primary,#jaye-intro-v1,#jaye-intro-v1 *';
+ var OUT='cubic-bezier(.23,1,.32,1)';       /* strong ease-out: responds at once, settles softly */
+ var TOUCH_DELAY=70;                         /* a finger that starts a scroll should not flash a press */
+ var MOVE_LIMIT=8;                           /* px of finger drift that turns a press into a scroll or drag */
+ var MIN_HOLD=90;                            /* a quick tap still shows the press for about 90 ms before it returns */
+ var TAG='jaye-press';
+ var cur=null,pending=null,meta=new WeakMap();
+ window.addEventListener('resize',function(){meta=new WeakMap()},{passive:true});   /* sizes (and so depths) may have changed */
+ function play(st,frames,ms){
+  var a=st.el.animate({scale:frames},{duration:ms,easing:OUT,fill:frames.length===2&&frames[1]!=='1'?'forwards':'none'});
+  a.id=TAG;st.meta.last=a;return a;
+ }
+ /* how far this control may shrink: about 3px of travel per edge, never more than 4%; 1 means "do not animate it" */
+ function prepare(st){
+  var m=meta.get(st.el);
+  if(!m){
+   var cs=getComputedStyle(st.el),r=st.el.getBoundingClientRect(),big=Math.max(r.width,r.height),s=1;
+   if(big&&cs.scale==='none'&&cs.display!=='inline'&&cs.display!=='contents')s=1-Math.min(.04,6/big);
+   m={s:s>.995?1:s,last:null};meta.set(st.el,m);
+  }
+  if(m.s===1)return false;
+  st.meta=m;st.to=m.s;st.from=1;
+  if(m.last&&m.last.playState==='running'){   /* pressed again while still returning: pick up from where it is */
+   st.from=level(m.last)||1;m.last.cancel();
+  }
+  return true;
+ }
+ /* the scale an animation is at right now, from its own timing (no style read) */
+ function level(a){
+  var k=a.effect.getKeyframes(),p=a.effect.getComputedTiming().progress;
+  if(p==null)return 1;
+  var v0=parseFloat(k[0].scale),v1=parseFloat(k[k.length-1].scale);
+  return k.length===2?v0+(v1-v0)*p:1;
+ }
+ function begin(st){
+  st.timer=0;st.on=true;st.t0=performance.now();
+  st.anim=play(st,[String(st.from),String(st.to)],140);
+ }
+ function giveBack(st){                      /* ease out of the press from wherever it has got to */
+  if(pending===st){clearTimeout(st.hold);pending=null}
+  var now=level(st.anim);
+  st.anim.cancel();
+  play(st,[String(now),'1'],200);
+ }
+ function end(){
+  var st=cur;if(!st)return;cur=null;
+  window.removeEventListener('pointerup',onUp,true);window.removeEventListener('pointercancel',onUp,true);
+  window.removeEventListener('pointermove',onMove,true);window.removeEventListener('blur',onUp);
+  st.el.removeEventListener('pointerleave',onLeave);
+  if(st.timer){                              /* a tap that finished inside the touch delay: one short press-and-return */
+   clearTimeout(st.timer);st.timer=0;
+   if(!st.moved&&prepare(st))play(st,[String(st.from),String(st.to),'1'],260);
+  }else if(st.on){
+   var wait=MIN_HOLD-(performance.now()-st.t0);
+   if(wait>0&&!st.moved){pending=st;st.hold=setTimeout(function(){giveBack(st)},wait)}
+   else giveBack(st);
+  }
+ }
+ function onUp(e){
+  if(!cur||(e.pointerId!==undefined&&e.pointerId!==cur.id))return;
+  if(e.type==='pointercancel'||e.type==='blur')cur.moved=true;   /* the browser took the gesture (scroll, drag): no tap pulse */
+  end();
+ }
+ function onLeave(){if(cur&&cur.type==='mouse')end()}
+ function onMove(e){
+  if(!cur||e.pointerId!==cur.id||cur.type==='mouse')return;
+  if(Math.abs(e.clientX-cur.x)>MOVE_LIMIT||Math.abs(e.clientY-cur.y)>MOVE_LIMIT){cur.moved=true;end()}
+ }
+ document.addEventListener('pointerdown',function(e){
+  if(pending)giveBack(pending);
+  if(cur)end();
+  if(calm.matches||!e.isPrimary||(e.pointerType==='mouse'&&e.button!==0)||!e.target.closest)return;
+  var el=e.target.closest(PRESS);
+  if(!el||el.matches(SKIP))return;
+  var st=cur={el:el,meta:null,from:1,to:1,id:e.pointerId,type:e.pointerType,x:e.clientX,y:e.clientY,on:false,moved:false,timer:0,anim:null,t0:0,hold:0};
+  window.addEventListener('pointerup',onUp,true);window.addEventListener('pointercancel',onUp,true);
+  window.addEventListener('pointermove',onMove,true);window.addEventListener('blur',onUp);
+  el.addEventListener('pointerleave',onLeave);
+  if(e.pointerType==='touch')st.timer=setTimeout(function(){st.timer=0;if(cur===st&&prepare(st))begin(st)},TOUCH_DELAY);
+  else if(prepare(st))begin(st);
+ },{capture:true,passive:true});
+})();
+</script>
 <style id="jaye-ux-polish-v1">
 /* UI UX Pro Max pass (small, no redesign):
    - touch screens only: the in-page buttons of Cat AI and the challenge game reach the 44px minimum touch height; mouse layouts are unchanged
