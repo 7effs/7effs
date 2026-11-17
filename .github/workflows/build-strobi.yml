@@ -22,8 +22,10 @@ jobs:
           node-version: "22"
       - name: Install packages
         run: npm install
-      - name: Build widget
-        run: npm run build:widget
+      - name: Run full test suite
+        run: npm test
+      - name: Build app, type-check and build widget
+        run: npm run build
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
