@@ -28,6 +28,9 @@ test('page-content clearance applies to the visible mascot, not the restore pill
   assert.match(effect, /findHomeShift\(/)
   assert.match(effect, /getContentBoxes\(/)
   assert.doesNotMatch(effect, /pillShift|pillRef|restore-strobi/)
+  assert.match(effect, /let active = true/)
+  assert.match(effect, /if \(!active\) return/)
+  assert.match(effect, /active = false/)
 })
 
 test('the mascot idle-glide still avoids interactive controls', () => {
