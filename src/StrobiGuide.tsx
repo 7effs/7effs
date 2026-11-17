@@ -982,6 +982,7 @@ export default function StrobiGuide() {
     let pointer = { x: -9999, y: -9999, mouse: false }
 
     const schedule = (delay: number) => {
+      if (!active) return
       if (timer !== undefined) window.clearTimeout(timer)
       timer = window.setTimeout(check, delay)
     }
@@ -1163,6 +1164,7 @@ export default function StrobiGuide() {
   useEffect(() => {
     if (hidden) return
 
+    let active = true
     let timer: number | undefined
     let placed = false
     let stopIntroWait: (() => void) | undefined
@@ -1224,10 +1226,15 @@ export default function StrobiGuide() {
     const onResize = () => { relayout = true; schedule(HOME_SETTLE_MS) }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
-    void document.fonts?.ready.then(() => { relayout = true; schedule(150) })
+    void document.fonts?.ready.then(() => {
+      if (!active) return
+      relayout = true
+      schedule(150)
+    })
     schedule(600)
 
     return () => {
+      active = false
       if (timer !== undefined) window.clearTimeout(timer)
       stopIntroWait?.()
       window.removeEventListener('scroll', onScroll)
