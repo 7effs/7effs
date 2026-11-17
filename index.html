@@ -2379,7 +2379,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <circle cx="50" cy="50" r="5.5" stroke="#E8EDF5" stroke-width="1"/><circle cx="50" cy="50" r="1.8" fill="#F4F7FC"/>
 <path d="M50 0V8M50 92V100M0 50H8M92 50H100" stroke="#F4F7FC" stroke-width="1.2"/><circle cx="50" cy="4" r="1.2" fill="#F4F7FC"/><circle cx="50" cy="96" r="1.2" fill="#F4F7FC"/>
 </g></svg>
-<span class="hero-signature-copy"><span class="hero-signature-name">Jaye<i>/</i></span></span>
+
 </div>
 <div class="hero-composition">
 <div class="hero-copy">
@@ -2387,7 +2387,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <h1 class="hero-name-stack" id="jaye-wordmark"><span class="hero-title-name">Jaye<span class="hero-title-dot"></span></span><span class="hero-name-second">7effs<span class="hero-second-period"></span></span></h1>
 <div class="hero-intro"><p>A Private Index of Things Unrecorded.</p>
 <div class="jaye-readout" data-place="down" id="jayeReadout">
-<button aria-controls="jrMenu" aria-expanded="false" aria-haspopup="true" class="jr-trigger" type="button"><span class="jr-head"><i class="jr-dot"></i><span>SECTION</span><i aria-hidden="true" class="jr-caret"></i></span><span class="jr-main"><b class="jr-name">HOME</b><span class="jr-idx"> / 00</span></span><span class="jr-sr"> — choose a section</span></button>
+<button aria-controls="jrMenu" aria-expanded="false" aria-haspopup="true" class="jr-trigger" type="button"><span class="jr-head"><i class="jr-dot"></i><span>SECTION</span><i aria-hidden="true" class="jr-caret"></i></span><span class="jr-sr"> — choose a section</span></button>
 <nav aria-label="Sections" class="jr-menu" hidden id="jrMenu"><ul>
 <li><a data-short="HOME" href="#archive-home"><span class="jr-t">Home</span><span class="jr-n">00</span></a></li>
 <li><a data-short="ARCHIVE" href="#archiveInterfaces"><span class="jr-t">Archive</span><span class="jr-n">01</span></a></li>
@@ -8124,50 +8124,21 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
    Entries whose section is missing from the page are dropped, so the list can never point at a destination that is not there. */
 const root=document.getElementById('jayeReadout');if(!root)return;
 const btn=root.querySelector('.jr-trigger'),menu=root.querySelector('.jr-menu');
-const nameEl=root.querySelector('.jr-name'),idxEl=root.querySelector('.jr-idx');
-if(!btn||!menu||!nameEl||!idxEl)return;
+if(!btn||!menu)return;
 const items=[];
 menu.querySelectorAll('a[href^="#"]').forEach(a=>{
   const el=document.getElementById(a.hash.slice(1));
-  if(el)items.push({a,el,name:a.dataset.short||a.querySelector('.jr-t').textContent.toUpperCase(),idx:a.querySelector('.jr-n').textContent});
+  if(el)items.push({a,el});
   else a.parentElement.remove();
 });
 if(!items.length){root.remove();return}
 
-/* Active section: a thin band a third of the way down the viewport, where a section lands once the selector has scrolled to it;
-   callbacks fire only when a section crosses it (no scroll listener). */
-const live=new Map();let current=-1,pick=-1,pickTimer=0;
-function show(i){
-  if(i===current)return;current=i;
-  const it=items[i];
-  nameEl.textContent=it.name;idxEl.textContent=' / '+it.idx;
-  root.classList.toggle('is-long',(it.name+it.idx).length>12);
-  items.forEach((x,k)=>{if(k===i)x.a.setAttribute('aria-current','location');else x.a.removeAttribute('aria-current')});
-  root.classList.remove('is-swap');void root.offsetWidth;root.classList.add('is-swap');
-}
-show(0);
-if('IntersectionObserver' in window){
-  let atEnd=false;
-  const resolve=()=>{
-    let k=-1;items.forEach((it,i)=>{if(live.get(it.el))k=i});/* later sections in page order win when the band touches two */
-    /* The last section is short, so at the very end of the page the band never reaches it: the end wins, unless the visitor
-       just chose another section that is still under the band (a tall window can show Worlds and Glimpse together). */
-    if(atEnd&&!(pick>=0&&live.get(items[pick].el)))k=items.length-1;
-    if(k>=0)show(k);
-  };
-  const io=new IntersectionObserver(es=>{es.forEach(e=>live.set(e.target,e.isIntersecting));resolve()},{rootMargin:'-30% 0px -69% 0px',threshold:0});
-  items.forEach(it=>io.observe(it.el));
-  const end=document.querySelector('main > footer');
-  if(end)new IntersectionObserver(es=>{atEnd=es[es.length-1].isIntersecting;resolve()},{threshold:.9}).observe(end);
-}
-
-/* Dropdown. Document-level listeners exist only while it is open. */
+/* Dropdown navigation only. No active-section observer or readout tracking. */
 const links=items.map(it=>it.a);
 let open=false;
 function place(){
   menu.style.maxHeight='';
   const r=btn.getBoundingClientRect(),h=menu.offsetHeight,gap=8,edge=12;
-  /* room is measured to the viewport (less the fixed Switch Background chip) or to any clipping ancestor (the hero clips on wide screens) */
   let lo=0,hi=innerHeight-40;
   for(let n=root.parentElement;n&&n!==document.documentElement;n=n.parentElement){
     if(getComputedStyle(n).overflowY!=='visible'){const c=n.getBoundingClientRect();lo=Math.max(lo,c.top);hi=Math.min(hi,c.bottom)}
@@ -8189,14 +8160,14 @@ function onKey(e){
   else if(e.key==='End')n=last;
   if(n>=0){e.preventDefault();links[n].focus()}
 }
-function openMenu(focusActive){
+function openMenu(focusFirst){
   if(open)return;open=true;
   menu.hidden=false;place();
   btn.setAttribute('aria-expanded','true');root.classList.add('is-open');
   document.addEventListener('pointerdown',onPointer,true);
   document.addEventListener('keydown',onKey);
   addEventListener('resize',onResize);
-  if(focusActive){const t=links[current]||links[0];t.focus()}
+  if(focusFirst)links[0].focus();
 }
 function close(refocus){
   if(!open)return;open=false;
@@ -8213,7 +8184,7 @@ btn.addEventListener('keydown',e=>{
   e.preventDefault();e.stopPropagation();openMenu(true);
   if(e.key==='ArrowUp')links[links.length-1].focus();
 });
-menu.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;pick=links.indexOf(a);clearTimeout(pickTimer);pickTimer=setTimeout(()=>{pick=-1},2000);close(false)});
+menu.addEventListener('click',e=>{if(e.target.closest('a'))close(false)});
 root.addEventListener('focusout',e=>{if(open&&e.relatedTarget&&!root.contains(e.relatedTarget))close(false)});
 })();
 </script>
