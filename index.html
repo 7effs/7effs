@@ -4206,10 +4206,13 @@ renderHistory();resizeInput();
     if (floatingPlayer && !floatingPlayer.paused) floatingPlayer.pause();
 
     try {
-      if (audio.src !== new URL(src, document.baseURI).href || audio.error) {
-        /* Stop the previous source before asking the browser to select the new one. */
+      const expectedSrc = new URL(src, document.baseURI).href;
+      if (audio.src !== expectedSrc) {
+        /* Assigning a new src already starts resource selection; avoid a second load() restart. */
         pauseAudio();
-        audio.src = src;
+        audio.src = expectedSrc;
+      } else if (audio.error) {
+        /* A failed source needs an explicit reset before the visitor retries it. */
         audio.load();
       }
 
@@ -6333,8 +6336,8 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
 <div id="jaye-image-background-panel" role="dialog" aria-label="Choose an image background" aria-modal="false">
   <div class="jaye-image-panel-head"><span>Pick 🧚</span><button id="jaye-image-panel-close" type="button" aria-label="Close image backgrounds">×</button></div>
   <div class="jaye-image-background-options">
-    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="amber" aria-label="Use orange-haired manga background"><img data-deferred-src="assets/amber-background.jpg" alt="Orange-haired manga character" loading="lazy" decoding="async"><span>Amber</span></button>
-    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="noir" aria-label="Use black-haired manga background"><img data-deferred-src="assets/noir-background.jpg" alt="Black-haired manga character" loading="lazy" decoding="async"><span>Noir</span></button>
+    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="amber" aria-label="Use orange-haired manga background"><img data-deferred-src="assets/amber-background.jpg" alt="Orange-haired manga character" loading="eager"><span>Amber</span></button>
+    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="noir" aria-label="Use black-haired manga background"><img data-deferred-src="assets/noir-background.jpg" alt="Black-haired manga character" loading="eager"><span>Noir</span></button>
   </div>
 </div>
 <script id="jaye-optional-image-backgrounds-runtime-v1">
@@ -6350,28 +6353,41 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     amber:'assets/amber-background.jpg',
     noir:'assets/noir-background.jpg'
   };
-  /* Optional backgrounds stay unloaded until the picker is opened. */
-  const waitForThumbnail=key=>{
-    const option=panel.querySelector('[data-jaye-image-bg="'+key+'"]');
-    const thumb=option&&option.querySelector('img');
-    if(!thumb)return Promise.resolve(null);
-    if(thumb.complete)return Promise.resolve(thumb.naturalWidth>0?thumb:null);
-    return new Promise(resolve=>{
-      thumb.addEventListener('load',()=>resolve(thumb.naturalWidth>0?thumb:null),{once:true});
-      thumb.addEventListener('error',()=>resolve(null),{once:true});
-    });
-  };
+  /* Performance only. Loading order for the optional backgrounds, none of which is visible when the page opens:
+       1. the two background photographs are requested as soon as the page's HTML is parsed (DOMContentLoaded), at low priority so they never hold up rendering;
+       2. once the page has finished loading and the photographs are in, the background video starts fetching;
+       3. the picker's thumbnail images are attached only when the visitor approaches the picker, or at once if they open it early.
+     The photographs and the thumbnails are the same two files, so a thumbnail never needs a second download.
+     Nothing is swapped in until it is ready, so the current background stays in place while a choice is still loading. */
+  const warm={};
+  const warmUp=key=>warm[key]||(warm[key]=new Promise(resolve=>{
+    const photo=new Image();photo.decoding='async';photo.fetchPriority='low';
+    photo.onload=()=>resolve(photo);photo.onerror=()=>{delete warm[key];resolve(null);};
+    photo.src=images[key];
+  }));
+  const photosSettled=new Promise(resolve=>{const go=()=>resolve(Promise.all(Object.keys(images).map(warmUp)));document.readyState==='loading'?addEventListener('DOMContentLoaded',go,{once:true}):go();});
+  const pageLoaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
+  Promise.all([pageLoaded,photosSettled]).then(()=>{
+    const video=document.getElementById('jaye-global-video-background');
+    /* Only an untouched video is started; pressing the switch already fetches it on demand. */
+    if(video&&video.preload==='none'&&video.paused&&video.readyState===0&&video.networkState!==2&&!root.classList.contains('jaye-video-background-active')&&!root.classList.contains('jaye-image-background-active')){
+      video.preload='auto';
+      const source=video.getAttribute('data-src');
+      if(source&&!video.hasAttribute('src')){
+        try{const parsed=new URL(source,document.baseURI);if(parsed.origin===window.location.origin)video.setAttribute('src',parsed.href);}catch(_){}
+      }
+    }
+  });
   const attachThumbnails=()=>{
     panel.querySelectorAll('img[data-deferred-src]').forEach(thumb=>{thumb.src=thumb.getAttribute('data-deferred-src');thumb.removeAttribute('data-deferred-src');});
   };
+  ['pointerenter','pointerdown','focusin'].forEach(type=>switcher.addEventListener(type,attachThumbnails,{once:true,passive:true}));
   let nudgeDismissed=false;
-  let latestChoice=0;
-  const closePanel=()=>{latestChoice++;panel.classList.remove('is-visible');nudge.classList.remove('is-visible');};
+  const closePanel=()=>{panel.classList.remove('is-visible');nudge.classList.remove('is-visible');};
   switcher.addEventListener('click',()=>{
-    latestChoice++;
     if(root.classList.contains('jaye-image-background-active'))root.classList.remove('jaye-image-background-active');
     closePanel();
-    if(!nudgeDismissed)nudge.classList.add('is-visible');
+    if(!nudgeDismissed){attachThumbnails();nudge.classList.add('is-visible');}
   });
   nudge.addEventListener('click',()=>{attachThumbnails();nudge.classList.remove('is-visible');panel.classList.add('is-visible');});
   close.addEventListener('click',()=>{closePanel();nudgeDismissed=true;});
@@ -6380,23 +6396,28 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     root.classList.remove('jaye-video-background-active');
     root.classList.add('jaye-image-background-active');
     document.dispatchEvent(new Event('jaye-background-image-selected'));
+    const video=document.getElementById('jaye-global-video-background');
+    if(video)video.pause();
+    const mainButton=document.getElementById('jaye-background-switch');
+    if(mainButton){mainButton.textContent='CHANGE BACKGROUND';mainButton.setAttribute('aria-label','Switch global background to video');mainButton.setAttribute('aria-pressed','false');}
     closePanel();
     /* Re-arm the existing background nudge after an image is chosen, so the next
        switch back to video can offer the image backgrounds again. */
     nudgeDismissed=false;
   };
+  let latestChoice=0;
   panel.querySelectorAll('[data-jaye-image-bg]').forEach(option=>option.addEventListener('click',()=>{
     const key=option.getAttribute('data-jaye-image-bg');
     if(!images[key])return;
     const choice=++latestChoice;
     /* Wait until the photograph is downloaded and decoded, so the swap never shows an empty layer; a newer choice cancels this one. */
-    waitForThumbnail(key).then(photo=>photo&&photo.decode?photo.decode().then(()=>photo,()=>photo):photo).then(photo=>{
+    warmUp(key).then(photo=>photo&&photo.decode?photo.decode().then(()=>photo,()=>photo):photo).then(photo=>{
       if(choice!==latestChoice)return;
       if(photo)applyImage(key);else closePanel();
     });
   }));
   document.addEventListener('pointerdown',event=>{
-    if(panel.classList.contains('is-visible')&&!panel.contains(event.target)&&!nudge.contains(event.target)){latestChoice++;panel.classList.remove('is-visible');}
+    if(panel.classList.contains('is-visible')&&!panel.contains(event.target)&&!nudge.contains(event.target))panel.classList.remove('is-visible');
     else if(nudge.classList.contains('is-visible')&&!nudge.contains(event.target)&&event.target!==switcher)nudge.classList.remove('is-visible');
   });
   document.addEventListener('keydown',event=>{if(event.key==='Escape')closePanel();});

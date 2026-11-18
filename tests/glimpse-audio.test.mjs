@@ -47,10 +47,12 @@ class FakeAudio extends FakeElement {
     this._src = ''
     this.pendingPlays = []
     this.pendingPauseEvents = 0
+    this.loadCount = 0
   }
   get src() { return this._src }
   set src(value) { this._src = new URL(value, this.baseURI).href }
   load() {
+    this.loadCount += 1
     this.error = null
     this.ended = false
     this.currentSrc = ''
@@ -246,4 +248,19 @@ test('build configuration requires both Glimpse audio files in the output', () =
   assert.match(config, /Required media asset missing or empty/)
   assert.match(config, /statSync\(source\)\.size === 0/)
   assert.match(config, /statSync\(output\)\.size === 0/)
+})
+
+test('new track selection does not redundantly restart loading; failed same-source retry resets once', async () => {
+  const h = createHarness()
+  click(h.trackA)
+  assert.equal(h.audio.loadCount, 0, 'setting a new src already initiates resource selection')
+  assert.equal(h.audio.pendingPlays.length, 1)
+
+  h.audio.error = { code: 2 }
+  h.audio.dispatch('error')
+  assert.match(h.note.textContent, /Could not load this track/)
+
+  click(h.trackA)
+  assert.equal(h.audio.loadCount, 1, 'retrying the same failed source calls load() exactly once')
+  assert.equal(h.audio.pendingPlays.length, 2)
 })
