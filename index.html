@@ -4138,6 +4138,12 @@ renderHistory();resizeInput();
     });
   }
 
+  function sourceMatches(){
+    if (!activeSrc) return false;
+    const expected = new URL(activeSrc, document.baseURI).href;
+    return audio.src === expected && (!audio.currentSrc || audio.currentSrc === expected);
+  }
+
   function mediaErrorMessage(){
     const error = audio.error;
     if (!error) return 'Unable to play this track. Tap to try again.';
@@ -4254,21 +4260,21 @@ renderHistory();resizeInput();
   });
 
   audio.addEventListener('playing', function(){
-    if (!activeButton || !activeSrc) return;
+    if (!activeButton || !sourceMatches() || audio.paused) return;
     phase = 'playing';
     setNote('Now playing: ' + trackName(activeButton));
     paint();
   });
 
   audio.addEventListener('waiting', function(){
-    if (!activeButton || audio.paused) return;
+    if (!activeButton || !sourceMatches() || audio.paused) return;
     phase = 'buffering';
     setNote('Buffering: ' + trackName(activeButton) + '…');
     paint();
   });
 
   audio.addEventListener('stalled', function(){
-    if (!activeButton || audio.paused) return;
+    if (!activeButton || !sourceMatches() || audio.paused) return;
     phase = 'buffering';
     setNote('Connection interrupted while loading: ' + trackName(activeButton) + '…');
     paint();
@@ -4281,7 +4287,7 @@ renderHistory();resizeInput();
       return;
     }
 
-    if (activeButton && !audio.ended) {
+    if (activeButton && sourceMatches() && !audio.ended) {
       ++requestId;
       phase = 'paused';
       setNote('Paused: ' + trackName(activeButton));
@@ -4290,6 +4296,7 @@ renderHistory();resizeInput();
   });
 
   audio.addEventListener('ended', function(){
+    if (!sourceMatches()) return;
     ++requestId;
     phase = 'ended';
     paint();
@@ -4297,7 +4304,7 @@ renderHistory();resizeInput();
   });
 
   audio.addEventListener('error', function(){
-    if (!activeSrc || !audio.error) return;
+    if (!sourceMatches() || !audio.error) return;
 
     ++requestId;
     phase = 'error';
