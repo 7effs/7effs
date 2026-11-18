@@ -1,3 +1,4 @@
+// Regression coverage for on-demand media loading, playback races, and resource release.
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
