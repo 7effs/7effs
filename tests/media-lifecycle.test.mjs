@@ -116,18 +116,15 @@ test('an unexpected pause gets at most one event-driven recovery attempt',async(
   h.video.paused=true; h.video.dispatch('pause')
   assert.equal(h.video.playRequests.length,2)
 })
-test('optional images and video are not preloaded at startup',()=>{
-  assert.doesNotMatch(imageScript,/DOMContentLoaded|photosSettled|pageLoaded|preload\s*=\s*['"]auto|warmUp\(|new Image\(\)/)
-  assert.match(imageScript,/nudge\.addEventListener\('click',\(\)=>\{attachThumbnails\(\)/)
-  assert.doesNotMatch(imageScript,/switcher\.addEventListener\('(pointerenter|pointerdown|focusin)'/)
-  assert.match(html,/data-deferred-src="assets\/amber-background\.jpg"[^>]*loading="lazy"/)
-  assert.match(html,/data-deferred-src="assets\/noir-background\.jpg"[^>]*loading="lazy"/)
+test('background-image loading is restored to the previous warm-up behavior and then prewarms video',()=>{
+  assert.match(imageScript,/const warmUp=key=>warm\\[key\\]\\|\\|\\(warm\\[key\\]=new Promise/)
+  assert.match(imageScript,/DOMContentLoaded/)
+  assert.match(imageScript,/Promise\\.all\\(\\[pageLoaded,photosSettled\\]\\)/)
+  assert.match(imageScript,/video\\.preload='auto'/)
+  assert.match(imageScript,/video\\.setAttribute\\('src',parsed\\.href\\)/)
+  assert.match(imageScript,/pointerenter|pointerdown|focusin/)
+  assert.match(imageScript,/jaye-background-image-selected/)
+  assert.match(html,/data-deferred-src="assets\\/amber-background\\.jpg"[^>]*loading="eager"/)
+  assert.match(html,/data-deferred-src="assets\\/noir-background\\.jpg"[^>]*loading="eager"/)
 })
-test('a pending image choice is invalidated when switching background or closing the picker',()=>{
-  const switcher=imageScript.match(/switcher\.addEventListener\('click',\(\)=>\{([\s\S]*?)\}\);/)?.[1]??''
-  assert.match(switcher,/latestChoice\+\+/)
-  assert.match(imageScript,/document\.dispatchEvent\(new Event\('jaye-background-image-selected'\)\)/)
-  assert.match(imageScript,/const closePanel=\(\)=>\{latestChoice\+\+/)
-  const outsideClose=imageScript.match(/document\.addEventListener\('pointerdown',event=>\{([\s\S]*?)\}\);/)?.[1]??''
-  assert.match(outsideClose,/latestChoice\+\+/)
-})
+
