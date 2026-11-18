@@ -128,4 +128,6 @@ test('a pending image choice is invalidated when switching background or closing
   assert.match(switcher,/latestChoice\+\+/)
   assert.match(imageScript,/document\.dispatchEvent\(new Event\('jaye-background-image-selected'\)\)/)
   assert.match(imageScript,/const closePanel=\(\)=>\{latestChoice\+\+/)
+  const outsideClose=imageScript.match(/document\.addEventListener\('pointerdown',event=>\{([\s\S]*?)\}\);/)?.[1]??''
+  assert.match(outsideClose,/latestChoice\+\+/)
 })
