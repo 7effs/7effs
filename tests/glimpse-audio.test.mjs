@@ -242,8 +242,8 @@ test('stale old-source errors and invalid external paths cannot hijack the curre
 
 test('build configuration requires both Glimpse audio files in the output', () => {
   const config = readFileSync(new URL('../vite.config.ts', import.meta.url), 'utf8')
-  assert.match(config, /for \(const file of \["glimpse\/song1\.mp3", "glimpse\/song2\.mp3"\]\)/)
-  assert.match(config, /Required Glimpse audio asset missing or empty/)
+  assert.match(config, /for \(const file of \["glimpse\/song1\.mp3", "glimpse\/song2\.mp3", "glimpse\/cover1\.jpg", "glimpse\/cover2\.jpg", "jaye-video-background\.mp4"\]\)/)
+  assert.match(config, /Required media asset missing or empty/)
   assert.match(config, /statSync\(source\)\.size === 0/)
   assert.match(config, /statSync\(output\)\.size === 0/)
 })
