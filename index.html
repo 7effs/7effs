@@ -2148,7 +2148,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 </head>
 <body>
 <canvas id="jaye-tornado-background" aria-hidden="true"></canvas>
-<video id="jaye-global-video-background" aria-hidden="true" muted loop playsinline preload="none" src="jaye-video-background.mp4" tabindex="-1"></video>
+<video id="jaye-global-video-background" aria-hidden="true" muted loop playsinline preload="none" data-src="jaye-video-background.mp4" tabindex="-1"></video>
 <button id="jaye-background-switch" type="button" aria-pressed="false" aria-label="Switch global background to video">Switch background</button>
 
 
@@ -4075,142 +4075,22 @@ renderHistory();resizeInput();
 })();
 </script>
 <script>
-/* Glimpse audio controller. Keeps native media playback and isolates all state from other site audio. */
+/* Glimpse audio controller — request-safe native playback; isolated from background video and page audio. */
 (function(){
   'use strict';
+
   const audio = document.getElementById('glimpseAudio');
   const buttons = Array.from(document.querySelectorAll('.glimpse-track'));
   const note = document.getElementById('glimpseNote');
   if (!audio || !buttons.length) return;
 
   let requestId = 0;
+  let pendingPauseEvents = 0;
   let activeButton = null;
-  let currentSrc = '';
+  let activeSrc = '';
+  let phase = 'idle';
 
-  function trackName(button){
-    const node = button && button.querySelector('.glimpse-track-name');
-    return node ? node.textContent.trim() : 'track';
-  }
-  function setNote(message){
-    if (note) note.textContent = message;
-  }
-  function paint(state, active){
-    buttons.forEach(function(button){
-      const selected = button === active;
-      const playing = selected && state === 'playing';
-      button.classList.toggle('is-active', playing);
-      const play = button.querySelector('.glimpse-play');
-      const label = button.querySelector('.glimpse-track-state');
-      if (play) play.textContent = playing ? 'Ⅱ' : '▶';
-      if (label) label.textContent = selected ? ({
-        loading:'Loading…', buffering:'Buffering…', playing:'Now playing',
-        paused:'Paused', error:'Playback unavailable'
-      }[state] || 'Tap to play') : 'Tap to play';
-      button.setAttribute('aria-pressed', String(playing));
-    });
-  }
-  function errorMessage(){
-    if (audio.error) {
-      switch(audio.error.code){
-        case MediaError.MEDIA_ERR_ABORTED: return 'Playback was interrupted. Tap to try again.';
-        case MediaError.MEDIA_ERR_NETWORK: return 'Network problem while loading this track. Check your connection and retry.';
-        case MediaError.MEDIA_ERR_DECODE: return 'This audio file could not be decoded.';
-        case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED: return 'This track could not be loaded. The audio file may be unavailable or unsupported.';
-      }
-    }
-    return 'Playback could not start. Tap to try again.';
-  }
-  function isCurrent(id, src){
-    return id === requestId && src === currentSrc;
-  }
-  function pauseOtherSiteAudio(){
-    const floatingPlayer = document.getElementById('siteAudio');
-    if (floatingPlayer && !floatingPlayer.paused) floatingPlayer.pause();
-  }
-  function stopCurrent(){
-    requestId++;
-    audio.pause();
-    activeButton = null;
-    paint('idle', null);
-    return requestId;
-  }
-
-  buttons.forEach(function(button){
-    button.setAttribute('aria-pressed', 'false');
-    button.addEventListener('click', async function(){
-      const src = (button.dataset.track || '').trim();
-      if (!src){
-        setNote('This track is not configured yet.');
-        paint('error', button);
-        return;
-      }
-
-      if (src === currentSrc && button === activeButton && !audio.paused && !audio.ended){
-        stopCurrent();
-        setNote('Paused: ' + trackName(button));
-        paint('paused', button);
-        activeButton = button;
-        return;
-      }
-
-      const id = stopCurrent();
-      activeButton = button;
-      currentSrc = src;
-      setNote('Loading: ' + trackName(button) + '…');
-      paint('loading', button);
-      pauseOtherSiteAudio();
-
-      if (audio.getAttribute('src') !== src){
-        audio.src = src;
-      }
-      audio.load();
-
-      try {
-        await audio.play();
-        if (!isCurrent(id, src)) return;
-        paint('playing', button);
-        setNote('Now playing: ' + trackName(button));
-      } catch (error) {
-        if (!isCurrent(id, src)) return;
-        if (error && error.name === 'AbortError') return;
-        paint('error', button);
-        setNote(errorMessage());
-      }
-    });
-  });
-
-  audio.addEventListener('playing', function(){
-    if (!activeButton || !currentSrc) return;
-    paint('playing', activeButton);
-    setNote('Now playing: ' + trackName(activeButton));
-  });
-  audio.addEventListener('waiting', function(){
-    if (!activeButton || audio.paused) return;
-    paint('buffering', activeButton);
-    setNote('Buffering: ' + trackName(activeButton) + '…');
-  });
-  audio.addEventListener('stalled', function(){
-    if (!activeButton || audio.paused) return;
-    paint('buffering', activeButton);
-    setNote('Connection stalled while loading: ' + trackName(activeButton) + '.');
-  });
-  audio.addEventListener('pause', function(){
-    if (!activeButton || !audio.paused) return;
-    paint('paused', activeButton);
-  });
-  audio.addEventListener('ended', function(){
-    if (!activeButton) return;
-    const finished = activeButton;
-    activeButton = null;
-    paint('idle', null);
-    setNote('Track finished: ' + trackName(finished) + '. Choose a track to play again.');
-  });
-  audio.addEventListener('error', function(){
-    if (!activeButton || !currentSrc) return;
-    paint('error', activeButton);
-    setNote(errorMessage());
-  });
-
+  /* Keep broken artwork from expanding a track row or showing a broken-image icon. */
   document.querySelectorAll('.glimpse-thumbnail').forEach(function(img){
     img.addEventListener('error', function(){
       const fallback = document.createElement('span');
@@ -4220,6 +4100,237 @@ renderHistory();resizeInput();
       fallback.textContent = '♪';
       img.replaceWith(fallback);
     }, {once:true});
+  });
+
+  function trackName(button){
+    const node = button && button.querySelector('.glimpse-track-name');
+    return node ? node.textContent.trim() : 'track';
+  }
+
+  function setNote(message){
+    if (note) note.textContent = message;
+  }
+
+  function pauseAudio(){
+    if (audio.paused) return;
+    /* pause is delivered asynchronously; account for it before allowing a retry. */
+    pendingPauseEvents += 1;
+    audio.pause();
+  }
+
+  function paint(){
+    buttons.forEach(function(button){
+      const selected = button === activeButton;
+      const isPlaying = selected && (phase === 'playing' || phase === 'buffering') && !audio.paused && !audio.ended;
+      const isLoading = selected && phase === 'loading';
+      const isActive = selected && (isPlaying || isLoading);
+
+      button.classList.toggle('is-active', isActive);
+
+      const play = button.querySelector('.glimpse-play');
+      const state = button.querySelector('.glimpse-track-state');
+      if (play) play.textContent = isPlaying ? 'Ⅱ' : (isLoading ? '…' : '▶');
+
+      if (state) {
+        if (!selected) state.textContent = 'Tap to play';
+        else if (phase === 'loading') state.textContent = 'Loading…';
+        else if (phase === 'buffering') state.textContent = 'Buffering…';
+        else if (phase === 'playing') state.textContent = 'Now playing';
+        else if (phase === 'paused') state.textContent = 'Paused';
+        else if (phase === 'ended') state.textContent = 'Play again';
+        else if (phase === 'error') state.textContent = 'Try again';
+        else state.textContent = 'Tap to play';
+      }
+
+      button.setAttribute('aria-pressed', String(isPlaying));
+    });
+  }
+
+  function sourceMatches(requireSelectedResource){
+    if (!activeSrc) return false;
+    const expected = new URL(activeSrc, document.baseURI).href;
+    if (audio.src !== expected) return false;
+    /* A progress event cannot belong to this track until the browser selects its resource. */
+    if (!audio.currentSrc) return !requireSelectedResource;
+    return audio.currentSrc === expected;
+  }
+
+  function mediaErrorMessage(){
+    const error = audio.error;
+    if (!error) return 'Unable to play this track. Tap to try again.';
+
+    switch (error.code) {
+      case 1:
+        return 'Playback was interrupted. Tap to try again.';
+      case 2:
+        return 'Could not load this track. Check your connection or try again.';
+      case 3:
+        return 'This audio could not be decoded. Tap to try again.';
+      case 4:
+        return 'This audio format or source is not supported.';
+      default:
+        return 'Unable to play this track. Tap to try again.';
+    }
+  }
+
+  function failCurrentRequest(error, id){
+    if (id !== requestId) return;
+
+    phase = 'error';
+    pauseAudio();
+    paint();
+
+    if (error && error.name === 'NotAllowedError') {
+      setNote('The browser blocked playback. Tap the track again to retry.');
+    } else if (error && error.name === 'NotSupportedError') {
+      setNote('This audio format or source is not supported.');
+    } else if (error && error.name === 'AbortError') {
+      setNote('Playback was interrupted. Tap the track again to retry.');
+    } else if (audio.error) {
+      setNote(mediaErrorMessage());
+    } else {
+      setNote('Playback could not start. Check your connection and tap to retry.');
+    }
+  }
+
+  async function startTrack(button, src){
+    const id = ++requestId;
+    activeButton = button;
+    activeSrc = src;
+    phase = 'loading';
+    setNote('Loading: ' + trackName(button) + '…');
+    paint();
+
+    /* Preserve the existing one-player-at-a-time rule. */
+    const floatingPlayer = document.getElementById('siteAudio');
+    if (floatingPlayer && !floatingPlayer.paused) floatingPlayer.pause();
+
+    try {
+      if (audio.src !== new URL(src, document.baseURI).href || audio.error) {
+        /* Stop the previous source before asking the browser to select the new one. */
+        pauseAudio();
+        audio.src = src;
+        audio.load();
+      }
+
+      await audio.play();
+
+      /* A later tap may have selected another track while play() was pending. */
+      if (id !== requestId) return;
+
+      if (!audio.paused && phase === 'loading') {
+        phase = 'playing';
+        setNote('Now playing: ' + trackName(button));
+        paint();
+      }
+    } catch (error) {
+      failCurrentRequest(error, id);
+    }
+  }
+
+  buttons.forEach(function(button){
+    button.setAttribute('aria-pressed', 'false');
+
+    button.addEventListener('click', function(){
+      const src = (button.dataset.track || '').trim();
+
+      if (!src) {
+        setNote('This track has no audio file configured.');
+        return;
+      }
+
+      let parsed;
+      try {
+        parsed = new URL(src, document.baseURI);
+      } catch (_) {
+        setNote('This track has an invalid audio path.');
+        return;
+      }
+
+      if (parsed.origin !== window.location.origin) {
+        setNote('This track has an invalid audio path.');
+        return;
+      }
+
+      /* Tapping the selected track pauses it; a further tap retries/resumes it. */
+      if (activeSrc === src && phase !== 'error' && !audio.error && !audio.paused && !audio.ended) {
+        ++requestId;
+        phase = 'paused';
+        pauseAudio();
+        setNote('Paused: ' + trackName(button));
+        paint();
+        return;
+      }
+
+      /* Do not issue duplicate play() calls while the same source is still starting. */
+      if (activeSrc === src && phase === 'loading' && audio.paused && !audio.error) {
+        setNote('Still loading: ' + trackName(button) + '…');
+        return;
+      }
+
+      startTrack(button, src);
+    });
+  });
+
+  audio.addEventListener('playing', function(){
+    if (!activeButton || !sourceMatches(true) || audio.paused) return;
+    phase = 'playing';
+    setNote('Now playing: ' + trackName(activeButton));
+    paint();
+  });
+
+  audio.addEventListener('waiting', function(){
+    if (!activeButton || !sourceMatches(true) || audio.paused) return;
+    phase = 'buffering';
+    setNote('Buffering: ' + trackName(activeButton) + '…');
+    paint();
+  });
+
+  audio.addEventListener('stalled', function(){
+    if (!activeButton || !sourceMatches(true) || audio.paused) return;
+    phase = 'buffering';
+    setNote('Connection interrupted while loading: ' + trackName(activeButton) + '…');
+    paint();
+  });
+
+  audio.addEventListener('pause', function(){
+    /* A queued pause from the previous source must not mark the new source paused. */
+    if (pendingPauseEvents > 0) {
+      pendingPauseEvents -= 1;
+      paint();
+      return;
+    }
+
+    /* Explicit pauses set their state before calling pause(). */
+    if (phase === 'loading' || phase === 'paused' || phase === 'error' || phase === 'ended') {
+      paint();
+      return;
+    }
+
+    if (activeButton && sourceMatches(true) && !audio.ended) {
+      ++requestId;
+      phase = 'paused';
+      setNote('Paused: ' + trackName(activeButton));
+      paint();
+    }
+  });
+
+  audio.addEventListener('ended', function(){
+    if (!sourceMatches(true)) return;
+    ++requestId;
+    phase = 'ended';
+    paint();
+    setNote('Track finished. Choose a track to play again.');
+  });
+
+  audio.addEventListener('error', function(){
+    if (!sourceMatches() || !audio.error) return;
+
+    ++requestId;
+    phase = 'error';
+    pauseAudio();
+    paint();
+    setNote(mediaErrorMessage());
   });
 })();
 </script>
@@ -6222,8 +6333,8 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
 <div id="jaye-image-background-panel" role="dialog" aria-label="Choose an image background" aria-modal="false">
   <div class="jaye-image-panel-head"><span>Pick 🧚</span><button id="jaye-image-panel-close" type="button" aria-label="Close image backgrounds">×</button></div>
   <div class="jaye-image-background-options">
-    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="amber" aria-label="Use orange-haired manga background"><img data-deferred-src="assets/amber-background.jpg" alt="Orange-haired manga character" loading="eager"><span>Amber</span></button>
-    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="noir" aria-label="Use black-haired manga background"><img data-deferred-src="assets/noir-background.jpg" alt="Black-haired manga character" loading="eager"><span>Noir</span></button>
+    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="amber" aria-label="Use orange-haired manga background"><img data-deferred-src="assets/amber-background.jpg" alt="Orange-haired manga character" loading="lazy" decoding="async"><span>Amber</span></button>
+    <button class="jaye-image-background-option" type="button" data-jaye-image-bg="noir" aria-label="Use black-haired manga background"><img data-deferred-src="assets/noir-background.jpg" alt="Black-haired manga character" loading="lazy" decoding="async"><span>Noir</span></button>
   </div>
 </div>
 <script id="jaye-optional-image-backgrounds-runtime-v1">
@@ -6239,35 +6350,29 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     amber:'assets/amber-background.jpg',
     noir:'assets/noir-background.jpg'
   };
-  /* Performance only. Loading order for the optional backgrounds, none of which is visible when the page opens:
-       1. the two background photographs are requested as soon as the page's HTML is parsed (DOMContentLoaded), at low priority so they never hold up rendering;
-       2. once the page has finished loading and the photographs are in, the background video starts fetching;
-       3. the picker's thumbnail images are attached only when the visitor approaches the picker, or at once if they open it early.
-     The photographs and the thumbnails are the same two files, so a thumbnail never needs a second download.
-     Nothing is swapped in until it is ready, so the current background stays in place while a choice is still loading. */
-  const warm={};
-  const warmUp=key=>warm[key]||(warm[key]=new Promise(resolve=>{
-    const photo=new Image();photo.decoding='async';photo.fetchPriority='low';
-    photo.onload=()=>resolve(photo);photo.onerror=()=>{delete warm[key];resolve(null);};
-    photo.src=images[key];
-  }));
-  const photosSettled=new Promise(resolve=>{const go=()=>resolve(Promise.all(Object.keys(images).map(warmUp)));document.readyState==='loading'?addEventListener('DOMContentLoaded',go,{once:true}):go();});
-  const pageLoaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
-  Promise.all([pageLoaded,photosSettled]).then(()=>{
-    const video=document.getElementById('jaye-global-video-background');
-    /* Only an untouched video is started; pressing the switch already fetches it on demand. */
-    if(video&&video.preload==='none'&&video.paused&&video.readyState===0&&video.networkState!==2&&!root.classList.contains('jaye-video-background-active'))video.preload='auto';
-  });
+  /* Optional backgrounds stay unloaded until the picker is opened. */
+  const waitForThumbnail=key=>{
+    const option=panel.querySelector('[data-jaye-image-bg="'+key+'"]');
+    const thumb=option&&option.querySelector('img');
+    if(!thumb)return Promise.resolve(null);
+    if(thumb.complete)return Promise.resolve(thumb.naturalWidth>0?thumb:null);
+    return new Promise(resolve=>{
+      thumb.addEventListener('load',()=>resolve(thumb.naturalWidth>0?thumb:null),{once:true});
+      thumb.addEventListener('error',()=>resolve(null),{once:true});
+    });
+  };
   const attachThumbnails=()=>{
     panel.querySelectorAll('img[data-deferred-src]').forEach(thumb=>{thumb.src=thumb.getAttribute('data-deferred-src');thumb.removeAttribute('data-deferred-src');});
   };
   ['pointerenter','pointerdown','focusin'].forEach(type=>switcher.addEventListener(type,attachThumbnails,{once:true,passive:true}));
   let nudgeDismissed=false;
-  const closePanel=()=>{panel.classList.remove('is-visible');nudge.classList.remove('is-visible');};
+  let latestChoice=0;
+  const closePanel=()=>{latestChoice++;panel.classList.remove('is-visible');nudge.classList.remove('is-visible');};
   switcher.addEventListener('click',()=>{
+    latestChoice++;
     if(root.classList.contains('jaye-image-background-active'))root.classList.remove('jaye-image-background-active');
     closePanel();
-    if(!nudgeDismissed){attachThumbnails();nudge.classList.add('is-visible');}
+    if(!nudgeDismissed)nudge.classList.add('is-visible');
   });
   nudge.addEventListener('click',()=>{attachThumbnails();nudge.classList.remove('is-visible');panel.classList.add('is-visible');});
   close.addEventListener('click',()=>{closePanel();nudgeDismissed=true;});
@@ -6275,22 +6380,18 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     layer.style.backgroundImage='url("'+images[key]+'")';
     root.classList.remove('jaye-video-background-active');
     root.classList.add('jaye-image-background-active');
-    const video=document.getElementById('jaye-global-video-background');
-    if(video)video.pause();
-    const mainButton=document.getElementById('jaye-background-switch');
-    if(mainButton){mainButton.textContent='CHANGE BACKGROUND';mainButton.setAttribute('aria-label','Switch global background to video');mainButton.setAttribute('aria-pressed','false');}
+    document.dispatchEvent(new Event('jaye-background-image-selected'));
     closePanel();
     /* Re-arm the existing background nudge after an image is chosen, so the next
        switch back to video can offer the image backgrounds again. */
     nudgeDismissed=false;
   };
-  let latestChoice=0;
   panel.querySelectorAll('[data-jaye-image-bg]').forEach(option=>option.addEventListener('click',()=>{
     const key=option.getAttribute('data-jaye-image-bg');
     if(!images[key])return;
     const choice=++latestChoice;
     /* Wait until the photograph is downloaded and decoded, so the swap never shows an empty layer; a newer choice cancels this one. */
-    warmUp(key).then(photo=>photo&&photo.decode?photo.decode().then(()=>photo,()=>photo):photo).then(photo=>{
+    waitForThumbnail(key).then(photo=>photo&&photo.decode?photo.decode().then(()=>photo,()=>photo):photo).then(photo=>{
       if(choice!==latestChoice)return;
       if(photo)applyImage(key);else closePanel();
     });
@@ -7693,33 +7794,78 @@ html body main #postAI-impossible.postai-game-section > .postai-wrap:hover {
   const canvas=document.getElementById('jaye-tornado-background');
   const button=document.getElementById('jaye-background-switch');
   if(!video||!canvas||!button)return;
-  const setMode=async useVideo=>{
-    if(useVideo){
-      try{
-        await video.play();
-        document.documentElement.classList.add('jaye-video-background-active');
-        button.textContent='SATURN BACKGROUND';
-        button.setAttribute('aria-label','Switch global background to Saturn');
-        button.setAttribute('aria-pressed','true');
-      }catch(e){
-        document.documentElement.classList.remove('jaye-video-background-active');
-        button.textContent='CHANGE BACKGROUND';
-        button.setAttribute('aria-label','Switch global background to video');
-        button.setAttribute('aria-pressed','false');
-      }
-    }else{
-      document.documentElement.classList.remove('jaye-video-background-active');
-      video.pause();
-      button.textContent='CHANGE BACKGROUND';
-      button.setAttribute('aria-label','Switch global background to video');
-      button.setAttribute('aria-pressed','false');
+  const root=document.documentElement, activeClass='jaye-video-background-active';
+  let wanted=false, suspended=false, generation=0, pauseRecoveryUsed=false;
+  const setButton=active=>{
+    button.textContent=active?'SATURN BACKGROUND':'CHANGE BACKGROUND';
+    button.setAttribute('aria-label',active?'Switch global background to Saturn':'Switch global background to video');
+    button.setAttribute('aria-pressed',String(active));
+  };
+  const releaseSource=()=>{
+    video.pause();
+    if(video.hasAttribute('src')){video.removeAttribute('src');video.load();}
+  };
+  const deactivate=()=>{
+    generation++;wanted=false;suspended=false;
+    root.classList.remove(activeClass);releaseSource();setButton(false);
+  };
+  const attachSource=()=>{
+    const source=video.getAttribute('data-src');
+    if(!source)return false;
+    try{
+      const parsed=new URL(source,document.baseURI);
+      if(parsed.origin!==window.location.origin)return false;
+      if(video.getAttribute('src')!==parsed.href)video.setAttribute('src',parsed.href);
+      return true;
+    }catch(_){return false;}
+  };
+  const playForRequest=async id=>{
+    if(id!==generation||!wanted||suspended||document.hidden)return;
+    if(!attachSource()){deactivate();return;}
+    try{
+      await video.play();
+      if(id!==generation||!wanted||suspended||document.hidden)return;
+      if(!video.paused){root.classList.add(activeClass);setButton(true);}
+    }catch(_){
+      if(id!==generation||!wanted||suspended||document.hidden)return;
+      deactivate();
     }
   };
-  video.addEventListener('error',()=>{
-    if(document.documentElement.classList.contains('jaye-video-background-active'))setMode(false);
+  const activate=()=>{
+    wanted=true;suspended=false;pauseRecoveryUsed=false;setButton(true);
+    const id=++generation;void playForRequest(id);
+  };
+  button.addEventListener('click',()=>{if(wanted)deactivate();else activate();});
+  video.addEventListener('playing',()=>{
+    if(!wanted||suspended||document.hidden)return;
+    root.classList.add(activeClass);setButton(true);
   });
-  button.addEventListener('click',()=>setMode(!document.documentElement.classList.contains('jaye-video-background-active')));
-  document.addEventListener('visibilitychange',()=>{if(document.hidden)video.pause();else if(document.documentElement.classList.contains('jaye-video-background-active'))video.play().catch(()=>{});});
+  video.addEventListener('waiting',()=>{
+    if(wanted&&!suspended&&!document.hidden)button.setAttribute('aria-label','Background video buffering. Switch to another background');
+  });
+  video.addEventListener('stalled',()=>{
+    if(wanted&&!suspended&&!document.hidden)button.setAttribute('aria-label','Background video connection stalled. Switch to another background');
+  });
+  video.addEventListener('pause',()=>{
+    if(!wanted||suspended||document.hidden||pauseRecoveryUsed)return;
+    const source=video.getAttribute('src');
+    if(!source||!video.currentSrc||video.currentSrc!==source||video.readyState===0)return;
+    pauseRecoveryUsed=true;
+    const id=++generation;void playForRequest(id);
+  });
+  video.addEventListener('error',()=>{
+    if(wanted&&!suspended&&!document.hidden&&video.error&&video.currentSrc&&video.currentSrc===video.getAttribute('src'))deactivate();
+  });
+  document.addEventListener('visibilitychange',()=>{
+    if(!wanted)return;
+    if(document.hidden){
+      generation++;suspended=true;root.classList.remove(activeClass);releaseSource();
+    }else{
+      suspended=false;pauseRecoveryUsed=false;
+      const id=++generation;void playForRequest(id);
+    }
+  });
+  document.addEventListener('jaye-background-image-selected',deactivate);
 })();
 </script>
 
