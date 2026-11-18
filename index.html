@@ -6396,7 +6396,7 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     });
   }));
   document.addEventListener('pointerdown',event=>{
-    if(panel.classList.contains('is-visible')&&!panel.contains(event.target)&&!nudge.contains(event.target))panel.classList.remove('is-visible');
+    if(panel.classList.contains('is-visible')&&!panel.contains(event.target)&&!nudge.contains(event.target)){latestChoice++;panel.classList.remove('is-visible');}
     else if(nudge.classList.contains('is-visible')&&!nudge.contains(event.target)&&event.target!==switcher)nudge.classList.remove('is-visible');
   });
   document.addEventListener('keydown',event=>{if(event.key==='Escape')closePanel();});
