@@ -4139,10 +4139,13 @@ renderHistory();resizeInput();
     });
   }
 
-  function sourceMatches(){
+  function sourceMatches(requireSelectedResource){
     if (!activeSrc) return false;
     const expected = new URL(activeSrc, document.baseURI).href;
-    return audio.src === expected && (!audio.currentSrc || audio.currentSrc === expected);
+    if (audio.src !== expected) return false;
+    /* A progress event cannot belong to this track until the browser selects its resource. */
+    if (!audio.currentSrc) return !requireSelectedResource;
+    return audio.currentSrc === expected;
   }
 
   function mediaErrorMessage(){
@@ -4265,21 +4268,21 @@ renderHistory();resizeInput();
   });
 
   audio.addEventListener('playing', function(){
-    if (!activeButton || !sourceMatches() || audio.paused) return;
+    if (!activeButton || !sourceMatches(true) || audio.paused) return;
     phase = 'playing';
     setNote('Now playing: ' + trackName(activeButton));
     paint();
   });
 
   audio.addEventListener('waiting', function(){
-    if (!activeButton || !sourceMatches() || audio.paused) return;
+    if (!activeButton || !sourceMatches(true) || audio.paused) return;
     phase = 'buffering';
     setNote('Buffering: ' + trackName(activeButton) + '…');
     paint();
   });
 
   audio.addEventListener('stalled', function(){
-    if (!activeButton || !sourceMatches() || audio.paused) return;
+    if (!activeButton || !sourceMatches(true) || audio.paused) return;
     phase = 'buffering';
     setNote('Connection interrupted while loading: ' + trackName(activeButton) + '…');
     paint();
@@ -4299,7 +4302,7 @@ renderHistory();resizeInput();
       return;
     }
 
-    if (activeButton && sourceMatches() && !audio.ended) {
+    if (activeButton && sourceMatches(true) && !audio.ended) {
       ++requestId;
       phase = 'paused';
       setNote('Paused: ' + trackName(activeButton));
@@ -4308,7 +4311,7 @@ renderHistory();resizeInput();
   });
 
   audio.addEventListener('ended', function(){
-    if (!sourceMatches()) return;
+    if (!sourceMatches(true)) return;
     ++requestId;
     phase = 'ended';
     paint();
