@@ -34,8 +34,8 @@ jobs:
             output="optimized-media/$file"
             mkdir -p "$(dirname "$output")"
             bitrate="$(ffprobe -v error -show_entries format=bit_rate -of default=noprint_wrappers=1:nokey=1 "$file" | head -n1)"
-            if [[ "$bitrate" =~ ^[0-9]+$ ]] && (( bitrate > 175000 )); then
-              ffmpeg -hide_banner -y -i "$file" -map 0:a:0 -vn -sn -dn -c:a libmp3lame -b:a 160k -ar 44100 -ac 2 -map_metadata 0 -id3v2_version 3 "$output"
+            if [[ "$bitrate" =~ ^[0-9]+$ ]] && (( bitrate > 140000 )); then
+              ffmpeg -hide_banner -y -i "$file" -map 0:a:0 -vn -sn -dn -c:a libmp3lame -b:a 128k -ar 44100 -ac 2 -map_metadata 0 -id3v2_version 3 "$output"
             else
               cp "$file" "$output"
             fi
