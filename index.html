@@ -6364,7 +6364,6 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
   const attachThumbnails=()=>{
     panel.querySelectorAll('img[data-deferred-src]').forEach(thumb=>{thumb.src=thumb.getAttribute('data-deferred-src');thumb.removeAttribute('data-deferred-src');});
   };
-  ['pointerenter','pointerdown','focusin'].forEach(type=>switcher.addEventListener(type,attachThumbnails,{once:true,passive:true}));
   let nudgeDismissed=false;
   let latestChoice=0;
   const closePanel=()=>{latestChoice++;panel.classList.remove('is-visible');nudge.classList.remove('is-visible');};
