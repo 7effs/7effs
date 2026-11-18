@@ -97,8 +97,8 @@ function createHarness() {
   const audio = new FakeAudio(baseURI)
   const siteAudio = new FakeAudio(baseURI)
   const note = new FakeElement()
-  const trackA = makeButton('/glimpse/song1.mp3', 'A.')
-  const trackB = makeButton('/glimpse/song2.mp3', 'B.')
+  const trackA = makeButton('/glimpse/song1.mp3', 'You')
+  const trackB = makeButton('/glimpse/song2.mp3', 'Sorus W')
   const buttons = [trackA, trackB]
   const document = {
     baseURI,
@@ -120,7 +120,7 @@ function createHarness() {
 const tick = async () => { await Promise.resolve(); await Promise.resolve() }
 const click = button => button.dispatch('click')
 
-test('rapid A → B switching ignores stale play promises and stale media events', async () => {
+test('rapid You → Sorus W switching ignores stale play promises and stale media events', async () => {
   const h = createHarness()
   click(h.trackA)
   assert.match(h.note.textContent, /^Loading: A\./)
@@ -138,15 +138,15 @@ test('rapid A → B switching ignores stale play promises and stale media events
 
   h.audio.selectResource()
   h.audio.dispatch('playing')
-  assert.equal(h.note.textContent, 'Now playing: B.')
+  assert.equal(h.note.textContent, 'Now playing: Sorus W')
 
   oldARequest.resolve()
   await tick()
-  assert.equal(h.note.textContent, 'Now playing: B.', 'late A play() resolution must not overwrite B')
+  assert.equal(h.note.textContent, 'Now playing: Sorus W', 'late A play() resolution must not overwrite B')
 
   h.audio.pendingPlays[1].resolve()
   await tick()
-  assert.equal(h.note.textContent, 'Now playing: B.')
+  assert.equal(h.note.textContent, 'Now playing: Sorus W')
   assert.equal(h.trackB.attributes['aria-pressed'], 'true')
 })
 
@@ -156,19 +156,19 @@ test('pause and resume retain the selected track and update the actual player st
   h.audio.selectResource()
   h.audio.pendingPlays[0].resolve()
   await tick()
-  assert.equal(h.note.textContent, 'Now playing: A.')
+  assert.equal(h.note.textContent, 'Now playing: You')
 
   click(h.trackA)
   assert.equal(h.audio.paused, true)
-  assert.equal(h.note.textContent, 'Paused: A.')
+  assert.equal(h.note.textContent, 'Paused: You')
   h.audio.flushPauseEvent()
-  assert.equal(h.note.textContent, 'Paused: A.')
+  assert.equal(h.note.textContent, 'Paused: You')
 
   click(h.trackA)
   assert.equal(h.audio.pendingPlays.length, 2, 'a later tap retries/resumes')
   h.audio.pendingPlays[1].resolve()
   await tick()
-  assert.equal(h.note.textContent, 'Now playing: A.')
+  assert.equal(h.note.textContent, 'Now playing: You')
 })
 
 test('media network errors are classified and the same source can be retried', async () => {
@@ -185,7 +185,7 @@ test('media network errors are classified and the same source can be retried', a
   h.audio.pendingPlays[1].resolve()
   await tick()
   h.audio.flushPauseEvent()
-  assert.equal(h.note.textContent, 'Now playing: B.', 'late error-pause events must not mark the retry paused')
+  assert.equal(h.note.textContent, 'Now playing: Sorus W', 'late error-pause events must not mark the retry paused')
 })
 
 test('browser playback restrictions produce a useful retry message', async () => {
@@ -204,7 +204,7 @@ test('browser playback restrictions produce a useful retry message', async () =>
   h.audio.pendingPlays[1].resolve()
   await tick()
   h.audio.flushPauseEvent()
-  assert.equal(h.note.textContent, 'Now playing: A.', 'the queued pause from the rejected attempt must not overwrite the retry')
+  assert.equal(h.note.textContent, 'Now playing: You', 'the queued pause from the rejected attempt must not overwrite the retry')
 })
 
 test('buffering and stalled events expose recovery state without losing the selected track', () => {
@@ -212,17 +212,17 @@ test('buffering and stalled events expose recovery state without losing the sele
   click(h.trackA)
   h.audio.selectResource()
   h.audio.dispatch('playing')
-  assert.equal(h.note.textContent, 'Now playing: A.')
+  assert.equal(h.note.textContent, 'Now playing: You')
 
   h.audio.dispatch('waiting')
-  assert.match(h.note.textContent, /^Buffering: A/)
+  assert.match(h.note.textContent, /^Buffering: You/)
   assert.equal(h.trackA.children['.glimpse-track-state'].textContent, 'Buffering…')
 
   h.audio.dispatch('stalled')
-  assert.match(h.note.textContent, /^Connection interrupted while loading: A/)
+  assert.match(h.note.textContent, /^Connection interrupted while loading: You/)
 
   h.audio.dispatch('playing')
-  assert.equal(h.note.textContent, 'Now playing: A.')
+  assert.equal(h.note.textContent, 'Now playing: You')
 })
 
 test('stale old-source errors and invalid external paths cannot hijack the current track', () => {
