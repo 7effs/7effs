@@ -4085,7 +4085,7 @@ renderHistory();resizeInput();
   if (!audio || !buttons.length) return;
 
   let requestId = 0;
-  let pendingSourcePauseEvents = 0;
+  let pendingPauseEvents = 0;
   let activeButton = null;
   let activeSrc = '';
   let phase = 'idle';
@@ -4109,6 +4109,13 @@ renderHistory();resizeInput();
 
   function setNote(message){
     if (note) note.textContent = message;
+  }
+
+  function pauseAudio(){
+    if (audio.paused) return;
+    /* pause is delivered asynchronously; account for it before allowing a retry. */
+    pendingPauseEvents += 1;
+    audio.pause();
   }
 
   function paint(){
@@ -4170,7 +4177,7 @@ renderHistory();resizeInput();
     if (id !== requestId) return;
 
     phase = 'error';
-    if (!audio.paused) audio.pause();
+    pauseAudio();
     paint();
 
     if (error && error.name === 'NotAllowedError') {
@@ -4200,11 +4207,8 @@ renderHistory();resizeInput();
 
     try {
       if (audio.src !== new URL(src, document.baseURI).href || audio.error) {
-        /* This pause belongs to the old source, not the newly selected track. */
-        if (!audio.paused) {
-          pendingSourcePauseEvents += 1;
-          audio.pause();
-        }
+        /* Stop the previous source before asking the browser to select the new one. */
+        pauseAudio();
         audio.src = src;
         audio.load();
       }
@@ -4252,7 +4256,7 @@ renderHistory();resizeInput();
       if (activeSrc === src && phase !== 'error' && !audio.error && !audio.paused && !audio.ended) {
         ++requestId;
         phase = 'paused';
-        audio.pause();
+        pauseAudio();
         setNote('Paused: ' + trackName(button));
         paint();
         return;
@@ -4291,8 +4295,8 @@ renderHistory();resizeInput();
 
   audio.addEventListener('pause', function(){
     /* A queued pause from the previous source must not mark the new source paused. */
-    if (pendingSourcePauseEvents > 0) {
-      pendingSourcePauseEvents -= 1;
+    if (pendingPauseEvents > 0) {
+      pendingPauseEvents -= 1;
       paint();
       return;
     }
@@ -4324,7 +4328,7 @@ renderHistory();resizeInput();
 
     ++requestId;
     phase = 'error';
-    if (!audio.paused) audio.pause();
+    pauseAudio();
     paint();
     setNote(mediaErrorMessage());
   });
