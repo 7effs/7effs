@@ -4085,6 +4085,7 @@ renderHistory();resizeInput();
   if (!audio || !buttons.length) return;
 
   let requestId = 0;
+  let pendingSourcePauseEvents = 0;
   let activeButton = null;
   let activeSrc = '';
   let phase = 'idle';
@@ -4195,7 +4196,11 @@ renderHistory();resizeInput();
 
     try {
       if (audio.src !== new URL(src, document.baseURI).href || audio.error) {
-        audio.pause();
+        /* This pause belongs to the old source, not the newly selected track. */
+        if (!audio.paused) {
+          pendingSourcePauseEvents += 1;
+          audio.pause();
+        }
         audio.src = src;
         audio.load();
       }
@@ -4281,7 +4286,14 @@ renderHistory();resizeInput();
   });
 
   audio.addEventListener('pause', function(){
-    /* Source changes and explicit pauses set their state before calling pause(). */
+    /* A queued pause from the previous source must not mark the new source paused. */
+    if (pendingSourcePauseEvents > 0) {
+      pendingSourcePauseEvents -= 1;
+      paint();
+      return;
+    }
+
+    /* Explicit pauses set their state before calling pause(). */
     if (phase === 'loading' || phase === 'paused' || phase === 'error' || phase === 'ended') {
       paint();
       return;
