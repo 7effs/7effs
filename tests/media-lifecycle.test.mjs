@@ -119,6 +119,7 @@ test('an unexpected pause gets at most one event-driven recovery attempt',async(
 test('optional images and video are not preloaded at startup',()=>{
   assert.doesNotMatch(imageScript,/DOMContentLoaded|photosSettled|pageLoaded|preload\s*=\s*['"]auto|warmUp\(|new Image\(\)/)
   assert.match(imageScript,/nudge\.addEventListener\('click',\(\)=>\{attachThumbnails\(\)/)
+  assert.doesNotMatch(imageScript,/pointerenter|pointerdown|focusin/)
   assert.match(html,/data-deferred-src="assets\/amber-background\.jpg"[^>]*loading="lazy"/)
   assert.match(html,/data-deferred-src="assets\/noir-background\.jpg"[^>]*loading="lazy"/)
 })
