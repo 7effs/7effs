@@ -4170,6 +4170,7 @@ renderHistory();resizeInput();
     if (id !== requestId) return;
 
     phase = 'error';
+    if (!audio.paused) audio.pause();
     paint();
 
     if (error && error.name === 'NotAllowedError') {
@@ -4248,7 +4249,7 @@ renderHistory();resizeInput();
       }
 
       /* Tapping the selected track pauses it; a further tap retries/resumes it. */
-      if (activeSrc === src && !audio.paused && !audio.ended) {
+      if (activeSrc === src && phase !== 'error' && !audio.error && !audio.paused && !audio.ended) {
         ++requestId;
         phase = 'paused';
         audio.pause();
@@ -4323,6 +4324,7 @@ renderHistory();resizeInput();
 
     ++requestId;
     phase = 'error';
+    if (!audio.paused) audio.pause();
     paint();
     setNote(mediaErrorMessage());
   });
