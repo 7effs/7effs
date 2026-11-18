@@ -159,7 +159,7 @@ test('pause and resume retain the selected track and update the actual player st
   click(h.trackA)
   assert.equal(h.audio.paused, true)
   assert.equal(h.note.textContent, 'Paused: A.')
-  h.audio.dispatch('pause')
+  h.audio.flushPauseEvent()
   assert.equal(h.note.textContent, 'Paused: A.')
 
   click(h.trackA)
@@ -182,7 +182,8 @@ test('media network errors are classified and the same source can be retried', a
   h.audio.selectResource()
   h.audio.pendingPlays[1].resolve()
   await tick()
-  assert.equal(h.note.textContent, 'Now playing: B.')
+  h.audio.flushPauseEvent()
+  assert.equal(h.note.textContent, 'Now playing: B.', 'late error-pause events must not mark the retry paused')
 })
 
 test('browser playback restrictions produce a useful retry message', async () => {
@@ -193,6 +194,33 @@ test('browser playback restrictions produce a useful retry message', async () =>
   h.audio.pendingPlays[0].reject(denied)
   await tick()
   assert.match(h.note.textContent, /browser blocked playback/i)
+  assert.equal(h.audio.paused, true)
+
+  click(h.trackA)
+  assert.equal(h.audio.pendingPlays.length, 2, 'the same track remains retryable after a rejected play()')
+  h.audio.selectResource()
+  h.audio.pendingPlays[1].resolve()
+  await tick()
+  h.audio.flushPauseEvent()
+  assert.equal(h.note.textContent, 'Now playing: A.', 'the queued pause from the rejected attempt must not overwrite the retry')
+})
+
+test('buffering and stalled events expose recovery state without losing the selected track', () => {
+  const h = createHarness()
+  click(h.trackA)
+  h.audio.selectResource()
+  h.audio.dispatch('playing')
+  assert.equal(h.note.textContent, 'Now playing: A.')
+
+  h.audio.dispatch('waiting')
+  assert.match(h.note.textContent, /^Buffering: A/)
+  assert.equal(h.trackA.children['.glimpse-track-state'].textContent, 'Buffering…')
+
+  h.audio.dispatch('stalled')
+  assert.match(h.note.textContent, /^Connection interrupted while loading: A/)
+
+  h.audio.dispatch('playing')
+  assert.equal(h.note.textContent, 'Now playing: A.')
 })
 
 test('stale old-source errors and invalid external paths cannot hijack the current track', () => {
