@@ -4075,14 +4075,142 @@ renderHistory();resizeInput();
 })();
 </script>
 <script>
-/* Independent Glimpse audio system. Isolated from the background player and all other page systems. */
+/* Glimpse audio controller. Keeps native media playback and isolates all state from other site audio. */
 (function(){
+  'use strict';
   const audio = document.getElementById('glimpseAudio');
   const buttons = Array.from(document.querySelectorAll('.glimpse-track'));
   const note = document.getElementById('glimpseNote');
   if (!audio || !buttons.length) return;
- 
-  /* Keep broken artwork from expanding the track row or showing a broken-image icon. */
+
+  let requestId = 0;
+  let activeButton = null;
+  let currentSrc = '';
+
+  function trackName(button){
+    const node = button && button.querySelector('.glimpse-track-name');
+    return node ? node.textContent.trim() : 'track';
+  }
+  function setNote(message){
+    if (note) note.textContent = message;
+  }
+  function paint(state, active){
+    buttons.forEach(function(button){
+      const selected = button === active;
+      const playing = selected && state === 'playing';
+      button.classList.toggle('is-active', playing);
+      const play = button.querySelector('.glimpse-play');
+      const label = button.querySelector('.glimpse-track-state');
+      if (play) play.textContent = playing ? 'Ⅱ' : '▶';
+      if (label) label.textContent = selected ? ({
+        loading:'Loading…', buffering:'Buffering…', playing:'Now playing',
+        paused:'Paused', error:'Playback unavailable'
+      }[state] || 'Tap to play') : 'Tap to play';
+      button.setAttribute('aria-pressed', String(playing));
+    });
+  }
+  function errorMessage(){
+    if (audio.error) {
+      switch(audio.error.code){
+        case MediaError.MEDIA_ERR_ABORTED: return 'Playback was interrupted. Tap to try again.';
+        case MediaError.MEDIA_ERR_NETWORK: return 'Network problem while loading this track. Check your connection and retry.';
+        case MediaError.MEDIA_ERR_DECODE: return 'This audio file could not be decoded.';
+        case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED: return 'This track could not be loaded. The audio file may be unavailable or unsupported.';
+      }
+    }
+    return 'Playback could not start. Tap to try again.';
+  }
+  function isCurrent(id, src){
+    return id === requestId && src === currentSrc;
+  }
+  function pauseOtherSiteAudio(){
+    const floatingPlayer = document.getElementById('siteAudio');
+    if (floatingPlayer && !floatingPlayer.paused) floatingPlayer.pause();
+  }
+  function stopCurrent(){
+    requestId++;
+    audio.pause();
+    activeButton = null;
+    paint('idle', null);
+    return requestId;
+  }
+
+  buttons.forEach(function(button){
+    button.setAttribute('aria-pressed', 'false');
+    button.addEventListener('click', async function(){
+      const src = (button.dataset.track || '').trim();
+      if (!src){
+        setNote('This track is not configured yet.');
+        paint('error', button);
+        return;
+      }
+
+      if (src === currentSrc && button === activeButton && !audio.paused && !audio.ended){
+        stopCurrent();
+        setNote('Paused: ' + trackName(button));
+        paint('paused', button);
+        activeButton = button;
+        return;
+      }
+
+      const id = stopCurrent();
+      activeButton = button;
+      currentSrc = src;
+      setNote('Loading: ' + trackName(button) + '…');
+      paint('loading', button);
+      pauseOtherSiteAudio();
+
+      if (audio.getAttribute('src') !== src){
+        audio.src = src;
+      }
+      audio.load();
+
+      try {
+        await audio.play();
+        if (!isCurrent(id, src)) return;
+        paint('playing', button);
+        setNote('Now playing: ' + trackName(button));
+      } catch (error) {
+        if (!isCurrent(id, src)) return;
+        if (error && error.name === 'AbortError') return;
+        paint('error', button);
+        setNote(errorMessage());
+      }
+    });
+  });
+
+  audio.addEventListener('playing', function(){
+    if (!activeButton || !currentSrc) return;
+    paint('playing', activeButton);
+    setNote('Now playing: ' + trackName(activeButton));
+  });
+  audio.addEventListener('waiting', function(){
+    if (!activeButton || audio.paused) return;
+    paint('buffering', activeButton);
+    setNote('Buffering: ' + trackName(activeButton) + '…');
+  });
+  audio.addEventListener('stalled', function(){
+    if (!activeButton || audio.paused) return;
+    paint('buffering', activeButton);
+    setNote('Connection stalled while loading: ' + trackName(activeButton) + '.');
+  });
+  audio.addEventListener('pause', function(){
+    if (!activeButton || !audio.paused) return;
+    paint('paused', activeButton);
+  });
+  audio.addEventListener('ended', function(){
+    if (!activeButton) return;
+    const finished = activeButton;
+    activeButton = null;
+    paint('idle', null);
+    setNote('Track finished: ' + trackName(finished) + '. Choose a track to play again.');
+  });
+  audio.addEventListener('error', function(){
+    if (!activeButton || !currentSrc) return;
+    paint('error', activeButton);
+    setNote(errorMessage());
+  });
+
   document.querySelectorAll('.glimpse-thumbnail').forEach(function(img){
     img.addEventListener('error', function(){
       const fallback = document.createElement('span');
@@ -4092,78 +4220,6 @@ renderHistory();resizeInput();
       fallback.textContent = '♪';
       img.replaceWith(fallback);
     }, {once:true});
-  });
- 
-  function trackName(button){
-    const node = button && button.querySelector('.glimpse-track-name');
-    return node ? node.textContent.trim() : 'track';
-  }
-  function setNote(message){
-    if (note) note.textContent = message;
-  }
-  function paint(active){
-    buttons.forEach(function(button){
-      const isCurrent = button === active && !audio.paused && !audio.error;
-      button.classList.toggle('is-active', isCurrent);
-      const play = button.querySelector('.glimpse-play');
-      const state = button.querySelector('.glimpse-track-state');
-      if (play) play.textContent = isCurrent ? 'Ⅱ' : '▶';
-      if (state) state.textContent = isCurrent ? 'Now playing' :
-        (button === active && audio.paused ? 'Paused' : 'Tap to play');
-      button.setAttribute('aria-pressed', String(isCurrent));
-    });
-  }
- 
-  buttons.forEach(function(button){
-    button.setAttribute('aria-pressed', 'false');
-    button.addEventListener('click', async function(){
-      const src = (button.dataset.track || '').trim();
-      if (!src){
-        setNote('This track has no audio file configured.');
-        return;
-      }
- 
-      if (audio.dataset.current === src && !audio.paused){
-        audio.pause();
-        paint(button);
-        setNote('Paused: ' + trackName(button));
-        return;
-      }
- 
-      if (audio.dataset.current !== src){
-        audio.pause();
-        audio.dataset.current = src;
-        audio.src = src;
-        audio.load();
-      }
- 
-      setNote('Loading: ' + trackName(button) + '…');
-      try {
-        /* Shared audio lock: stop floating music before starting a Glimpse track. */
-        const floatingPlayer = document.getElementById('siteAudio');
-        if (floatingPlayer && !floatingPlayer.paused) floatingPlayer.pause();
-        await audio.play();
-        paint(button);
-        setNote('Now playing: ' + trackName(button));
-      } catch (error) {
-        paint(null);
-        setNote('Audio source missing for “' + trackName(button) + '”. Add the original file at ' + src + ' to enable playback.');
-      }
-    });
-  });
- 
-  audio.addEventListener('play', function(){
-    const active = buttons.find(function(button){ return button.dataset.track === audio.dataset.current; }) || null;
-    paint(active);
-  });
-  audio.addEventListener('pause', function(){ paint(null); });
-  audio.addEventListener('ended', function(){
-    paint(null);
-    setNote('Track finished. Choose a track to play again.');
-  });
-  audio.addEventListener('error', function(){
-    paint(null);
-    setNote('Original audio is not included in this rebuild. Add the selected track at its displayed path to enable playback.');
   });
 })();
 </script>
