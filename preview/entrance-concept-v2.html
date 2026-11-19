@@ -56,12 +56,12 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--black
 .wipe-black{z-index:9;background:var(--black);animation:wipe .58s var(--ease) 8.04s both}
 /* The final frame grows from four measured corners; the title opens as one unit from the seam. */
 .final{position:absolute;z-index:10;inset:0;opacity:0;animation:finalOn .01s linear 8.58s both}
-.frame{position:absolute;left:11vw;right:11vw;top:25%;height:47%;opacity:0}
-.corner{position:absolute;width:clamp(30px,6vw,90px);height:clamp(30px,6vw,90px)}
+.frame{position:absolute;left:11vw;right:11vw;top:25%;height:47%;opacity:0;animation:frameArrive 1.25s var(--soft) 8.62s both}
+.corner{position:absolute;width:clamp(30px,6vw,90px);height:clamp(30px,6vw,90px);opacity:0;animation:cornerDraw .72s var(--soft) both}.c1{animation-delay:8.82s}.c2{animation-delay:8.96s}.c3{animation-delay:9.10s}.c4{animation-delay:9.24s}
 .corner::before,.corner::after{content:"";position:absolute;background:rgba(243,242,239,.42)}
 .corner::before{height:1px;width:100%}.corner::after{width:1px;height:100%}
 .c1{left:0;top:0}.c2{right:0;top:0;transform:scaleX(-1)}.c3{left:0;bottom:0;transform:scaleY(-1)}.c4{right:0;bottom:0;transform:scale(-1)}
-.frame-line{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(243,242,239,.1);transform:scaleY(0);transform-origin:center}
+.frame-line{position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(243,242,239,.1);transform:scaleY(0);transform-origin:center;animation:lineY .8s var(--soft) 9.28s both}
 .final-word{position:absolute;left:0;right:0;top:45%;display:flex;justify-content:center;align-items:baseline;gap:.015em;padding:.08em 3vw .16em;font-size:clamp(78px,21vw,255px);font-weight:750;letter-spacing:-.105em;line-height:.9;color:#f4f3ef;white-space:nowrap}
 .final-word span{display:block;opacity:0;clip-path:inset(0 50%);transform:scaleX(.7)}
 .final-word span:nth-child(1){animation:wordOpen .88s var(--soft) 8.82s both}
@@ -76,7 +76,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--black
 .progress i{display:block;width:100%;height:100%;background:rgba(243,242,239,.7);transform:scaleX(0);transform-origin:left;animation:progress 11.8s linear both}
 .controls{position:absolute;z-index:50;right:22px;bottom:22px}
 .controls button{border:1px solid #4a4843;background:rgba(5,5,5,.85);color:#c7c5c0;padding:10px 13px;font:9px Arial;letter-spacing:.15em;cursor:pointer}
-.controls button:hover{background:var(--ivory);color:#080808}
+.controls button:hover{background:var(--ivory);color:#080808}\n#stage.skipped .scene,#stage.skipped .wipe-ivory,#stage.skipped .wipe-black,#stage.skipped .counter,#stage.skipped .progress{display:none!important}\n#stage.skipped .final{opacity:1!important;animation:none!important}\n#stage.skipped .frame{opacity:.72!important;animation:none!important}\n#stage.skipped .corner{opacity:1!important;animation:none!important;clip-path:none!important}\n#stage.skipped .frame-line{transform:scaleY(1)!important;animation:none!important}\n#stage.skipped .final-word span{opacity:1!important;clip-path:none!important;transform:none!important;animation:none!important}\n#stage.skipped .final-small,#stage.skipped .final-rule,#stage.skipped .final-tag{opacity:1!important;clip-path:none!important;transform:none!important;animation:none!important}
 @keyframes wallBuild{to{transform:scaleX(1)}}
 @keyframes lineX{to{transform:scaleX(1)}}
 @keyframes lineY{to{transform:scaleY(1)}}
@@ -93,7 +93,7 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--black
 @keyframes slashBuild{to{transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}}
 @keyframes slashTravel{to{transform:translate(150vw,-50%) rotate(28deg) scaleY(.24)}}
 @keyframes wipe{to{transform:translateY(-105%)}}
-@keyframes finalOn{to{opacity:1}}
+@keyframes finalOn{to{opacity:1}}\n@keyframes frameArrive{0%{opacity:0;transform:scale(.94)}65%{opacity:1;transform:scale(1.01)}100%{opacity:.72;transform:scale(1)}}\n@keyframes cornerDraw{0%{opacity:0;clip-path:inset(0 100% 100% 0)}100%{opacity:1;clip-path:inset(0)}}
 @keyframes wordOpen{0%{opacity:0;clip-path:inset(0 50%);transform:scaleX(.7)}70%{opacity:1;clip-path:inset(0);transform:scaleX(1.025)}100%{opacity:1;clip-path:inset(0);transform:scaleX(1)}}
 @keyframes ruleIn{to{transform:scaleX(1)}}
 @keyframes tagIn{to{opacity:1;clip-path:inset(0)}}
@@ -153,15 +153,8 @@ html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--black
 </main>
 <script>
 const stage=document.getElementById('stage');
-function replay(){
-  const clone=stage.cloneNode(true);
-  stage.replaceWith(clone);
-  const next=document.getElementById('stage');
-  next.querySelector('#replay').addEventListener('click',replay);
-  next.querySelector('#skip').addEventListener('click',()=>{next.style.opacity='0';next.style.transition='opacity .35s ease';setTimeout(()=>{next.style.display='none'},360)});
-}
-stage.querySelector('#replay').addEventListener('click',replay);
-stage.querySelector('#skip').addEventListener('click',()=>{stage.style.opacity='0';stage.style.transition='opacity .35s ease';setTimeout(()=>{stage.style.display='none'},360)});
+stage.querySelector('#replay').addEventListener('click',()=>location.reload());
+stage.querySelector('#skip').addEventListener('click',()=>stage.classList.add('skipped'));
 </script>
 </body>
 </html>
