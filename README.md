@@ -50,7 +50,3 @@
 </p>
 
 <br>
-
-<p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=venom&height=100&color=090909&text=J%CE%9B&fontColor=FFFFFF&fontSize=42&fontAlignY=55" width="100%" />
-</p>
