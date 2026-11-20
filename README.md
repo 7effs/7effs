@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=venom&height=220&color=090909&text=J%CE%9B.YE&fontColor=FFFFFF&fontSize=78&fontAlignY=50&animation=twinkling" width="100%" />
+  <img src="https://capsule-render.vercel.app/api?type=venom&height=220&color=090909&text=J%CE%9BYE&fontColor=FFFFFF&fontSize=78&fontAlignY=50&animation=twinkling" width="100%" />
 </p>
 
 <p align="center">
