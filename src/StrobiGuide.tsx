@@ -15,7 +15,7 @@ type Personality = 'playful' | 'freaky'
 type CueKind = 'tip' | 'casual' | 'menu'
 // Who a popup is for decides how long it stays and what may replace it:
 //   ambient   - spontaneous / idle chatter. Short-lived, never replaces anything already showing.
-//   important - an explanation Baew volunteers (welcome, section tips). A little longer.
+//   important - the homepage welcome, the one explanation Baew volunteers. A little longer.
 //   user      - something the visitor asked for (menu, "Explain", "Surprise me"). Longest.
 type CuePriority = 'ambient' | 'important' | 'user'
 type DayPart = 'morning' | 'daytime' | 'evening' | 'night'
@@ -158,12 +158,39 @@ const SPONTANEOUS_BY_DAYPART: Record<DayPart, string[]> = {
   ],
 }
 
-function getGuideSections(): HTMLElement[] {
-  return Array.from(document.querySelectorAll<HTMLElement>(SECTION_SELECTOR)).filter(section =>
-    Boolean(section.id) &&
+function isGuideSection(section: HTMLElement): boolean {
+  return Boolean(section.id) &&
     !section.closest('#strobi-widget-root, #strobi-widget') &&
     !section.matches('[data-strobi-ignore]')
-  )
+}
+
+function getGuideSections(): HTMLElement[] {
+  return Array.from(document.querySelectorAll<HTMLElement>(SECTION_SELECTOR)).filter(isGuideSection)
+}
+
+// Tap-to-explain. A section is explained only when the visitor taps its own title (h1 / h2). Scrolling to it, reading
+// it or hovering it never asks for anything. The title is the target because it is the one part of a section that is
+// not also something else: a tap that lands on, or inside, anything interactive (or anything styled as clickable) is
+// the page's own, and so is a tap that ends a text selection, a double tap, a modified click or a scripted click.
+const TAP_INTERACTIVE =
+  'a[href], button, input, select, textarea, summary, label, video, audio, canvas, iframe, ' +
+  '[role="button"], [role="link"], [role="tab"], [role="menuitem"], [role="switch"], [contenteditable], ' +
+  '[tabindex]:not([tabindex="-1"]), [onclick], [data-strobi-ignore], #strobi-widget-root, #strobi-widget, .restore-strobi'
+
+function sectionForTap(event: MouseEvent): HTMLElement | undefined {
+  const target = event.target
+  if (!(target instanceof Element)) return undefined
+  // detail === 1 is a real first click; 0 is a scripted or keyboard click, 2+ a double tap.
+  if (event.button !== 0 || event.detail !== 1 || event.defaultPrevented) return undefined
+  if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return undefined
+  const heading = target.closest<HTMLElement>('h1, h2')
+  if (!heading || target.closest(TAP_INTERACTIVE)) return undefined
+  const section = heading.closest<HTMLElement>(SECTION_SELECTOR)
+  if (!section || !isGuideSection(section)) return undefined
+  if (getComputedStyle(target).cursor === 'pointer') return undefined
+  const selection = window.getSelection()
+  if (selection && !selection.isCollapsed) return undefined
+  return section
 }
 
 function getRenderableSections(): HTMLElement[] {
@@ -355,7 +382,6 @@ export default function StrobiGuide() {
   const pillShiftRef = useRef<HomeShift>({ dx: 0, lift: 0 })
   const pillRef = useRef<HTMLButtonElement | null>(null)
   const floatFreezeRef = useRef<(sync?: boolean) => void>(() => {})
-  const seenSections = useRef(new Set<string>())
   const activeSectionRef = useRef('archive-home')
   const introShown = useRef(false)
   const manualHiddenRef = useRef(false)
@@ -366,7 +392,6 @@ export default function StrobiGuide() {
   const progressRef = useRef<Progress>(progressInitial)      // what each area has already told the visitor
   const menuLineIndex = useRef(0)
   const inactivityTimer = useRef<number | undefined>(undefined)
-  const sectionTimer = useRef<number | undefined>(undefined)
   const casualTimer = useRef<number | undefined>(undefined)
   const dismissTimer = useRef<number | undefined>(undefined)
   // Popup lifetime bookkeeping, all for the one dismissTimer above.
@@ -635,7 +660,7 @@ export default function StrobiGuide() {
   const requestHelp = useCallback(async (section: HTMLElement | undefined, options: HelpOptions = {}) => {
     if (manualHiddenRef.current) return
     registerActivity()
-    // Volunteered explanations (welcome, section tips) and ones the visitor asked for are both answers, and
+    // The welcome (the only explanation Baew volunteers) and ones the visitor asked for are both answers, and
     // both stay about eight seconds from the moment they appear.
     const priority: CuePriority = options.automatic ? 'important' : 'user'
     const hour = new Date().getHours()
@@ -657,7 +682,6 @@ export default function StrobiGuide() {
     const sectionId = section.id
     const title = getSectionTitle(section)
     activeSectionRef.current = sectionId
-    if (options.automatic) seenSections.current.add(sectionId)
 
     cancelInFlight()
     const intent: PromptIntent = options.welcome ? 'welcome' : options.deeper ? 'deeper' : 'explain'
@@ -856,27 +880,9 @@ export default function StrobiGuide() {
       const current = Array.from(ratios.current.entries())
         .filter(([, ratio]) => ratio > 0)
         .sort((a, b) => b[1] - a[1])[0]?.[0]
-      if (!current) return
-      activeSectionRef.current = current.id
-      if (!introShown.current || manualHiddenRef.current || seenSections.current.has(current.id)) return
-
-      if (sectionTimer.current !== undefined) window.clearTimeout(sectionTimer.current)
-      const sectionId = current.id
-      const scheduleTry = () => {
-        sectionTimer.current = window.setTimeout(() => {
-          const mostVisible = Array.from(ratios.current.entries())
-            .filter(([, ratio]) => ratio > 0)
-            .sort((a, b) => b[1] - a[1])[0]?.[0]
-          if (manualHiddenRef.current || mostVisible?.id !== sectionId || seenSections.current.has(sectionId)) return
-          if (bubbleOpenRef.current || thinkingRef.current || dragRef.current) {
-            scheduleTry()
-            return
-          }
-          const section = getGuideSections().find(item => item.id === sectionId)
-          if (section) void requestHelp(section, { automatic: true })
-        }, 1400)
-      }
-      scheduleTry()
+      // Which section is in view only tells the help menu and "Explain" what "this section" means. Being in view
+      // never starts an explanation: those come from a tap on the section title (below) or from the menu.
+      if (current) activeSectionRef.current = current.id
     }, { threshold: [0, 0.25, 0.45, 0.65, 0.8] })
 
     const observed = new WeakSet<HTMLElement>()
@@ -920,7 +926,6 @@ export default function StrobiGuide() {
       })
       const section = onScreen || sections[0]
       if (section) {
-        seenSections.current.add(section.id)
         void requestHelp(section, { welcome: true, automatic: true })
       } else {
         void requestHelp(undefined, { welcome: true, automatic: true })
@@ -942,6 +947,20 @@ export default function StrobiGuide() {
       // Normal page taps count as activity only. They must never move Baew or open a bubble.
       registerActivity()
     }
+    // Tap-to-explain: one delegated listener, no per-section handlers. A second tap on the same title within 700 ms
+    // is the same tap arriving twice (touch plus emulated mouse), not a second request; tapping a different title
+    // at once simply replaces the first answer, because every request cancels the one before it.
+    let lastTapId = ''
+    let lastTapAt = -Infinity
+    const onSectionTap = (event: MouseEvent) => {
+      if (manualHiddenRef.current) return
+      const section = sectionForTap(event)
+      if (!section) return
+      if (section.id === lastTapId && event.timeStamp - lastTapAt < 700) return
+      lastTapId = section.id
+      lastTapAt = event.timeStamp
+      void requestHelp(section, {})
+    }
     const onWheel = () => {
       // Wheel events fire repeatedly while scrolling; throttle activity updates.
       if (Date.now() - lastActivity.current > 1200) registerActivity()
@@ -955,16 +974,17 @@ export default function StrobiGuide() {
     }
 
     document.addEventListener('pointerdown', onPagePointerDown, true)
+    document.addEventListener('click', onSectionTap)
     window.addEventListener('wheel', onWheel, { passive: true })
     window.addEventListener('resize', onResize)
     registerActivity()
 
     return () => {
       stopWatching()
-      if (sectionTimer.current !== undefined) window.clearTimeout(sectionTimer.current)
       observer.disconnect()
       mutationObserver.disconnect()
       document.removeEventListener('pointerdown', onPagePointerDown, true)
+      document.removeEventListener('click', onSectionTap)
       window.removeEventListener('wheel', onWheel)
       window.removeEventListener('resize', onResize)
     }
@@ -1321,7 +1341,6 @@ export default function StrobiGuide() {
 
   useEffect(() => () => {
     if (inactivityTimer.current !== undefined) window.clearTimeout(inactivityTimer.current)
-    if (sectionTimer.current !== undefined) window.clearTimeout(sectionTimer.current)
     if (casualTimer.current !== undefined) window.clearTimeout(casualTimer.current)
     clearDismissTimer()
     cancelInFlight()
