@@ -28,9 +28,6 @@
 
 <br>
 
-<p align="center">
-  <sub>02 &nbsp; / &nbsp; TECHNOLOGY</sub>
-</p>
 
 <h3 align="center">Built with</h3>
 
@@ -53,10 +50,6 @@
 </p>
 
 <br>
-
-<p align="center">
-  <sub>JΛYE &nbsp; / &nbsp; 001</sub>
-</p>
 
 <p align="center">
   <img src="https://capsule-render.vercel.app/api?type=venom&height=100&color=090909&text=J%CE%9B&fontColor=FFFFFF&fontSize=42&fontAlignY=55" width="100%" />
