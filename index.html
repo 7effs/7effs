@@ -6183,25 +6183,18 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
     amber:'assets/amber-background.jpg',
     noir:'assets/noir-background.jpg'
   };
-  /* Performance only. Loading order for the optional backgrounds, none of which is visible when the page opens:
-       1. the two background photographs are requested as soon as the page's HTML is parsed (DOMContentLoaded), at low priority so they never hold up rendering;
-       2. once the page has finished loading and the photographs are in, the background video starts fetching;
-       3. the picker's thumbnail images are attached only when the visitor approaches the picker, or at once if they open it early.
+  /* Performance only. None of the optional backgrounds is visible when the page opens, so none of them is downloaded until it is asked for:
+       1. the background video is fetched by the first press of the switch (video.play() in the toggle script), never in advance;
+       2. the picker's thumbnail images are attached only when the visitor approaches the switch, or at once if they open the picker early;
+       3. a photograph is fetched at full priority when it is chosen, because by then someone is waiting for it.
      The photographs and the thumbnails are the same two files, so a thumbnail never needs a second download.
-     Nothing is swapped in until it is ready, so the current background stays in place while a choice is still loading. */
+     Nothing is swapped in until it is ready (downloaded and decoded), so the current background stays in place while a choice is still loading. */
   const warm={};
   const warmUp=key=>warm[key]||(warm[key]=new Promise(resolve=>{
-    const photo=new Image();photo.decoding='async';photo.fetchPriority='low';
+    const photo=new Image();photo.decoding='async';photo.fetchPriority='high';
     photo.onload=()=>resolve(photo);photo.onerror=()=>{delete warm[key];resolve(null);};
     photo.src=images[key];
   }));
-  const photosSettled=new Promise(resolve=>{const go=()=>resolve(Promise.all(Object.keys(images).map(warmUp)));document.readyState==='loading'?addEventListener('DOMContentLoaded',go,{once:true}):go();});
-  const pageLoaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
-  Promise.all([pageLoaded,photosSettled]).then(()=>{
-    const video=document.getElementById('jaye-global-video-background');
-    /* Only an untouched video is started; pressing the switch already fetches it on demand. */
-    if(video&&video.preload==='none'&&video.paused&&video.readyState===0&&video.networkState!==2&&!root.classList.contains('jaye-video-background-active'))video.preload='auto';
-  });
   const attachThumbnails=()=>{
     panel.querySelectorAll('img[data-deferred-src]').forEach(thumb=>{thumb.src=thumb.getAttribute('data-deferred-src');thumb.removeAttribute('data-deferred-src');});
   };
