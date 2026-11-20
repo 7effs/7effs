@@ -1287,7 +1287,7 @@ export default function StrobiGuide() {
 
   const modeSwitch = (
     <div className="bubble-modes" role="group" aria-label="Baew personality mode">
-      <button className={`mode-pill ${personality === 'playful' ? 'is-active' : ''}`} aria-pressed={personality === 'playful'} onClick={() => switchPersonality('playful')}>Playful</button>
+      <button className={`mode-pill ${personality === 'playful' ? 'is-active' : ''}`} aria-pressed={personality === 'playful'} onClick={() => switchPersonality('playful')}>Normal</button>
       <button className={`mode-pill ${personality === 'freaky' ? 'is-active' : ''}`} aria-pressed={personality === 'freaky'} onClick={() => switchPersonality('freaky')}>Freaky</button>
     </div>
   )
