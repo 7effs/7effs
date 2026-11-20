@@ -1,31 +1,63 @@
 
-<div align="center">
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=venom&height=220&color=090909&text=J%CE%9B.YE&fontColor=FFFFFF&fontSize=78&fontAlignY=50&animation=twinkling" width="100%" />
+</p>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=venom&height=205&color=0:000000,25:101010,50:303030,75:101010,100:000000&text=J%CE%94YE&fontColor=FFFFFF&fontSize=92&fontAlignY=48&stroke=FFFFFF&strokeWidth=1&animation=twinkling" />
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Space+Mono&size=12&duration=4000&pause=1500&color=999999&center=true&vCenter=true&width=460&lines=INDEPENDENT+DIGITAL+SPACE;PERSONAL+WEB+EXPERIENCE;JAYE+%2F+001" />
+</p>
 
-<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=13&duration=1400&pause=250&color=FFFFFF&center=true&vCenter=true&width=650&lines=INDEPENDENT+DIGITAL+IDENTITY;FORM+%2F+MOTION+%2F+EXPERIMENT;DESIGNED+TO+BREAK+THE+ORDINARY;JAYE+%3A%3A+001" />
+<br>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=2&color=FFFFFF" />
+<p align="center">
+  <sub>01 &nbsp; / &nbsp; PROJECT</sub>
+</p>
 
-<sub> J / Project &nbsp;</sub>
+<h2 align="center">A personal digital space</h2>
 
-<br/>
+<p align="center">
+  A standalone web experience shaped around visual design,<br>
+  interaction and curated content.
+</p>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=76&color=0:050505,50:242424,100:050505&text=NOISE%20IN%20THE%20SYSTEM&fontColor=FFFFFF&fontSize=23&animation=twinkling" />
+<br>
 
-<br/>
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=rect&height=1&color=303030" width="72%" />
+</p>
 
-###  TECH STACK
+<br>
 
-<img src="https://skillicons.dev/icons?i=html,css,js,git,github,vscode&theme=dark" />
+<p align="center">
+  <sub>02 &nbsp; / &nbsp; TECHNOLOGY</sub>
+</p>
 
-<br/>
+<h3 align="center">Built with</h3>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=2&color=FFFFFF" />
+<p align="center">
+  <img src="https://img.shields.io/badge/HTML5-171717?style=flat-square&logo=html5&logoColor=FFFFFF" />
+  <img src="https://img.shields.io/badge/CSS3-171717?style=flat-square&logo=css3&logoColor=FFFFFF" />
+  <img src="https://img.shields.io/badge/JavaScript-171717?style=flat-square&logo=javascript&logoColor=FFFFFF" />
+</p>
 
-<img src="https://readme-typing-svg.demolab.com?font=Space+Mono&weight=700&size=13&duration=1500&pause=300&color=FFFFFF&center=true&vCenter=true&width=600&lines=DESIGN+WITHOUT+NOISE;DETAIL+WITHOUT+COMPROMISE;JAYE+%2F%2F+STILL+EVOLVING" />
+<p align="center">
+  <img src="https://img.shields.io/badge/Git-171717?style=flat-square&logo=git&logoColor=FFFFFF" />
+  <img src="https://img.shields.io/badge/GitHub-171717?style=flat-square&logo=github&logoColor=FFFFFF" />
+  <img src="https://img.shields.io/badge/VS_Code-171717?style=flat-square&logo=visualstudiocode&logoColor=FFFFFF" />
+</p>
 
-<img width="100%" src="https://capsule-render.vercel.app/api?type=rect&height=90&color=0:000000,50:252525,100:000000&text=J%CE%94&fontColor=FFFFFF&fontSize=52&animation=twinkling" />
+<br>
 
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=rect&height=1&color=303030" width="72%" />
+</p>
 
+<br>
 
+<p align="center">
+  <sub>JΛYE &nbsp; / &nbsp; 001</sub>
+</p>
+
+<p align="center">
+  <img src="https://capsule-render.vercel.app/api?type=venom&height=100&color=090909&text=J%CE%9B&fontColor=FFFFFF&fontSize=42&fontAlignY=55" width="100%" />
+</p>
