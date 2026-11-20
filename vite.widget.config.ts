@@ -2,6 +2,7 @@ import react from '@vitejs/plugin-react'
 import { cpSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { defineConfig } from 'vite'
+import { ajvPrecompiled } from './scripts/ajv-precompiled.mjs'
 
 // index.html references /strobi-widget.js and /strobi-widget.css at the repo root.
 // Keep those root copies in lockstep with src/ on every widget build so they can
@@ -10,6 +11,8 @@ const WIDGET_ASSETS = ['strobi-widget.js', 'strobi-widget.css']
 
 export default defineConfig({
   plugins: [
+    // the avatar library compiles a JSON-schema validator on every page load; this ships the same validator compiled at build time
+    ajvPrecompiled(),
     react(),
     {
       name: 'sync-root-widget-assets',
