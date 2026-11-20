@@ -8051,8 +8051,9 @@ body>main #archiveInterfaces.archive-portal-v3::after{
     lit=reduce?0:(hover||SEQ[seq]);
     if(lit!==lastLit){lastLit=lit;cards.forEach((c,i)=>c.classList.toggle('lit',lit!==0&&c.classList.contains('r'+lit)))}
     const target=reduce?0:(lit?360/26000:360/64000);speed+=(target-speed)*.05;ang+=dt*speed;
-    const r=art.getBoundingClientRect();let tgx=0,tgy=0;
-    if(!reduce&&t-ptr.t<3600){tgx=clamp((ptr.x-(r.left+r.width/2))/(innerWidth*.5),-1,1);tgy=clamp((ptr.y-(r.top+r.height/2))/(innerHeight*.5),-1,1)}
+    let tgx=0,tgy=0;
+    /* the box is measured only while the pointer is steering the tilt; measuring it every frame forced a style flush for nothing */
+    if(!reduce&&t-ptr.t<3600){const r=art.getBoundingClientRect();tgx=clamp((ptr.x-(r.left+r.width/2))/(innerWidth*.5),-1,1);tgy=clamp((ptr.y-(r.top+r.height/2))/(innerHeight*.5),-1,1)}
     px+=(tgx-px)*.07;py+=(tgy-py)*.07;
     const rx=-20+py*6,ry=px*12;
     tilt.style.transform='rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
