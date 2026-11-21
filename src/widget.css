@@ -629,11 +629,10 @@
 .restore-strobi {
   position: fixed;
   z-index: 2147483000;
-  /* Baew's collapsed state rests where Baew rests: bottom-left, raised the same way (see
-     --strobi-home-*) only if page content would otherwise sit under it. */
-  left: calc(max(8px, env(safe-area-inset-left)) + var(--strobi-pill-dx, 0px));
+  /* Fixed viewport anchor. Unlike the mascot, the restore pill never scans or dodges page content. */
+  left: max(8px, env(safe-area-inset-left));
   right: auto;
-  bottom: calc(max(8px, env(safe-area-inset-bottom)) + var(--strobi-pill-lift, 0px));
+  bottom: max(8px, env(safe-area-inset-bottom));
   border-radius: 999px;
   border: 1px solid var(--jaye-edge, rgba(214, 224, 240, .2)) !important;
   background: var(--jaye-glass, rgba(11, 13, 20, .86)) !important;
@@ -646,8 +645,7 @@
   cursor: pointer;
   box-shadow: var(--jaye-highlight, inset 0 1px 0 rgba(255, 255, 255, .08)), 0 6px 18px -6px rgba(0, 0, 0, .6);
   font-family: Inter, system-ui, sans-serif;
-  transition: border-color .2s ease, background-color .2s ease,
-              left 180ms cubic-bezier(.22, 1, .36, 1), bottom 180ms cubic-bezier(.22, 1, .36, 1);
+  transition: border-color .2s ease, background-color .2s ease;
 }
 
 .restore-strobi:hover,

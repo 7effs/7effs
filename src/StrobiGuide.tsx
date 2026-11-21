@@ -83,7 +83,6 @@ const HOME_SETTLE_MS = 450    // quiet time after a scroll / resize before she r
 const SESSION_MEMORY_KEY = 'baew-guide-session-v1'
 const PROGRESS_KEY = 'baew-guide-progress-v1'
 const THINKING_LINES = ['Reading this section…', 'Checking the archive…', 'Finding the right words…', 'One moment…']
-const ANIMATIONS: AnimationName[] = ['excited', 'playful', 'listening', 'happy', 'proud']
 
 // Baew's voice: dry, warm and specific to this site. Short sentences, no filler, no emoji confetti.
 // Playful is the friendly register; Freaky is the same character deadpan and a little conspiratorial.
@@ -378,12 +377,9 @@ export default function StrobiGuide() {
   const [floatMs, setFloatMs] = useState<number | null>(null)
   const [flickMs, setFlickMs] = useState<number | null>(null)
   const [homeShift, setHomeShift] = useState<HomeShift>({ dx: 0, lift: 0 })
-  const [pillShift, setPillShift] = useState<HomeShift>({ dx: 0, lift: 0 })
 
   const widgetRef = useRef<HTMLDivElement | null>(null)
   const homeShiftRef = useRef<HomeShift>({ dx: 0, lift: 0 })
-  const pillShiftRef = useRef<HomeShift>({ dx: 0, lift: 0 })
-  const pillRef = useRef<HTMLButtonElement | null>(null)
   const floatFreezeRef = useRef<(sync?: boolean) => void>(() => {})
   const activeSectionRef = useRef('archive-home')
   const introShown = useRef(false)
@@ -1246,42 +1242,40 @@ export default function StrobiGuide() {
     }
   }, [])
 
-  // Home clearance. Self-contained like the idle float: it only ever touches a Baew who is still at her
-  // CSS home, and stands down for good the moment she has been dragged or has floated off. It never
-  // writes left/top, only the two offsets the home rule in widget.css reads, so the corner stays the
-  // anchor (resize, rotation and safe areas keep working) and drag / float / popups are untouched.
-  // While she is hidden the same check keeps the small "Baew" restore pill off the page content too.
+  // Mascot home clearance only. The collapsed restore pill is a permanent viewport anchor
+  // and is intentionally excluded from all page-content scans and automatic position updates.
   useEffect(() => {
-    const pill = hidden
-    const shiftRef = pill ? pillShiftRef : homeShiftRef
-    const setShift = pill ? setPillShift : setHomeShift
+    if (hidden) return
+
+    let active = true
     let timer: number | undefined
     let placed = false
     let stopIntroWait: (() => void) | undefined
     let relayout = false // the viewport or fonts changed: pick the nearest clear spot afresh
 
     const schedule = (delay: number) => {
+      if (!active) return
       if (timer !== undefined) window.clearTimeout(timer)
       timer = window.setTimeout(check, delay)
     }
 
     const check = () => {
       timer = undefined
-      const widget = pill ? pillRef.current : widgetRef.current
-      if (!widget || (!pill && positionRef.current)) return
+      const widget = widgetRef.current
+      if (!widget || positionRef.current) return
       if (introActive()) { // opening intro: wait for it to end instead of polling
         if (!stopIntroWait) stopIntroWait = afterIntro(() => { stopIntroWait = undefined; schedule(100) })
         return
       }
       if (getComputedStyle(widget).visibility === 'hidden') { schedule(500); return }
-      if (!pill && (dragRef.current || bubbleOpenRef.current || thinkingRef.current)) { schedule(900); return }
-      const wrap = pill ? widget : widget.querySelector<HTMLElement>('.strobi-mascot-wrap')
+      if (dragRef.current || bubbleOpenRef.current || thinkingRef.current) { schedule(900); return }
+      const wrap = widget.querySelector<HTMLElement>('.strobi-mascot-wrap')
       if (!wrap) return
       const viewWidth = document.documentElement.clientWidth
       const viewHeight = document.documentElement.clientHeight
       const box = widget.getBoundingClientRect()
-      const current = shiftRef.current
-      const parts = [wrap, pill ? null : widget.querySelector<HTMLElement>('.hide-strobi')]
+      const current = homeShiftRef.current
+      const parts = [wrap, widget.querySelector<HTMLElement>('.hide-strobi')]
         .filter((part): part is HTMLElement => part !== null)
         .map(part => part.getBoundingClientRect())
       const footprint: Box = {
@@ -1295,13 +1289,13 @@ export default function StrobiGuide() {
       relayout = false
       const next = findHomeShift(footprint, home, viewWidth, getContentBoxes(viewWidth, viewHeight), keep)
       if (Math.abs(next.dx - current.dx) > 0.5 || Math.abs(next.lift - current.lift) > 0.5) {
-        shiftRef.current = next
+        homeShiftRef.current = next
         if (placed) {
-          setShift(next)
+          setHomeShift(next)
         } else {
           // First placement: she is only just appearing, so put her there without a slide.
           widget.style.transition = 'none'
-          flushSync(() => setShift(next))
+          flushSync(() => setHomeShift(next))
           void widget.offsetWidth
           widget.style.transition = ''
         }
@@ -1316,10 +1310,15 @@ export default function StrobiGuide() {
     const onResize = () => { relayout = true; schedule(HOME_SETTLE_MS) }
     window.addEventListener('scroll', onScroll, { passive: true })
     window.addEventListener('resize', onResize)
-    void document.fonts?.ready.then(() => { relayout = true; schedule(150) })
-    schedule(pill ? 60 : 600)
+    void document.fonts?.ready.then(() => {
+      if (!active) return
+      relayout = true
+      schedule(150)
+    })
+    schedule(600)
 
     return () => {
+      active = false
       if (timer !== undefined) window.clearTimeout(timer)
       stopIntroWait?.()
       window.removeEventListener('scroll', onScroll)
@@ -1372,7 +1371,7 @@ export default function StrobiGuide() {
 
   const modeSwitch = (
     <div className="bubble-modes" role="group" aria-label="Baew personality mode">
-      <button className={`mode-pill ${personality === 'playful' ? 'is-active' : ''}`} aria-pressed={personality === 'playful'} onClick={() => switchPersonality('playful')}>Playful</button>
+      <button className={`mode-pill ${personality === 'playful' ? 'is-active' : ''}`} aria-pressed={personality === 'playful'} onClick={() => switchPersonality('playful')}>Normal</button>
       <button className={`mode-pill ${personality === 'freaky' ? 'is-active' : ''}`} aria-pressed={personality === 'freaky'} onClick={() => switchPersonality('freaky')}>Freaky</button>
     </div>
   )
@@ -1477,11 +1476,7 @@ export default function StrobiGuide() {
 
       {hidden && (
         <button
-          ref={pillRef}
           className="restore-strobi"
-          style={pillShift.dx > 0 || pillShift.lift > 0
-            ? ({ '--strobi-pill-dx': `${pillShift.dx}px`, '--strobi-pill-lift': `${pillShift.lift}px` } as CSSProperties)
-            : undefined}
           onClick={() => {
             manualHiddenRef.current = false
             introShown.current = true

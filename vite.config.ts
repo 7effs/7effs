@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
-import { cpSync, existsSync, mkdirSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, statSync } from "node:fs";
 
 const ROOT_STATIC = [
   "strobi-widget.js",
@@ -43,6 +43,20 @@ export default defineConfig({
         for (const file of ["strobi-widget.js", "strobi-widget.css"]) {
           if (!existsSync(resolve(outDir, file))) {
             throw new Error(`Baew widget asset missing from dist: ${file}`);
+          }
+        }
+
+        // Build-time integrity only; no extra browser requests or rendering.
+        for (const file of ["glimpse/song1.mp3", "glimpse/song2.mp3", "glimpse/cover1.jpg", "glimpse/cover2.jpg", "jaye-video-background.mp4"]) {
+          const source = resolve(file);
+          const output = resolve(outDir, file);
+          if (
+            !existsSync(source) ||
+            !existsSync(output) ||
+            statSync(source).size === 0 ||
+            statSync(output).size === 0
+          ) {
+            throw new Error(`Required media asset missing or empty: ${file}`);
           }
         }
       },

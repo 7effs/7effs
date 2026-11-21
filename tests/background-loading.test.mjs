@@ -2,7 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync, openSync, readSync, fstatSync, closeSync } from 'node:fs'
 
-// Performance only: the optional backgrounds (the video and the two photographs) cost nothing until they are asked for.
+// The optional backgrounds (the video and the two photographs) cost nothing while the page parses; the video and photographs
+// are then fetched after the page has loaded, or at once when the switch is used (see also media-lifecycle.test.mjs).
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
 const script = (id) => {
   const start = html.indexOf(`<script id="${id}">`)
@@ -12,14 +13,13 @@ const script = (id) => {
 const images = script('jaye-optional-image-backgrounds-runtime-v1')
 const toggle = script('jaye-global-background-video-toggle-runtime')
 
-test('the background video is not fetched until the switch is pressed', () => {
-  assert.match(html, /<video id="jaye-global-video-background"[^>]*preload="none"/, 'markup asks for nothing')
-  assert.doesNotMatch(html, /\.preload\s*=\s*['"](auto|metadata)['"]/, 'no script upgrades it behind the visitor’s back')
-  assert.match(toggle, /await video\.play\(\)/, 'the press itself fetches it (and still waits for playback before showing it)')
+test('the background video asks for nothing while the page is parsing', () => {
+  assert.match(html, /<video id="jaye-global-video-background"[^>]*preload="none"[^>]*data-src="jaye-video-background\.mp4"/, 'the markup carries only data-src and preload="none"')
+  assert.doesNotMatch(html, /<video id="jaye-global-video-background"[^>]* src=/, 'no src attribute until a script sets it')
+  assert.match(toggle, /await video\.play\(\)/, 'the press itself still fetches it (and waits for playback before showing it)')
 })
 
-test('the two background photographs are not downloaded when the page opens', () => {
-  assert.doesNotMatch(images, /DOMContentLoaded|photosSettled|pageLoaded/, 'no load-time warm-up of the photographs')
+test('the background photographs are fetched at full priority, and the picker thumbnails wait for the visitor', () => {
   assert.doesNotMatch(images, /fetchPriority\s*=\s*['"]low['"]/, 'a photograph somebody is waiting for is not low priority')
   assert.match(images, /photo\.fetchPriority='high'/)
   assert.match(images, /\['pointerenter','pointerdown','focusin'\]\.forEach\(type=>switcher\.addEventListener\(type,attachThumbnails,\{once:true,passive:true\}\)\)/, 'thumbnails attach when the visitor approaches the switch')
