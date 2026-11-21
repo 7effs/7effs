@@ -123,18 +123,18 @@ const click = button => button.dispatch('click')
 test('rapid You → Sorus W switching ignores stale play promises and stale media events', async () => {
   const h = createHarness()
   click(h.trackA)
-  assert.match(h.note.textContent, /^Loading: A\./)
+  assert.match(h.note.textContent, /^Loading: You…/)
   const oldARequest = h.audio.pendingPlays[0]
 
   click(h.trackB)
-  assert.match(h.note.textContent, /^Loading: B\./)
+  assert.match(h.note.textContent, /^Loading: Sorus W…/)
   assert.equal(h.audio.pendingPlays.length, 2)
 
   // A delayed event from the old source arrives before B has been selected.
   h.audio.dispatch('playing')
-  assert.match(h.note.textContent, /^Loading: B\./, 'an empty currentSrc must not promote B to playing')
+  assert.match(h.note.textContent, /^Loading: Sorus W…/, 'an empty currentSrc must not promote B to playing')
   h.audio.flushPauseEvent()
-  assert.match(h.note.textContent, /^Loading: B\./, 'the queued pause from A must not pause B')
+  assert.match(h.note.textContent, /^Loading: Sorus W…/, 'the queued pause from A must not pause B')
 
   h.audio.selectResource()
   h.audio.dispatch('playing')
@@ -233,7 +233,7 @@ test('stale old-source errors and invalid external paths cannot hijack the curre
   h.audio.currentSrc = 'https://jaye.example/glimpse/song1.mp3'
   h.audio.error = { code: 2 }
   h.audio.dispatch('error')
-  assert.match(h.note.textContent, /^Loading: B\./, 'an A error must not be attributed to B')
+  assert.match(h.note.textContent, /^Loading: Sorus W…/, 'an A error must not be attributed to B')
 
   h.trackA.dataset.track = 'https://other.example/song.mp3'
   const requests = h.audio.pendingPlays.length
