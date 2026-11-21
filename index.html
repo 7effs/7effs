@@ -7147,10 +7147,6 @@ renderHistory();resizeInput();
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch (_) { storageAvailable = false; return false; }
   };
-  const safeRemove = (key) => {
-    try { localStorage.removeItem(key); return true; }
-    catch (_) { storageAvailable = false; return false; }
-  };
 
   /* THE IMPOSSIBLE — local challenge engine v2
    Self-contained puzzle logic. No AI, API, network, or external dependencies. */
