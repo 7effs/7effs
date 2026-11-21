@@ -2021,7 +2021,11 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 
 <style id="jaye-tornado-background-styles">
 /* JAYE atmospheric Tornado page background — isolated from the welcome sequence */
-#jaye-tornado-background{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none;opacity:.78;contain:strict}
+/* Steady backgrounds (all three layers): a fixed element follows the visible viewport, which grows and shrinks as a phone's browser bar hides and shows. Each layer is the
+   height of the largest viewport and is anchored to the bottom, which does not move, so the picture no longer slides or resizes while scrolling. Browsers with
+   the bar at the bottom (iOS Safari) keep the top anchor, which is the edge that stays put there. Nothing changes where there is no browser bar. */
+#jaye-tornado-background{position:fixed;inset:auto 0 0 0;width:100%;height:100%;height:100lvh;display:block;z-index:0;pointer-events:none;opacity:.78;contain:strict}
+@supports(-webkit-touch-callout:none){#jaye-tornado-background{inset:0 0 auto 0}}
 body{isolation:isolate}
 body>main{position:relative;z-index:1}
 /* Let the page atmosphere show through section surfaces without flattening actual cards. */
@@ -2132,7 +2136,8 @@ html body main #demiGate {
 </style>
 <style id="jaye-global-background-video-toggle-styles">
 /* Global background switch only — Parent Space Saturn and all section artwork stay untouched. */
-#jaye-global-video-background{position:fixed;inset:0 0 auto 0;width:100%;height:100vh;height:100lvh;object-fit:cover;object-position:center;z-index:0;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .85s cubic-bezier(.2,.7,.2,1),visibility .85s;contain:strict;background:#03050a}
+#jaye-global-video-background{position:fixed;inset:auto 0 0 0;width:100%;height:100vh;height:100lvh;object-fit:cover;object-position:center;z-index:0;pointer-events:none;opacity:0;visibility:hidden;transition:opacity .85s cubic-bezier(.2,.7,.2,1),visibility .85s;contain:strict;background:#03050a}
+@supports(-webkit-touch-callout:none){#jaye-global-video-background{inset:0 0 auto 0}}
 html.jaye-video-background-active #jaye-global-video-background{opacity:.72;visibility:visible}
 html.jaye-video-background-active #jaye-tornado-background{opacity:0!important;visibility:hidden;transition:opacity .85s cubic-bezier(.2,.7,.2,1),visibility .85s}
 #jaye-background-switch{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));right:max(14px,env(safe-area-inset-right));transform:scale(.95);transform-origin:bottom right;z-index:10020;display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:0 12px;border:1px solid rgba(221,229,241,.24);border-radius:2px;background:rgba(5,8,14,.54);color:rgba(236,241,249,.82);font:500 9px/1.1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.17em;text-transform:uppercase;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer;transition:background .3s,border-color .3s,color .3s,opacity .3s;}
@@ -2176,8 +2181,8 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 
     <div class="jaye-v5-strip"><span>MEMORY / ART&nbsp;&nbsp; — &nbsp;&nbsp;JAYE ARCHIVE</span></div>
 
-    <p class="jaye-v5-phrase jaye-v5-phrase--one"><span><b>FRAGMENTS OF</b></span><span><b>BECOMING.</b></span></p>
-    <p class="jaye-v5-phrase jaye-v5-phrase--two"><span><b>WORDS THAT</b></span><span><b>REMAIN /</b></span></p>
+    <p class="jaye-v5-phrase jaye-v5-phrase--one jaye-sig"><span><b>FRAGMENTS OF</b></span><span><b>BECOMING.</b></span></p>
+    <p class="jaye-v5-phrase jaye-v5-phrase--two jaye-sig"><span><b>WORDS THAT</b></span><span><b>REMAIN /</b></span></p>
 
     <span class="jaye-v5-blade"></span>
     <span class="jaye-v5-wipe jaye-v5-wipe--ivory"></span>
@@ -2204,8 +2209,8 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
     </div>
     <div class="jaye-intro-ghost" aria-hidden="true">JAYE</div>
     <div class="jaye-intro-strip"><div class="jaye-intro-strip-text">MEMORY / ART&nbsp;&nbsp; — &nbsp;&nbsp;JAYE ARCHIVE</div></div>
-    <p class="jaye-intro-phrase jaye-intro-phrase--one"><span><b>FRAGMENTS OF</b></span><span><b>BECOMING.</b></span></p>
-    <p class="jaye-intro-phrase jaye-intro-phrase--two"><span><b>WORDS THAT</b></span><span><b>REMAIN /</b></span></p>
+    <p class="jaye-intro-phrase jaye-intro-phrase--one jaye-sig"><span><b>FRAGMENTS OF</b></span><span><b>BECOMING.</b></span></p>
+    <p class="jaye-intro-phrase jaye-intro-phrase--two jaye-sig"><span><b>WORDS THAT</b></span><span><b>REMAIN /</b></span></p>
     <div class="jaye-intro-symbol"></div>
     <div class="jaye-intro-light"></div><div class="jaye-intro-blackout"></div>
     <div class="jaye-intro-final-stage">
@@ -3277,7 +3282,8 @@ body > .demi-butterfly .demi-butterfly-label{background:transparent!important;bo
 }
 </style>
 <style id="jaye-optional-image-backgrounds-v1">
-#jaye-image-background-layer{position:fixed;inset:0 0 auto 0;height:100vh;height:100lvh;z-index:0;pointer-events:none;opacity:0;visibility:hidden;background-position:center;background-size:cover;background-repeat:no-repeat;transition:opacity .65s ease,visibility .65s;contain:strict}
+#jaye-image-background-layer{position:fixed;inset:auto 0 0 0;height:100vh;height:100lvh;z-index:0;pointer-events:none;opacity:0;visibility:hidden;background-position:center;background-size:cover;background-repeat:no-repeat;transition:opacity .65s ease,visibility .65s;contain:strict}
+@supports(-webkit-touch-callout:none){#jaye-image-background-layer{inset:0 0 auto 0}}
 #jaye-image-background-layer::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,5,9,.18),rgba(3,5,9,.38));}
 html.jaye-image-background-active #jaye-image-background-layer{opacity:1;visibility:visible}
 html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-background-active #jaye-global-video-background{opacity:0!important;visibility:hidden!important}
@@ -5134,6 +5140,12 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
   #nodeAISection .node-ai-bubble,#nodeAISection .node-ai-bubble.waiting,#nodeAISection .node-ai-live-label:first-child::before{animation:none}
 }
 </style>
+<style id="jaye-signature-lines-v1">
+/* Signature lines: a short list of original taglines and statements, each marked class="jaye-sig", cannot be picked up by a drag-select or a long press.
+   Nothing else is affected: ordinary paragraphs, labels, buttons, links and the whole Archive stay selectable and copyable, and there is no global rule.
+   This only stops text selection, so taps, links, scrolling, screen readers and find-in-page work as before. To protect another line, add the class to it. */
+.jaye-sig{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+</style>
 <main>
 <nav aria-label="Social link" class="glimpse-contact">
 <a aria-label="Open Instagram profile" href="https://www.instagram.com/cvechz" rel="noopener noreferrer" target="_blank"><span aria-hidden="true" class="contact-icon">◎</span><span>Je</span><span aria-hidden="true" class="contact-arrow">↗</span></a>
@@ -5158,7 +5170,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <div class="hero-copy">
 <p class="kicker"><span></span></p>
 <h1 class="hero-name-stack" id="jaye-wordmark"><span class="hero-title-name">Jaye<span class="hero-title-dot"></span></span><span class="hero-name-second">7effs<span class="hero-second-period"></span></span></h1>
-<div class="hero-intro"><p>A Private Index of Things Unrecorded.</p>
+<div class="hero-intro"><p class="jaye-sig">A Private Index of Things Unrecorded.</p>
 <div class="jaye-readout" data-place="down" id="jayeReadout">
 <button aria-controls="jrMenu" aria-expanded="false" aria-haspopup="true" class="jr-trigger" type="button"><span class="jr-head"><i class="jr-dot"></i><span>SECTION</span><i aria-hidden="true" class="jr-caret"></i></span><span class="jr-sr"> — choose a section</span></button>
 <nav aria-label="Sections" class="jr-menu" hidden id="jrMenu"><ul>
@@ -5418,11 +5430,11 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <div class="demi-art-caption demi-art-caption--bottom"><span>SUBJECT</span><b>LOCKED</b></div>
 </div>
 <div class="demi-gate-copy">
-<div class="demi-eyebrow">A door was left open.</div>
-<h2>There is one
+<div class="demi-eyebrow jaye-sig">A door was left open.</div>
+<h2 class="jaye-sig">There is one
        <br/>
 <span>memory</span> left.</h2>
-<p>This page does not continue downward. It changes state.</p>
+<p class="jaye-sig">This page does not continue downward. It changes state.</p>
 </div>
 <div aria-hidden="true" class="demi-butterfly">
 <div class="demi-butterfly-stage">
@@ -5699,7 +5711,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <section aria-hidden="true" class="system-continuation" hidden="" id="after-demi">
 <div class="sys-wrap">
 <div class="sys-kicker">11 / AFTER THE MEMORY</div>
-<h2 class="sys-title">The story
+<h2 class="sys-title jaye-sig">The story
       <br/>
       stays. The system moves.</h2>
 <p class="sys-sub">The Demi page is finished as a story. What follows is a different layer — interactive, strange, and deliberately less like a normal webpage.</p>
@@ -5726,7 +5738,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 </div>
 <div aria-label="Return to the beginning of the archive" class="exit-portal" id="exitPortal" role="button" tabindex="0">
 <div class="exit-copy">
-<small>More</small><b>Return to the beginning.</b><span>The archive closes. The memory does not.</span>
+<small>More</small><b class="jaye-sig">Return to the beginning.</b><span class="jaye-sig">The archive closes. The memory does not.</span>
 </div>
 </div>
 </div>
@@ -5812,7 +5824,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <section aria-labelledby="parent-atlas-title" class="parent-space-atlas">
 <div class="parent-space-atlas-copy">
 <div class="parent-space-atlas-kicker"><span aria-hidden="true" class="parent-status-point"></span> DUAL SYSTEM / LINKED REASONING</div>
-<h2 id="parent-atlas-title">Read the record.<br/><em>Test the conclusion.</em></h2>
+<h2 id="parent-atlas-title" class="jaye-sig">Read the record.<br/><em>Test the conclusion.</em></h2>
 <p>Two connected instruments, one disciplined route: inspect what is documented, then examine what the evidence can actually support.</p>
 <div class="parent-space-atlas-status"><span aria-live="polite" id="parentSpaceSignalStatus" role="status">ACTIVE NODE / 12 — EVIDENCE ARCHIVE</span><span>LOCAL CASEWORK</span></div>
 </div>
@@ -5906,7 +5918,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <div class="postai-topline">
 <span>15 / EXPERIMENTAL WORLDS</span><span>THE IMPOSSIBLE · 2 MODES</span>
 </div>
-<h2 class="postai-heading" id="postAI-game-title">A game that does not <em>play fair.</em></h2>
+<h2 class="postai-heading jaye-sig" id="postAI-game-title">A game that does not <em>play fair.</em></h2>
 <p class="postai-lead">Solve pattern and logic puzzles</p>
 <div class="postai-game-entry">
 <div aria-hidden="true" class="postai-game-glyph postai-worlds-emblem">
@@ -7438,8 +7450,8 @@ function renderEvidence(){
  const visible=cases.filter(x=>(x.title+' '+x.tag+' '+x.summary).toLowerCase().includes(q.toLowerCase())&&(filter==='all'||(filter==='completed'?inv.completed.includes(x.id):filter==='available'?available(x):!available(x))));if(sort==='az')visible.sort((a,b)=>a.title.localeCompare(b.title));if(sort==='status')visible.sort((a,b)=>Number(inv.completed.includes(a.id))-Number(inv.completed.includes(b.id)));
  host.innerHTML=`<div class="ja-toolbar"><input class="ja-input" id="ja-case-search" aria-label="Search cases" placeholder="Search title, tag, or detail…" value="${esc(q)}"><select id="ja-case-filter" class="ja-select" aria-label="Filter cases" style="max-width:170px"><option value="all">All cases</option><option value="available">Available</option><option value="locked">Locked</option><option value="completed">Completed</option></select><select id="ja-case-sort" class="ja-select" aria-label="Sort cases" style="max-width:150px"><option value="order">Case order</option><option value="az">A–Z</option><option value="status">Status</option></select></div>
  <div class="ja-meta"><span class="ja-stat">${inv.completed.length} / ${cases.length} CASES RESOLVED</span><span class="ja-small">Device record · ${safeStore.write('jarchive:investigation:v1',inv)?'storage available':'storage unavailable'}</span></div>
- <div class="ja-grid">${visible.map(x=>`<article class="ja-card"><div class="ja-kicker">${esc(x.id)} · ${esc(x.tag)}</div><h3>${esc(x.title)}</h3><p>${esc(x.summary)}</p><div class="ja-actions"><span class="ja-status">${inv.completed.includes(x.id)?'Resolved':available(x)?'Available':'Sealed'}</span><button class="ja-btn" data-open-case="${x.id}" ${available(x)?'':'disabled'}>${inv.selected===x.id?'Selected':'Open dossier'}</button></div></article>`).join('')||'<div class="ja-empty">No cases match this filter.</div>'}</div>
- <div class="ja-rule"></div><div class="ja-kicker">ACTIVE DOSSIER · ${esc(c.id)}</div><h3>${esc(c.title)}</h3><p>${esc(c.brief)}</p>
+ <div class="ja-grid">${visible.map(x=>`<article class="ja-card"><div class="ja-kicker">${esc(x.id)} · ${esc(x.tag)}</div><h3 class="jaye-sig">${esc(x.title)}</h3><p>${esc(x.summary)}</p><div class="ja-actions"><span class="ja-status">${inv.completed.includes(x.id)?'Resolved':available(x)?'Available':'Sealed'}</span><button class="ja-btn" data-open-case="${x.id}" ${available(x)?'':'disabled'}>${inv.selected===x.id?'Selected':'Open dossier'}</button></div></article>`).join('')||'<div class="ja-empty">No cases match this filter.</div>'}</div>
+ <div class="ja-rule"></div><div class="ja-kicker">ACTIVE DOSSIER · ${esc(c.id)}</div><h3 class="jaye-sig">${esc(c.title)}</h3><p>${esc(c.brief)}</p>
  <div class="ja-columns"><div class="ja-panel"><h3>Timeline</h3><div class="ja-timeline">${c.timeline.map(t=>`<div class="ja-timeline-item"><time>${esc(t[0])}</time><div>${esc(t[1])}</div></div>`).join('')}</div><div class="ja-rule"></div><h3>Witness statements</h3>${c.witnesses.map(w=>`<div class="ja-entry"><strong>${esc(w[0])}</strong><p>${esc(w[1])}</p></div>`).join('')}</div>
  <div class="ja-panel"><h3>Evidence register</h3>${c.evidence.map(e=>`<div class="ja-entry"><strong>${esc(e[1])} <span class="ja-small">[${esc(e[0])}]</span></strong><p>${esc(e[2])}</p></div>`).join('')}<div class="ja-rule"></div><h3>Notebook</h3><label class="ja-small" for="ja-note">Observation / interpretation (saved locally)</label><textarea id="ja-note" class="ja-textarea" maxlength="4000" placeholder="Separate what the record says from what you infer…">${esc(inv.notes[c.id]||'')}</textarea><div class="ja-actions"><button class="ja-btn primary" id="ja-save-note">Save notebook entry</button><button class="ja-btn" id="ja-export-investigation">Export investigation</button><label class="ja-btn" for="ja-import-investigation">Import record</label><input class="ja-import" id="ja-import-investigation" type="file" accept="application/json"></div><p class="ja-small">Cross-references: ${c.refs.map(id=>esc(id)).join(', ')}. A reference becomes readable when its case is unlocked.</p></div></div>
  <div class="ja-panel" style="margin-top:10px"><h3>Resolve this case</h3><p>Choose the claim whose status is justified by the cited record. Completion unlocks the next dossier.</p><select class="ja-select" id="ja-case-answer" aria-label="Case resolution claim"><option value="">Choose a claim…</option>${c.claims.map(cl=>`<option value="${cl[0]}">${esc(cl[1])}</option>`).join('')}</select><button class="ja-btn primary" id="ja-submit-case" style="margin-top:8px">Submit resolution</button><div id="ja-case-feedback" role="status" aria-live="polite"></div></div>`;
@@ -7453,7 +7465,7 @@ function renderEvidence(){
 }
 function renderInference(){
  const host=$('ja-inference-app');if(!host)return;const c=selectedCase();
- host.innerHTML=`<div class="ja-meta"><span class="ja-stat">SOURCE CASE · ${esc(c.id)}</span><span class="ja-status">${inv.completed.includes(c.id)?'Resolved':'In progress'}</span></div><div class="ja-panel"><h3>${esc(c.title)}</h3><p>Timeline is reconstructed from the source dossier. Event order is preserved; times alone do not prove causation.</p><div class="ja-timeline">${c.timeline.map(t=>`<div class="ja-timeline-item"><time>${esc(t[0])}</time><div>${esc(t[1])}</div></div>`).join('')}</div></div>
+ host.innerHTML=`<div class="ja-meta"><span class="ja-stat">SOURCE CASE · ${esc(c.id)}</span><span class="ja-status">${inv.completed.includes(c.id)?'Resolved':'In progress'}</span></div><div class="ja-panel"><h3 class="jaye-sig">${esc(c.title)}</h3><p>Timeline is reconstructed from the source dossier. Event order is preserved; times alone do not prove causation.</p><div class="ja-timeline">${c.timeline.map(t=>`<div class="ja-timeline-item"><time>${esc(t[0])}</time><div>${esc(t[1])}</div></div>`).join('')}</div></div>
  <div class="ja-columns" style="margin-top:10px"><div class="ja-panel"><h3>Evidence → claim links</h3><p>Select a claim to inspect its evidence and rule-based status.</p><select id="ja-hypothesis" class="ja-select" aria-label="Select claim">${c.claims.map(cl=>`<option value="${cl[0]}">${esc(cl[1])}</option>`).join('')}</select><div id="ja-hypothesis-result" class="ja-feedback"></div><div class="ja-rule"></div><h3>Evidence references</h3>${c.evidence.map(e=>`<label class="ja-evidence-row"><input type="checkbox" data-evidence="${e[0]}"><span><strong>${esc(e[1])}</strong><p>${esc(e[2])}</p></span></label>`).join('')}<button class="ja-btn primary" id="ja-link-evidence">Link selected evidence to claim</button><p id="ja-link-status" class="ja-small" role="status"></p></div>
  <div class="ja-panel"><h3>Verdict rules</h3><div class="ja-entry"><strong>Established</strong><p>Directly supported by a record or by a consistent, explicit chain.</p></div><div class="ja-entry"><strong>Contradicted</strong><p>Conflicts with a verified record or an explicit impossibility in the dossier.</p></div><div class="ja-entry"><strong>Undetermined</strong><p>The available record cannot decide the claim either way.</p></div><div class="ja-entry"><strong>Unsupported attribution</strong><p>A conclusion about intent or identity cannot be inferred from resemblance or absence alone.</p></div><div class="ja-rule"></div><h3>Reasoning history</h3><div class="ja-list">${inv.history.slice(-8).reverse().map(h=>`<div class="ja-entry"><strong>${esc(h.action)}</strong><p>${esc(h.detail)} · ${new Date(h.at).toLocaleString()}</p></div>`).join('')||'<p class="ja-muted">No reasoning events yet.</p>'}</div></div></div>`;
  const result=host.querySelector('#ja-hypothesis-result'),sel=host.querySelector('#ja-hypothesis');
@@ -7949,7 +7961,14 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
    - particles are drawn in colour buckets (one fill per bucket, colours from a table) instead of one string, path and fill each;
      the whole cloud is drawn additively ('lighter'), so draw order never changed the picture and the depth sorts are gone
    - adaptive quality: when drawing takes too much of the frame budget the particle share drops in steps (100% / 80% / 62%) and comes back
-   - resize is debounced and no longer rebuilds the cloud */
+   - resize is debounced and no longer rebuilds the cloud
+   Still planet / steadier layer (the picture is unchanged; only what moves and what is recomputed):
+   - the planet (particle sphere and its luminous limb) no longer turns or shimmers: it is drawn once per size into its own bitmap and
+     copied each frame, so its 2,950 particles are no longer projected, sorted and filled every frame. Its look is the first frame it always had
+   - only the outer orbit moves now: the far ring arcs and the front ring particles, at 0.95 of their previous angular speed
+     (.104 -> .0988 rad/s). The faint dust twinkle and the sparse glints are untouched
+   - the layer is sized to the largest viewport and anchored to the bottom (see the CSS), so it no longer resizes, rebuilds or slides when a
+     phone's browser bar shows or hides */
 (()=>{
  const canvas=document.getElementById('jaye-tornado-background');if(!canvas)return;
  const ctx=canvas.getContext('2d',{alpha:true,desynchronized:true});if(!ctx)return;
@@ -7957,7 +7976,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  const TAU=Math.PI*2;
  const coarse=matchMedia('(pointer: coarse)');
  const isMobile=()=>coarse.matches||Math.min(innerWidth,innerHeight)<=600;
- const SPIN_SPEED=.104; /* was .12 */
+ const SPIN_SPEED=.104*.95; /* outer rings only: was .104 (.12 before that), now x0.95. The planet itself does not turn */
  const QUALITY=[1,.8,.62];
  const MOBILE_FPS=36,DESKTOP_FPS=60;
  const BAND_STROKES=['rgba(128,128,128,.22)','rgba(160,160,160,.20)','rgba(255,255,255,.12)','rgba(96,96,96,.18)'];
@@ -7984,7 +8003,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  const rPX=new Float32Array(ringN),rPY=new Float32Array(ringN),rRad=new Float32Array(ringN),rBk=new Int16Array(ringN),rOrd=new Uint16Array(ringN),rStart=new Int32Array(RING_B+1),rCur=new Int32Array(RING_B);
  const dX0=new Float32Array(dustN),dY0=new Float32Array(dustN),dSeed=new Float32Array(dustN),dSize=new Float32Array(dustN),dX=new Float32Array(dustN),dY=new Float32Array(dustN),dBk=new Int16Array(dustN),dOrd=new Uint16Array(dustN),dStart=new Int32Array(DUST_B+1),dCur=new Int32Array(DUST_B);
  for(let i=0;i<dustN;i++){dX0[i]=rand(-1,1);dY0[i]=rand(-1,1);dSeed[i]=Math.random()*TAU;dSize[i]=rand(.25,.75)}
- let nCore=coreN,nRing=ringN;
+ let nRing=ringN;
  /* fixed view: the roll and tilt never change */
  const roll=-.11,tilt=.43,cr=Math.cos(roll),sr=Math.sin(roll),ct=Math.cos(tilt),st=Math.sin(tilt);
  let pX=0,pY=0;
@@ -8002,23 +8021,24 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
    for(let b=0;b<B;b++){start[b+1]+=start[b];cur[b]=start[b]}
    for(let i=0;i<n;i++){const b=bk[i];if(b>=0)ord[cur[b]++]=i}
  }
- function fillBuckets(B,start,ord,style,px,py,rad){
+ function fillBuckets(B,start,ord,style,px,py,rad,c=ctx){
    for(let b=0;b<B;b++){
      const s=start[b],e=start[b+1];if(e===s)continue;
-     ctx.fillStyle=style[b];ctx.beginPath();
-     for(let k=s;k<e;k++){const i=ord[k],r=rad[i];ctx.moveTo(px[i]+r,py[i]);ctx.arc(px[i],py[i],r,0,TAU)}
-     ctx.fill();
+     c.fillStyle=style[b];c.beginPath();
+     for(let k=s;k<e;k++){const i=ord[k],r=rad[i];c.moveTo(px[i]+r,py[i]);c.arc(px[i],py[i],r,0,TAU)}
+     c.fill();
    }
  }
  /* sizes, and everything that is static for one size */
- let w=0,h=0,dpr=1,mobile=false,minDt=0,cx=0,cy=0,scale=0,haloC=null,haloG=null,glowG=null,filament=null;
+ let w=0,h=0,dpr=1,mobile=false,minDt=0,cx=0,cy=0,scale=0,haloC=null,haloG=null,filament=null,coreC=null,coreOx=0,coreOy=0;
  function resize(){
    mobile=isMobile();minDt=1000/(mobile?MOBILE_FPS:DESKTOP_FPS)-2;
-   const nw=innerWidth,nh=innerHeight,nd=Math.min(devicePixelRatio||1,mobile?1.5:2);
+   /* the height is the CSS one (100lvh: the largest viewport), not innerHeight, so a phone's browser bar showing or hiding does not resize the canvas */
+   const nw=innerWidth,nh=canvas.clientHeight||innerHeight,nd=Math.min(devicePixelRatio||1,mobile?1.5:2);
    if(nw===w&&nh===h&&nd===dpr&&haloC)return false;
    w=nw;h=nh;dpr=nd;
    canvas.width=Math.max(1,Math.round(w*dpr));canvas.height=Math.max(1,Math.round(h*dpr));
-   canvas.style.width=w+'px';canvas.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+   canvas.style.width=w+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
    cx=w*.5;cy=h*.49;scale=Math.min(w,h)*(w<h?.275:.285);
    /* soft halo: painted once into its own bitmap, then copied each frame */
    haloC=document.createElement('canvas');haloC.width=canvas.width;haloC.height=canvas.height;
@@ -8029,13 +8049,39 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
      haloG.addColorStop(0,'rgba(255,255,255,.12)');haloG.addColorStop(.28,'rgba(128,128,128,.075)');haloG.addColorStop(1,'rgba(0,0,0,0)');
      hc.fillStyle=haloG;hc.fillRect(0,0,w,h);
    }else haloC=null;
-   glowG=ctx.createRadialGradient(-scale*.27,-scale*.25,scale*.04,0,0,scale*1.05);
-   glowG.addColorStop(0,'rgba(255,255,255,.12)');glowG.addColorStop(.58,'rgba(128,128,128,.045)');glowG.addColorStop(1,'rgba(0,0,0,0)');
    /* ring-edge filaments: full circles, so they look the same at every spin angle; one path for all four */
    filament=new Path2D();
    for(const r of RING_EDGES){for(let i=0;i<=180;i++){const a=i/180*TAU;project(Math.cos(a)*r,Math.sin(a)*r,0,cx,cy,scale);if(i===0)filament.moveTo(pX,pY);else filament.lineTo(pX,pY)}}
    for(let i=0;i<dustN;i++){dX[i]=dX0[i]*w*.5+cx;dY[i]=dY0[i]*h*.5+cy}
+   buildCore();
    return true;
+ }
+ /* The planet is a still picture: its particles and luminous limb are drawn once into a bitmap that covers just the planet, placed on whole
+    device pixels so each frame's copy is 1:1. Same projection, shading, bucket colours and additive blending as the per-frame drawing it replaces,
+    at the orientation the page always opened with (the first frame; the reduced-motion still frame keeps its own angle). */
+ function buildCore(){
+   const pad=scale*1.3+4,padD=Math.ceil(pad*dpr);
+   coreOx=Math.floor(cx*dpr)-padD;coreOy=Math.floor(cy*dpr)-padD;
+   if(!coreC)coreC=document.createElement('canvas');
+   coreC.width=coreC.height=padD*2+2;
+   const k=coreC.getContext('2d');if(!k){coreC=null;return}
+   k.setTransform(dpr,0,0,dpr,-coreOx,-coreOy);k.globalCompositeOperation='lighter';
+   const spin=reduce?-.18:0,cs=Math.cos(spin),sn=Math.sin(spin),kr=scale*.0055;
+   for(let i=0;i<coreN;i++){
+     const wobble=reduce?0:Math.sin(coreSeedTau[i])*.012;
+     const x=coreX[i]*cs-coreZ[i]*sn,z=coreX[i]*sn+coreZ[i]*cs;
+     const p=project(x,coreY[i],z+wobble,cx,cy,scale);
+     sPX[i]=pX;sPY[i]=pY;sRad[i]=Math.max(.35,coreSize[i]*kr*p);
+     const light=clamp(.48+.43*(x*-.48+coreY[i]*.32+z*.72),.12,1);
+     sBk[i]=Math.min(CORE_B-1,((light-.12)*(CORE_B/.88))|0);
+   }
+   group(sBk,coreN,CORE_B,cStart,cCur,cOrd);fillBuckets(CORE_B,cStart,cOrd,coreStyle,sPX,sPY,sRad,k);
+   /* luminous limb */
+   const g=k.createRadialGradient(-scale*.27,-scale*.25,scale*.04,0,0,scale*1.05);
+   g.addColorStop(0,'rgba(255,255,255,.12)');g.addColorStop(.58,'rgba(128,128,128,.045)');g.addColorStop(1,'rgba(0,0,0,0)');
+   k.save();k.translate(cx,cy);k.rotate(-.09);k.scale(1,.91);
+   k.fillStyle=g;k.beginPath();k.arc(0,0,scale,0,TAU);k.fill();
+   k.restore();
  }
  /* ---- the frame ---- */
  let time=0,last=0,lastDraw=0,drawnOnce=false;
@@ -8055,21 +8101,8 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
      for(let i=0;i<=120;i++){const a=Math.PI+(i/120)*Math.PI+spin;project(Math.cos(a)*r0,Math.sin(a)*r0,0,cx,cy,scale);if(i===0)ctx.moveTo(pX,pY);else ctx.lineTo(pX,pY)}
      ctx.strokeStyle=BAND_STROKES[band];ctx.lineWidth=scale*(.026-band*.003);ctx.stroke();
    }
-   /* particle sphere, shaded by the view-facing hemisphere */
-   const cs=Math.cos(spin),sn=Math.sin(spin),kr=scale*.0055;
-   for(let i=0;i<nCore;i++){
-     const wobble=reduce?0:Math.sin(time*.55+coreSeedTau[i])*.012;
-     const x=coreX[i]*cs-coreZ[i]*sn,z=coreX[i]*sn+coreZ[i]*cs;
-     const p=project(x,coreY[i],z+wobble,cx,cy,scale);
-     sPX[i]=pX;sPY[i]=pY;sRad[i]=Math.max(.35,coreSize[i]*kr*p);
-     const light=clamp(.48+.43*(x*-.48+coreY[i]*.32+z*.72),.12,1);
-     sBk[i]=Math.min(CORE_B-1,((light-.12)*(CORE_B/.88))|0);
-   }
-   group(sBk,nCore,CORE_B,cStart,cCur,cOrd);fillBuckets(CORE_B,cStart,cOrd,coreStyle,sPX,sPY,sRad);
-   /* luminous limb */
-   ctx.save();ctx.translate(cx,cy);ctx.rotate(-.09);ctx.scale(1,.91);
-   ctx.fillStyle=glowG;ctx.beginPath();ctx.arc(0,0,scale,0,TAU);ctx.fill();
-   ctx.restore();
+   /* the still planet (particle sphere and luminous limb), copied from its bitmap */
+   if(coreC){ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(coreC,coreOx,coreOy);ctx.setTransform(dpr,0,0,dpr,0,0)}
    /* front ring particles, in orbital lanes */
    const kq=scale*.0062;
    for(let i=0;i<nRing;i++){
@@ -8091,7 +8124,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  let level=0,ema=0,over=0,calm=0,lastShift=0;
  function setLevel(l,now){
    level=l;over=calm=0;ema=0;lastShift=now;
-   nCore=Math.floor(coreN*QUALITY[l]);nRing=Math.floor(ringN*QUALITY[l]);
+   nRing=Math.floor(ringN*QUALITY[l]);
    canvas.dataset.saturnQuality=String(l);
  }
  function adapt(cost,now){

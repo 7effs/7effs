@@ -11,16 +11,16 @@ const code = script.replace(/\/\*[\s\S]*?\*\//g, '')
 test('the canvas element and its script are still the single background layer', () => {
   assert.equal((html.match(/<canvas[^>]*id="jaye-tornado-background"/g) ?? []).length, 1)
   assert.equal((html.match(/<script id="jaye-tornado-page-background">/g) ?? []).length, 1)
-  assert.equal((code.match(/getContext\(/g) ?? []).length, 2, 'the page canvas and one cached halo bitmap')
+  assert.equal((code.match(/getContext\(/g) ?? []).length, 3, 'the page canvas, the cached halo bitmap and the cached planet bitmap')
   assert.doesNotMatch(code, /\bimport\b|fetch\(|https?:\/\//, 'no library, no network')
 })
 
-test('about 30% fewer particles and a slightly slower turn', () => {
+test('about 30% fewer particles; the outer orbit turns at 0.95 of its former speed', () => {
   assert.match(code, /coreN=reduce\?1600:2950/, 'was 4200')
   assert.match(code, /ringCount=reduce\?2600:5750/, 'was 8200')
   assert.match(code, /dustN=reduce\?180:365/, 'was 520')
   assert.ok(2950 / 4200 <= .75 && 2950 / 4200 >= .65 && 5750 / 8200 <= .75 && 5750 / 8200 >= .65)
-  assert.match(code, /SPIN_SPEED=\.104/, 'was .12')
+  assert.match(code, /SPIN_SPEED=\.104\*\.95/, 'was .12, then .104; now x0.95 of that, for the outer rings only')
   assert.match(code, /const spin=reduce\?-\.18:time\*SPIN_SPEED/)
 })
 
@@ -86,4 +86,44 @@ test('the canvas element keeps its look rules (opacity, containment, no pointer 
   assert.match(rule, /position:fixed/)
   assert.match(rule, /pointer-events:none/)
   assert.match(rule, /contain:strict/)
+})
+
+test('the planet is still: drawn once per size and copied each frame; only the outer orbit moves', () => {
+  // comments are stripped from `code`, so the slices are cut at real statements, not at comment markers
+  const frameBody = code.slice(code.indexOf('function frame('), code.indexOf('let level=0'))
+  const buildBody = code.slice(code.indexOf('function buildCore('), code.indexOf('let time=0'))
+  assert.ok(frameBody.length > 500 && buildBody.length > 500 && frameBody.length < 6000 && buildBody.length < 3000, 'the slices are the two functions, not the rest of the script')
+  // nothing about the planet is recomputed per frame
+  assert.doesNotMatch(frameBody, /coreX|coreY|coreZ|coreSeedTau|sPX|sBk|CORE_B|Math\.cos\(spin\)|Math\.sin\(spin\)|glowG/, 'no per-frame planet projection, sorting or fill')
+  assert.match(frameBody, /ctx\.drawImage\(coreC,coreOx,coreOy\)/, 'a 1:1 copy of the cached planet')
+  assert.match(code, /buildCore\(\);\s*return true/, 'rebuilt only when the size changes')
+  // the cached picture is the old first frame: same projection, shading, buckets, additive blend, limb
+  assert.match(buildBody, /const spin=reduce\?-\.18:0/, 'the reduced-motion still frame keeps its angle; otherwise the opening orientation')
+  assert.match(buildBody, /Math\.sin\(coreSeedTau\[i\]\)\*\.012/, 'the depth offset the old first frame had, now fixed')
+  assert.match(buildBody, /globalCompositeOperation='lighter'/)
+  assert.match(buildBody, /fillBuckets\(CORE_B,cStart,cOrd,coreStyle,sPX,sPY,sRad,k\)/)
+  assert.match(buildBody, /k\.rotate\(-\.09\);k\.scale\(1,\.91\)/, 'the luminous limb')
+  assert.doesNotMatch(buildBody, /time|requestAnimationFrame/, 'nothing in it depends on the clock')
+  // the outer orbit still turns, both the far arcs and the front ring particles, and the other effects are untouched
+  assert.match(frameBody, /const a=Math\.PI\+\(i\/120\)\*Math\.PI\+spin/, 'far ring arcs')
+  assert.match(frameBody, /const a=ringA\[i\]\+spin\*ringK\[i\]/, 'front ring particles')
+  assert.match(frameBody, /Math\.sin\(time\*\.7\+dSeed\[i\]\)/, 'dust twinkle')
+  assert.match(frameBody, /const a=time\*\.16\+i\*TAU\/5/, 'glints')
+  // the planet is always drawn at full density; adaptive quality now only thins the rings
+  assert.doesNotMatch(code, /nCore/)
+  assert.match(code, /nRing=Math\.floor\(ringN\*QUALITY\[l\]\)/)
+})
+
+test('the three background layers keep one height and one anchor while a phone browser bar shows and hides', () => {
+  const rule = (id) => html.match(new RegExp(`${id}\\{position:fixed;[^}]*\\}`))?.[0] ?? ''
+  for (const id of ['#jaye-tornado-background', '#jaye-global-video-background', '#jaye-image-background-layer']) {
+    const r = rule(id)
+    assert.match(r, /inset:auto 0 0 0/, `${id}: bottom anchored`)
+    assert.match(r, /height:100lvh/, `${id}: the largest viewport height`)
+    assert.match(html, new RegExp(`@supports\\(-webkit-touch-callout:none\\)\\{${id}\\{inset:0 0 auto 0\\}\\}`), `${id}: iOS keeps its top anchor`)
+  }
+  assert.match(rule('#jaye-tornado-background'), /height:100%;height:100lvh/, 'browsers without lvh keep the old height')
+  // the canvas takes its height from CSS, never from the shrinking and growing innerHeight
+  assert.match(code, /nh=canvas\.clientHeight\|\|innerHeight/)
+  assert.doesNotMatch(code, /canvas\.style\.height/)
 })
