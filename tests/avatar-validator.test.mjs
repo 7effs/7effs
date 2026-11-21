@@ -35,8 +35,8 @@ const clone = (value) => JSON.parse(JSON.stringify(value))
 const keyPaths = (value, prefix = []) => Object.entries(value ?? {}).flatMap(([key, child]) => [[...prefix, key], ...(child && typeof child === 'object' ? keyPaths(child, [...prefix, key]) : [])])
 const at = (value, path) => path.reduce((node, key) => (node === null || typeof node !== 'object' ? undefined : node[key]), value)
 
-function mutate(random, paths) {
-  const copy = clone(definition)
+function mutate(random, paths, base = definition) {
+  const copy = clone(base)
   const pick = (list) => list[Math.floor(random() * list.length)]
   for (let i = 0, n = 1 + Math.floor(random() * 3); i < n; i++) {
     const path = pick(paths)
@@ -80,6 +80,82 @@ test('precompiled and real validators agree on every verdict and every error acr
     verdict ? valid++ : invalid++
   }
   assert.ok(valid > 100 && invalid > 100, `the fuzz covers both outcomes (valid ${valid}, invalid ${invalid})`)
+})
+
+// The shipped definition has no nodes, so on its own it never reaches the node rules (allOf, prefixItems, maxItems,
+// minItems and the nodeSurface enum). These run the same comparison on definitions that do.
+const node = (type, position, rotation) => ({ surface: { type, width: 40, height: 30, depth: 20, roundness: 0.5 }, position, rotation })
+const withNodes = (() => {
+  const copy = clone(definition)
+  copy.body.nodes = [node('cube', [10, -5, 0], [0, 45, 90]), node('capsule', [-12, 8, 3], [10, 20, 30]), node('cone', [0, 0, 15], [-90, 0, 180])]
+  return copy
+})()
+
+test('node-bearing definitions: the same verdict and the same errors on targeted cases', async () => {
+  const pre = await precompiled()
+  assert.equal(real(withNodes), true, 'the node-bearing base definition is valid')
+  const edit = (fn) => { const copy = clone(withNodes); fn(copy.body.nodes); return copy }
+  const cases = {
+    'seventeen nodes': edit((n) => { while (n.length < 17) n.push(node('cube', [0, 0, 0], [0, 0, 0])) }),
+    'sixteen nodes': edit((n) => { while (n.length < 16) n.push(node('cube', [0, 0, 0], [0, 0, 0])) }),
+    'node type outside the node list (mickey)': edit((n) => { n[0].surface.type = 'mickey' }),
+    'node type outside every list': edit((n) => { n[1].surface.type = 'torus' }),
+    'node without a rotation': edit((n) => { delete n[0].rotation }),
+    'node without a position': edit((n) => { delete n[2].position }),
+    'node with an extra key': edit((n) => { n[0].zz_extra = 1 }),
+    'two-number position': edit((n) => { n[0].position = [1, 2] }),
+    'four-number position': edit((n) => { n[0].position = [1, 2, 3, 4] }),
+    'string in a position': edit((n) => { n[0].position = [1, '2', 3] }),
+    'rotation past 360': edit((n) => { n[0].rotation = [0, 361, 0] }),
+    'rotation below -360': edit((n) => { n[1].rotation = [-361, 0, 0] }),
+    'rotation exactly at the limits': edit((n) => { n[1].rotation = [-360, 360, 0] }),
+    'null node': edit((n) => { n[1] = null }),
+    'no nodes at all': edit((n) => { n.length = 0 }),
+    'node surface without a width': edit((n) => { delete n[0].surface.width }),
+    'node surface roundness above 1': edit((n) => { n[0].surface.roundness = 1.5 }),
+    'node surface with an optional roundness': edit((n) => { n[0].surface.morphRoundness = 0.25 }),
+  }
+  const record = []
+  for (const [name, candidate] of Object.entries(cases)) {
+    const verdict = real(candidate)
+    assert.equal(pre(candidate), verdict, `verdict differs: ${name}`)
+    assert.equal(JSON.stringify(pre.errors), JSON.stringify(real.errors), `errors differ: ${name}`)
+    record.push(verdict)
+  }
+  assert.ok(record.includes(true) && record.includes(false), 'the targeted cases cover both outcomes')
+})
+
+test('node-bearing definitions: 2,000 mutations give the same verdicts and errors', async () => {
+  const pre = await precompiled()
+  const random = rng(7)
+  const paths = keyPaths(withNodes)
+  assert.ok(paths.some((path) => path.includes('nodes') && path.includes('rotation')), 'the fuzz reaches node fields')
+  let valid = 0
+  let invalid = 0
+  for (let i = 0; i < 2000; i++) {
+    const candidate = mutate(random, paths, withNodes)
+    const verdict = real(candidate)
+    const errors = JSON.stringify(real.errors)
+    assert.equal(pre(candidate), verdict, `verdict differs for mutation ${i}`)
+    assert.equal(JSON.stringify(pre.errors), errors, `errors differ for mutation ${i}`)
+    verdict ? valid++ : invalid++
+  }
+  assert.ok(valid > 100 && invalid > 100, `the fuzz covers both outcomes (valid ${valid}, invalid ${invalid})`)
+})
+
+test('the plugin answers the library’s own ajv import and no other module’s', async () => {
+  const { ajvPrecompiled } = await import('../scripts/ajv-precompiled.mjs')
+  const plugin = ajvPrecompiled(root)
+  const warnings = []
+  const context = { warn: (message) => warnings.push(message) }
+  const library = fileURLToPath(new URL('index.js', pathToFileURL(require.resolve('@bible-strong/avatar-core/schema'))))
+  assert.equal(plugin.resolveId.call(context, 'ajv/dist/2020.js', library), '\0ajv-precompiled-avatar-validator', 'the library gets the precompiled validator')
+  assert.equal(plugin.resolveId.call(context, 'ajv/dist/2020.js', `${library}?v=1`), '\0ajv-precompiled-avatar-validator', 'a query string on the importer changes nothing')
+  assert.equal(plugin.resolveId.call(context, 'ajv/dist/2020.js', fileURLToPath(new URL('../src/widget.tsx', import.meta.url))), null, 'the widget’s own source keeps the real ajv')
+  assert.equal(plugin.resolveId.call(context, 'ajv/dist/2020.js', require.resolve('ajv/dist/2020.js')), null, 'ajv importing itself is left alone')
+  assert.equal(plugin.resolveId.call(context, 'ajv/dist/2020.js', undefined), null, 'an import with no importer is left alone')
+  assert.equal(plugin.resolveId.call(context, 'ajv', library), null, 'only the exact 2020 entry is answered')
+  assert.deepEqual(warnings, [])
 })
 
 test('the shipped Baew bundle carries the precompiled validator, not ajv’s compiler', () => {
