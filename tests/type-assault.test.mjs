@@ -5,8 +5,8 @@ import { readFileSync } from 'node:fs'
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
 const style = html.match(/<style id="jaye-type-assault-v1">([\s\S]*?)<\/style>/)?.[1] ?? ''
 const markupStart = html.indexOf('<div class="jaye-type-assault"')
-const markupEnd = html.indexOf('</div>', markupStart)
-const markup = markupStart >= 0 ? html.slice(markupStart, html.indexOf('<span class="jaye-v5-blade"', markupStart)) : ''
+const bladeAt = html.indexOf('<span class="jaye-v5-blade"', markupStart)
+const markup = markupStart >= 0 && bladeAt > markupStart ? html.slice(markupStart, bladeAt) : ''
 
 test('type assault is a decorative layer inside the protected entrance sequence', () => {
   assert.ok(markupStart > 0, 'the type layer exists')
@@ -27,21 +27,21 @@ test('the palette uses warm paper, ink, restrained red and a deliberate navy acc
 })
 
 test('word collisions begin after Hi and clear before the existing JAYE transition', () => {
-  for (const [selector, delay] of [
-    ['.jaye-type-assault__paper', '2.34s'],
-    ['.jaye-type-assault__memory', '2.44s'],
-    ['.jaye-type-assault__art', '2.72s'],
-    ['.jaye-type-assault__fragments', '3.04s'],
-    ['.jaye-type-assault__of', '3.31s'],
-    ['.jaye-type-assault__becoming', '3.72s'],
-    ['.jaye-type-assault__words', '4.66s'],
-    ['.jaye-type-assault__remain', '4.98s'],
-    ['.jaye-type-assault__stamp', '5.98s'],
-    ['.jaye-type-assault__slash', '6.32s'],
+  for (const [animation, delay] of [
+    ['jtaPaperHit .58s', '2.34s'],
+    ['jtaSlamLeft .76s', '2.44s'],
+    ['jtaArtHit .72s', '2.72s'],
+    ['jtaSlamLeft .78s', '3.04s'],
+    ['jtaStamp .5s', '3.31s'],
+    ['jtaSlamRight .82s', '3.72s'],
+    ['jtaArtHit .7s', '4.66s'],
+    ['jtaSlamUp .78s', '4.98s'],
+    ['jtaNotFixed .48s', '5.98s'],
+    ['jtaSlash .34s', '6.32s'],
   ]) {
-    const i = style.indexOf(selector)
-    assert.ok(i >= 0, selector)
-    assert.ok(style.slice(i, i + 240).includes(delay), `${selector} starts at ${delay}`)
+    const i = style.indexOf(`animation:${animation}`)
+    assert.ok(i >= 0, animation)
+    assert.ok(style.slice(i, i + 140).includes(delay), `${animation} starts at ${delay}`)
   }
   assert.match(style, /\.jaye-type-assault\{\s*animation:jtaFieldExit \.28s ease 6\.58s both/)
   assert.match(style, /\.jaye-v5-wipe--ivory\{background:#18344F!important\}/)
