@@ -67,6 +67,7 @@ test('the print-impact upgrade keeps every mobile word inside the viewport', () 
 
 test('the JAYE reveal resolves as a hard paper plate with mechanical letter impacts', () => {
   assert.match(v2Style, /background:var\(--jta-paper\);/)
+  assert.match(v2Style, /\.jaye-v5-final-stage\{--jta-paper:#EEECE3;--jta-ink:#080A0D;--jta-navy:#18344F;--jta-red:#D94A35;/)
   assert.match(v2Style, /box-shadow:10px 10px 0 var\(--jta-red\)/)
   for (const name of ['jtaFinalJV2','jtaFinalAV2','jtaFinalYV2','jtaFinalEV2'])
     assert.ok(v2Style.includes(name))
