@@ -529,6 +529,8 @@ export default function StrobiGuide() {
   const presentCue = useCallback((next: Cue, priority: CuePriority, autoHideMs = DISMISS_MS[priority]): boolean => {
     // Ambient chatter never replaces a popup that is up, or an answer Baew is still preparing.
     if (priority === 'ambient' && (bubbleOpenRef.current || thinkingRef.current)) return false
+    // Anything the visitor asked for (menu, Explain, a tap) also means the welcome is no longer needed.
+    if (priority === 'user') introShown.current = true
     clearDismissTimer()
     const message = next.verbatim
       ? next.message
@@ -664,6 +666,10 @@ export default function StrobiGuide() {
     // both stay about eight seconds from the moment they appear.
     const priority: CuePriority = options.automatic ? 'important' : 'user'
     const hour = new Date().getHours()
+
+    // Once the visitor has asked Baew for something, the welcome has nothing left to introduce. Without this, a tap
+    // or a menu choice made in the second before the welcome fires would be replaced by it.
+    if (!options.automatic) introShown.current = true
 
     if (!section) {
       const generic = brain.respond({ intent: 'welcome', hour })
@@ -915,7 +921,8 @@ export default function StrobiGuide() {
       document.removeEventListener('visibilitychange', armWelcome)
     }
     const showWelcome = () => {
-      if (introShown.current || manualHiddenRef.current) return
+      if (introShown.current) { stopWatching(); return } // the visitor got there first, or it was already shown
+      if (manualHiddenRef.current) return
       if (!baewVisible()) { armWelcome(); return }
       introShown.current = true
       stopWatching()

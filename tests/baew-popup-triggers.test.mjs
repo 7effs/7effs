@@ -46,6 +46,14 @@ test('the welcome and the priority system are untouched (trigger-specific change
   assert.match(code, /const DISMISS_MS: Record<CuePriority, number> = \{ ambient: 4500, important: AUTO_HIDE_MS, user: AUTO_HIDE_MS \}/)
 })
 
+test('the welcome never replaces something the visitor already asked for', () => {
+  // In a browser on a fake clock: a tap or the menu inside the 1.25 s before the welcome used to be replaced by it.
+  assert.match(code, /if \(priority === 'user'\) introShown\.current = true/, 'the menu, "Surprise me" and every answer the visitor asked for')
+  assert.match(code, /if \(!options\.automatic\) introShown\.current = true/, 'a visitor request that is still being prepared')
+  assert.match(code, /if \(introShown\.current\) \{ stopWatching\(\); return \}/, 'a welcome that is no longer needed stops watching and does nothing')
+  assert.ok(code.indexOf("if (!options.automatic) introShown.current = true") < code.indexOf("const generic = brain.respond"), 'it is decided before any answer is built')
+})
+
 test('tap-to-explain: one delegated click listener, on section titles only, with every guard', () => {
   assert.equal((code.match(/document\.addEventListener\('click', onSectionTap\)/g) ?? []).length, 1)
   assert.equal((code.match(/document\.removeEventListener\('click', onSectionTap\)/g) ?? []).length, 1, 'removed on cleanup')
