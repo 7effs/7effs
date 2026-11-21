@@ -168,14 +168,17 @@ function getGuideSections(): HTMLElement[] {
   return Array.from(document.querySelectorAll<HTMLElement>(SECTION_SELECTOR)).filter(isGuideSection)
 }
 
-// Tap-to-explain. A section is explained only when the visitor taps its own title (h1 / h2). Scrolling to it, reading
-// it or hovering it never asks for anything. The title is the target because it is the one part of a section that is
-// not also something else: a tap that lands on, or inside, anything interactive (or anything styled as clickable) is
-// the page's own, and so is a tap that ends a text selection, a double tap, a modified click or a scripted click.
+// Tap-to-explain. A section is explained only when the visitor taps its own title (h1 / h2, or the Archive reading
+// sections' h3.archive-section-title, which is their only title). Scrolling to it, reading it or hovering it never
+// asks for anything. The title is the target because it is the one part of a section that is not also something
+// else: a tap that lands on, or inside, anything interactive (or anything styled as clickable) is the page's own,
+// and so is a tap that ends a text selection, a double tap, a modified click or a scripted click.
 const TAP_INTERACTIVE =
   'a[href], button, input, select, textarea, summary, label, video, audio, canvas, iframe, ' +
   '[role="button"], [role="link"], [role="tab"], [role="menuitem"], [role="switch"], [contenteditable], ' +
   '[tabindex]:not([tabindex="-1"]), [onclick], [data-strobi-ignore], #strobi-widget-root, #strobi-widget, .restore-strobi'
+
+const TAP_TITLE = 'h1, h2, h3.archive-section-title'
 
 function sectionForTap(event: MouseEvent): HTMLElement | undefined {
   const target = event.target
@@ -183,7 +186,7 @@ function sectionForTap(event: MouseEvent): HTMLElement | undefined {
   // detail === 1 is a real first click; 0 is a scripted or keyboard click, 2+ a double tap.
   if (event.button !== 0 || event.detail !== 1 || event.defaultPrevented) return undefined
   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return undefined
-  const heading = target.closest<HTMLElement>('h1, h2')
+  const heading = target.closest<HTMLElement>(TAP_TITLE)
   if (!heading || target.closest(TAP_INTERACTIVE)) return undefined
   const section = heading.closest<HTMLElement>(SECTION_SELECTOR)
   if (!section || !isGuideSection(section)) return undefined
