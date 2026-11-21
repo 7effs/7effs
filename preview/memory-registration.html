@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#08090b">
+<title>JAYE — Memory Registration / Entrance Study</title>
+<style>
+:root{color-scheme:dark;--ink:#08090b;--paper:#efeee9;--muted:#85878a;--ease:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#08090b;color:var(--paper);font-family:Arial,Helvetica,sans-serif}
+body{padding:clamp(16px,3vw,34px)}
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;max-width:1400px;margin:0 auto 18px}
+.kicker{font-size:10px;letter-spacing:.2em;color:#8e9094;text-transform:uppercase}
+h1{font-size:clamp(20px,3vw,34px);font-weight:500;letter-spacing:-.055em;margin:9px 0 5px}
+.sub{font-size:12px;color:#929398;line-height:1.6;margin:0;max-width:620px}
+.controls{display:flex;flex-wrap:wrap;gap:7px;justify-content:flex-end}
+button{border:1px solid #45484c;background:#101216;color:#e9e8e3;padding:10px 13px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+button[aria-pressed=true]{background:#e9e8e3;color:#090a0c;border-color:#e9e8e3}
+button:focus-visible{outline:2px solid white;outline-offset:3px}
+.stage-wrap{max-width:1400px;margin:auto}
+.stage{height:min(70vh,760px);min-height:470px;position:relative;overflow:hidden;background:#050505;border:1px solid #27292d;isolation:isolate}
+.stage:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.07;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.16) 4px,transparent 5px)}
+.scene{position:absolute;inset:0;overflow:hidden}
+.meta{position:absolute;z-index:10;top:22px;left:24px;color:#858585;font-size:9px;letter-spacing:.18em}
+.counter{position:absolute;z-index:10;right:24px;bottom:20px;color:#858585;font-size:9px;letter-spacing:.14em;font-variant-numeric:tabular-nums}
+.progress{position:absolute;z-index:12;left:0;right:0;bottom:0;height:1px;background:#ffffff17}
+.progress i{display:block;height:100%;background:#efeee9;transform:scaleX(0);transform-origin:left}
+.hi-scene{position:absolute;inset:0}
+.wall{position:absolute;left:0;top:50%;width:calc(var(--cx) - 9vw);height:1px;background:#f3f2ef;opacity:0;transform:scaleX(0);transform-origin:left}
+.hi{position:absolute;left:var(--cx);top:50%;transform:translate(-50%,-53%);font-size:clamp(150px,34vw,385px);font-weight:750;letter-spacing:-.105em;line-height:.76;white-space:nowrap}
+.hi span{display:inline-block;opacity:0}
+.plinth{position:absolute;left:0;top:calc(50% + clamp(120px,15vw,210px));width:calc(var(--cx) + 8vw);height:1px;background:#efeee9;transform:scaleX(0);transform-origin:left}
+.plinth-label{position:absolute;left:calc(var(--cx) - 8vw);top:calc(50% + clamp(145px,18vw,245px));font-size:8px;letter-spacing:.23em;color:#929292;opacity:0}
+.strip{position:absolute;z-index:4;left:0;top:43%;width:100%;height:14%;background:var(--paper);color:#080808;display:grid;place-items:center;transform:scaleX(0);transform-origin:left;overflow:hidden}
+.strip span{font-size:clamp(12px,1.8vw,22px);font-weight:700;letter-spacing:.22em;white-space:nowrap;clip-path:inset(0 100% 0 0)}
+.phrase{position:absolute;z-index:3;left:7vw;right:7vw;top:50%;transform:translateY(-50%);font-size:clamp(28px,6.5vw,88px);font-weight:650;letter-spacing:-.075em;line-height:.96}
+.phrase span{display:block;overflow:hidden}
+.phrase b{display:block;font-weight:inherit;opacity:0;transform:translateY(115%);filter:blur(4px)}
+.blade{position:absolute;z-index:5;left:50%;top:50%;width:5px;height:145vh;background:#f3f2ef;transform:translate(-50%,-50%) rotate(28deg) scaleY(0)}
+.wipe{position:absolute;z-index:7;inset:0;background:var(--paper);transform:translateY(105%)}
+.wipe.black{z-index:8;background:#050505}
+.wordmark{position:absolute;z-index:9;left:0;right:0;top:45%;display:flex;justify-content:center;white-space:nowrap;transform:translateY(-50%);font-size:clamp(78px,21vw,255px);font-weight:750;letter-spacing:-.105em;line-height:.9}
+.wordmark span{display:inline-block;opacity:0;transform:translateY(50%)}
+.wordmark small{font-size:9px;letter-spacing:.24em;writing-mode:vertical-rl;align-self:center;margin-left:1em;color:#999}
+.rule{position:absolute;z-index:10;left:7vw;right:7vw;bottom:25%;height:1px;background:#ffffff55;transform:scaleX(0)}
+.tag{position:absolute;z-index:10;left:7vw;bottom:calc(25% - 25px);font-size:9px;letter-spacing:.19em;color:#999;opacity:0}
+.registration{position:absolute;inset:0;z-index:11;pointer-events:none;opacity:0}
+.reg-line{position:absolute;left:7vw;right:7vw;top:50%;height:1px;background:linear-gradient(90deg,transparent,#d7d5ce 20%,#d7d5ce 80%,transparent);transform:scaleX(0);transform-origin:center}
+.reg-mark{position:absolute;left:var(--x,50%);top:var(--y,50%);transform:translate(-50%,-50%);font-size:clamp(30px,7vw,92px);font-weight:650;letter-spacing:-.075em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(239,238,233,.18);opacity:0}
+.reg-mark:before,.reg-mark:after{content:attr(data-text);position:absolute;inset:0;color:transparent;-webkit-text-stroke:1px rgba(239,238,233,.12)}
+.reg-mark:before{transform:translate(-9px,3px);opacity:.8}
+.reg-mark:after{transform:translate(8px,-2px);opacity:.55}
+.reg-caption{position:absolute;left:7vw;bottom:18%;font-size:9px;letter-spacing:.22em;color:#9a9993;opacity:0}
+.mode-registration .registration{opacity:1}
+.mode-registration .reg-line{animation:regline 1.1s var(--ease) 2.5s both}
+.mode-registration .reg-mark{animation:register 1.15s var(--ease) var(--delay,2.5s) both}
+.mode-registration .reg-mark:before{animation:imprintA 1.15s var(--ease) var(--delay,2.5s) both}
+.mode-registration .reg-mark:after{animation:imprintB 1.15s var(--ease) var(--delay,2.5s) both}
+.mode-registration .reg-caption{animation:captionIn .7s ease 6.8s both}
+.mode-registration .hi{animation:hiHold 2.1s ease .4s both}
+.mode-registration .hi span:first-child{animation:letterH .9s var(--ease) .46s both}
+.mode-registration .hi span:last-child{animation:letteri .9s var(--ease) .7s both}
+.mode-registration .wall{animation:wallIn .8s var(--ease) .04s both}
+.mode-registration .plinth{animation:plinthIn .8s var(--ease) 1s both}
+.mode-registration .plinth-label{animation:captionIn .5s ease 1.45s both}
+.mode-registration .strip{animation:strip .95s cubic-bezier(.76,0,.24,1) 2.34s both}
+.mode-registration .strip span{animation:textIn .48s var(--ease) 2.58s both}
+.mode-registration .phrase.one b:first-child{animation:phraseIn .68s var(--ease) 3.28s both}
+.mode-registration .phrase.one b:last-child{animation:phraseIn .72s var(--ease) 3.45s both}
+.mode-registration .phrase.two b:first-child{animation:phraseIn .68s var(--ease) 4.77s both}
+.mode-registration .phrase.two b:last-child{animation:phraseIn .72s var(--ease) 4.94s both}
+.mode-registration .blade{animation:bladeIn 1.2s var(--ease) 5.92s both}
+.mode-registration .wipe{animation:wipe .62s cubic-bezier(.76,0,.24,1) 6.86s both}
+.mode-registration .wipe.black{animation:wipe .57s cubic-bezier(.76,0,.24,1) 7.49s both}
+.mode-registration .wordmark span{animation:word .72s var(--ease) calc(7.98s + var(--n)*.14s) both}
+.mode-registration .rule{animation:ruleIn .78s var(--ease) 8.9s both}
+.mode-registration .tag{animation:captionIn .48s var(--ease) 9.18s both}
+.mode-baseline .hi{animation:hiHold 2.1s ease .4s both}
+.mode-baseline .hi span:first-child{animation:letterH .9s var(--ease) .46s both}
+.mode-baseline .hi span:last-child{animation:letteri .9s var(--ease) .7s both}
+.mode-baseline .wall{animation:wallIn .8s var(--ease) .04s both}
+.mode-baseline .plinth{animation:plinthIn .8s var(--ease) 1s both}
+.mode-baseline .plinth-label{animation:captionIn .5s ease 1.45s both}
+.mode-baseline .strip{animation:strip .95s cubic-bezier(.76,0,.24,1) 2.34s both}
+.mode-baseline .strip span{animation:textIn .48s var(--ease) 2.58s both}
+.mode-baseline .phrase.one b:first-child{animation:phraseIn .68s var(--ease) 3.28s both}
+.mode-baseline .phrase.one b:last-child{animation:phraseIn .72s var(--ease) 3.45s both}
+.mode-baseline .phrase.two b:first-child{animation:phraseIn .68s var(--ease) 4.77s both}
+.mode-baseline .phrase.two b:last-child{animation:phraseIn .72s var(--ease) 4.94s both}
+.mode-baseline .blade{animation:bladeIn 1.2s var(--ease) 5.92s both}
+.mode-baseline .wipe{animation:wipe .62s cubic-bezier(.76,0,.24,1) 6.86s both}
+.mode-baseline .wipe.black{animation:wipe .57s cubic-bezier(.76,0,.24,1) 7.49s both}
+.mode-baseline .wordmark span{animation:word .72s var(--ease) calc(7.98s + var(--n)*.14s) both}
+.mode-baseline .rule{animation:ruleIn .78s var(--ease) 8.9s both}
+.mode-baseline .tag{animation:captionIn .48s var(--ease) 9.18s both}
+@keyframes wallIn{to{opacity:.65;transform:scaleX(1)}}
+@keyframes letterH{0%{opacity:0;transform:translateX(-12vw)}75%{opacity:1;transform:translateX(1%)}100%{opacity:1;transform:none}}
+@keyframes letteri{0%{opacity:0;transform:translateX(12vw)}75%{opacity:1;transform:translateX(-1%)}100%{opacity:1;transform:none}}
+@keyframes hiHold{to{opacity:1}}
+@keyframes plinthIn{to{transform:scaleX(1)}}
+@keyframes captionIn{to{opacity:1;transform:translateY(0)}}
+@keyframes strip{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}65%{transform:scaleX(1);transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
+@keyframes textIn{to{clip-path:inset(0)}}
+@keyframes phraseIn{0%{opacity:0;transform:translateY(115%);filter:blur(5px)}72%{opacity:1;transform:translateY(-2%);filter:blur(0)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes bladeIn{0%{transform:translate(-50%,-50%) rotate(28deg) scaleY(0)}70%{transform:translate(-50%,-50%) rotate(28deg) scaleY(1.03)}100%{transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}}
+@keyframes wipe{to{transform:translateY(-105%)}}
+@keyframes word{0%{opacity:0;transform:translateY(50%);filter:blur(4px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes ruleIn{to{transform:scaleX(1)}}
+@keyframes regline{to{transform:scaleX(1);opacity:.6}}
+@keyframes register{0%{opacity:0;transform:translate(-50%,-50%) translateY(13px);letter-spacing:-.1em;-webkit-text-stroke-color:rgba(239,238,233,.03)}38%{opacity:.8}72%{opacity:.55;letter-spacing:-.075em;-webkit-text-stroke-color:rgba(239,238,233,.22)}100%{opacity:0;transform:translate(-50%,-50%) translateY(-5px);-webkit-text-stroke-color:rgba(239,238,233,0)}}
+@keyframes imprintA{0%{transform:translate(-50%,-50%) translate(-12px,4px);opacity:0}40%{opacity:.9}100%{transform:translate(-50%,-50%) translate(0,0);opacity:0}}
+@keyframes imprintB{0%{transform:translate(-50%,-50%) translate(10px,-3px);opacity:0}40%{opacity:.6}100%{transform:translate(-50%,-50%) translate(0,0);opacity:0}}
+@media(max-width:600px){.stage{min-height:530px;height:68svh}.hi{font-size:clamp(138px,40vw,230px)}.phrase{left:6vw;right:6vw;font-size:clamp(26px,7.6vw,44px)}.meta{left:15px;top:16px}.counter{right:15px;bottom:14px}.reg-caption{bottom:13%}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-delay:0ms!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+<div><div class="kicker">JAYE / entrance study / 01</div><h1>Memory Registration</h1><p class="sub">A motion study, not a site change. Compare the existing visual language with a restrained archival imprint that briefly mis-registers, then resolves into the word.</p></div>
+<div class="controls">
+<button id="baseline" aria-pressed="true">Current direction</button>
+<button id="registration" aria-pressed="false">Memory Registration</button>
+<button id="replay">Replay 10.76s</button>
+</div>
+</header>
+<main class="stage-wrap">
+<div class="stage mode-baseline" id="stage" aria-label="JAYE entrance motion preview">
+<div class="scene">
+<div class="meta">JAYE — PERSONAL ARCHIVE</div><div class="counter" id="counter">00.00 / 10.76</div>
+<div class="hi-scene"><div class="wall"></div><div class="hi"><span>H</span><span>i</span></div><div class="plinth"></div><div class="plinth-label">A PRESENCE / 001</div></div>
+<div class="strip"><span>MEMORY / ART</span></div>
+<div class="phrase one"><span><b>FRAGMENTS OF</b></span><span><b>BECOMING</b></span></div>
+<div class="phrase two"><span><b>WORDS THAT</b></span><span><b>REMAIN</b></span></div>
+<div class="blade"></div><div class="wipe"></div><div class="wipe black"></div>
+<div class="wordmark"><span style="--n:0">J</span><span style="--n:1">A</span><span style="--n:2">Y</span><span style="--n:3">E</span><small>PERSONAL ARCHIVE</small></div>
+<div class="rule"></div><div class="tag">A RECORD OF BECOMING</div>
+<div class="registration">
+<div class="reg-line"></div>
+<div class="reg-mark" data-text="MEMORY / ART" style="--x:50%;--y:50%;--delay:2.45s">MEMORY / ART</div>
+<div class="reg-mark" data-text="FRAGMENTS OF BECOMING" style="--x:50%;--y:50%;--delay:3.35s;font-size:clamp(20px,5vw,66px)">FRAGMENTS OF BECOMING</div>
+<div class="reg-mark" data-text="WORDS THAT REMAIN" style="--x:50%;--y:50%;--delay:4.85s;font-size:clamp(22px,5.4vw,70px)">WORDS THAT REMAIN</div>
+<div class="reg-mark" data-text="JAYE" style="--x:50%;--y:45%;--delay:7.98s;font-size:clamp(78px,21vw,255px)">JAYE</div>
+<div class="reg-caption">THE IMPRESSION PRECEDES THE RECORD</div>
+</div>
+<div class="progress"><i id="progress"></i></div>
+</div>
+</div>
+</main>
+<script>
+const stage=document.getElementById('stage'),progress=document.getElementById('progress'),counter=document.getElementById('counter');
+let mode='baseline',started=performance.now(),raf=0;
+function restart(){stage.classList.remove('mode-baseline','mode-registration');void stage.offsetWidth;stage.classList.add('mode-'+mode);started=performance.now();cancelAnimationFrame(raf);tick()}
+function tick(){const t=Math.min(10.76,(performance.now()-started)/1000);progress.style.transform='scaleX('+(t/10.76)+')';counter.textContent='00.'+String(Math.floor(t*100)).padStart(2,'0')+' / 10.76';if(t<10.76)raf=requestAnimationFrame(tick)}
+function setMode(next){mode=next;document.getElementById('baseline').setAttribute('aria-pressed',String(mode==='baseline'));document.getElementById('registration').setAttribute('aria-pressed',String(mode==='registration'));restart()}
+document.getElementById('baseline').addEventListener('click',()=>setMode('baseline'));
+document.getElementById('registration').addEventListener('click',()=>setMode('registration'));
+document.getElementById('replay').addEventListener('click',restart);
+restart();
+</script>
+</body>
+</html>
