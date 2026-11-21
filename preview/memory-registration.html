@@ -27,7 +27,7 @@ button:focus-visible{outline:2px solid white;outline-offset:3px}
 .progress i{display:block;height:100%;background:#efeee9;transform:scaleX(0);transform-origin:left}
 .hi-scene{position:absolute;inset:0}
 .wall{position:absolute;left:0;top:50%;width:calc(var(--cx) - 9vw);height:1px;background:#f3f2ef;opacity:0;transform:scaleX(0);transform-origin:left}
-.hi{position:absolute;left:var(--cx);top:50%;transform:translate(-50%,-53%);font-size:clamp(150px,34vw,385px);font-weight:750;letter-spacing:-.105em;line-height:.76;white-space:nowrap}
+.hi{position:absolute;left:var(--cx);top:50%;transform:translate(-50%,-53%);opacity:0;font-size:clamp(150px,34vw,385px);font-weight:750;letter-spacing:-.105em;line-height:.76;white-space:nowrap}
 .hi span{display:inline-block;opacity:0}
 .plinth{position:absolute;left:0;top:calc(50% + clamp(120px,15vw,210px));width:calc(var(--cx) + 8vw);height:1px;background:#efeee9;transform:scaleX(0);transform-origin:left}
 .plinth-label{position:absolute;left:calc(var(--cx) - 8vw);top:calc(50% + clamp(145px,18vw,245px));font-size:8px;letter-spacing:.23em;color:#929292;opacity:0}
@@ -66,7 +66,7 @@ button:focus-visible{outline:2px solid white;outline-offset:3px}
 .mode-registration .strip{animation:strip .95s cubic-bezier(.76,0,.24,1) 2.34s both}
 .mode-registration .strip span{animation:textIn .48s var(--ease) 2.58s both}
 .mode-registration .phrase.one b:first-child{animation:phraseIn .68s var(--ease) 3.28s both}
-.mode-registration .phrase.one b:last-child{animation:phraseIn .72s var(--ease) 3.45s both}
+.mode-registration .phrase.one b:last-child{animation:phraseIn .72s var(--ease) 3.45s both}\n.mode-registration .phrase.one{animation:phraseOut .4s ease-in 4.55s both}\n.mode-registration .phrase.two{animation:phraseOut .4s ease-in 6.05s both}
 .mode-registration .phrase.two b:first-child{animation:phraseIn .68s var(--ease) 4.77s both}
 .mode-registration .phrase.two b:last-child{animation:phraseIn .72s var(--ease) 4.94s both}
 .mode-registration .blade{animation:bladeIn 1.2s var(--ease) 5.92s both}
@@ -84,7 +84,7 @@ button:focus-visible{outline:2px solid white;outline-offset:3px}
 .mode-baseline .strip{animation:strip .95s cubic-bezier(.76,0,.24,1) 2.34s both}
 .mode-baseline .strip span{animation:textIn .48s var(--ease) 2.58s both}
 .mode-baseline .phrase.one b:first-child{animation:phraseIn .68s var(--ease) 3.28s both}
-.mode-baseline .phrase.one b:last-child{animation:phraseIn .72s var(--ease) 3.45s both}
+.mode-baseline .phrase.one b:last-child{animation:phraseIn .72s var(--ease) 3.45s both}\n.mode-baseline .phrase.one{animation:phraseOut .4s ease-in 4.55s both}\n.mode-baseline .phrase.two{animation:phraseOut .4s ease-in 6.05s both}
 .mode-baseline .phrase.two b:first-child{animation:phraseIn .68s var(--ease) 4.77s both}
 .mode-baseline .phrase.two b:last-child{animation:phraseIn .72s var(--ease) 4.94s both}
 .mode-baseline .blade{animation:bladeIn 1.2s var(--ease) 5.92s both}
@@ -101,7 +101,7 @@ button:focus-visible{outline:2px solid white;outline-offset:3px}
 @keyframes captionIn{to{opacity:1;transform:translateY(0)}}
 @keyframes strip{0%{transform:scaleX(0);transform-origin:left}50%{transform:scaleX(1);transform-origin:left}65%{transform:scaleX(1);transform-origin:right}100%{transform:scaleX(0);transform-origin:right}}
 @keyframes textIn{to{clip-path:inset(0)}}
-@keyframes phraseIn{0%{opacity:0;transform:translateY(115%);filter:blur(5px)}72%{opacity:1;transform:translateY(-2%);filter:blur(0)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
+@keyframes phraseOut{to{opacity:0;transform:translateY(-58%) scale(.985);filter:blur(3px)}}\n@keyframes phraseIn{0%{opacity:0;transform:translateY(115%);filter:blur(5px)}72%{opacity:1;transform:translateY(-2%);filter:blur(0)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
 @keyframes bladeIn{0%{transform:translate(-50%,-50%) rotate(28deg) scaleY(0)}70%{transform:translate(-50%,-50%) rotate(28deg) scaleY(1.03)}100%{transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}}
 @keyframes wipe{to{transform:translateY(-105%)}}
 @keyframes word{0%{opacity:0;transform:translateY(50%);filter:blur(4px)}100%{opacity:1;transform:translateY(0);filter:blur(0)}}
