@@ -52,3 +52,26 @@ test('mobile and reduced-motion fallbacks are defined', () => {
   assert.match(style, /@media\(prefers-reduced-motion:reduce\)/)
   assert.match(style, /\.jaye-type-assault\{display:none!important\}/)
 })
+
+
+const v2Style = html.match(/<style id="jaye-entry-brutalist-v2">([\s\S]*?)<\/style>/)?.[1] ?? ''
+
+test('the print-impact upgrade keeps every mobile word inside the viewport', () => {
+  assert.ok(v2Style, 'the v2 entrance style exists')
+  assert.match(v2Style, /\.jaye-type-assault__memory\{left:4%;right:4%;/)
+  assert.match(v2Style, /\.jaye-type-assault__fragments\{left:4%;right:4%;/)
+  assert.match(v2Style, /#jaye-intro-v1 \.jaye-type-assault__remain\{left:4%;right:4%;/)
+  assert.match(v2Style, /@media\(max-width:600px\)/)
+  assert.match(v2Style, /jtaTypeImpactV2/)
+})
+
+test('the JAYE reveal resolves as a hard paper plate with mechanical letter impacts', () => {
+  assert.match(v2Style, /background:var\(--jta-paper\);/)
+  assert.match(v2Style, /\.jaye-v5-final-stage\{--jta-paper:#EEECE3;--jta-ink:#080A0D;--jta-navy:#18344F;--jta-red:#D94A35;/)
+  assert.match(v2Style, /box-shadow:10px 10px 0 var\(--jta-red\)/)
+  for (const name of ['jtaFinalJV2','jtaFinalAV2','jtaFinalYV2','jtaFinalEV2'])
+    assert.ok(v2Style.includes(name))
+  assert.match(v2Style, /jaye-v5-wordmark>span:nth-child\(1\)[\s\S]*?7\.98s/)
+  assert.match(v2Style, /@media\(prefers-reduced-motion:reduce\)/)
+  assert.doesNotMatch(v2Style, /@import|https?:\/\/|<script/)
+})
