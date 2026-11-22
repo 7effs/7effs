@@ -7977,7 +7977,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  const coarse=matchMedia('(pointer: coarse)');
  const isMobile=()=>coarse.matches||Math.min(innerWidth,innerHeight)<=600;
  const SPIN_SPEED=.104*.95; /* outer rings only: was .104 (.12 before that), now x0.95. The planet itself does not turn */
- const QUALITY=[1,.8,.62];
+ const QUALITY=[.98,.8,.62]; /* level 0 draws 2% fewer ring particles (approved visual trade for speed; the planet and every kept particle are unchanged) */
  const MOBILE_FPS=36,DESKTOP_FPS=60;
  const BAND_STROKES=['rgba(128,128,128,.22)','rgba(160,160,160,.20)','rgba(255,255,255,.12)','rgba(96,96,96,.18)'];
  const RING_EDGES=[1.39,1.72,2.08,2.59];
@@ -8003,7 +8003,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  const rPX=new Float32Array(ringN),rPY=new Float32Array(ringN),rRad=new Float32Array(ringN),rBk=new Int16Array(ringN),rOrd=new Uint16Array(ringN),rStart=new Int32Array(RING_B+1),rCur=new Int32Array(RING_B);
  const dX0=new Float32Array(dustN),dY0=new Float32Array(dustN),dSeed=new Float32Array(dustN),dSize=new Float32Array(dustN),dX=new Float32Array(dustN),dY=new Float32Array(dustN),dBk=new Int16Array(dustN),dOrd=new Uint16Array(dustN),dStart=new Int32Array(DUST_B+1),dCur=new Int32Array(DUST_B);
  for(let i=0;i<dustN;i++){dX0[i]=rand(-1,1);dY0[i]=rand(-1,1);dSeed[i]=Math.random()*TAU;dSize[i]=rand(.25,.75)}
- let nRing=ringN;
+ let nRing=Math.floor(ringN*QUALITY[0]);
  /* fixed view: the roll and tilt never change */
  const roll=-.11,tilt=.43,cr=Math.cos(roll),sr=Math.sin(roll),ct=Math.cos(tilt),st=Math.sin(tilt);
  let pX=0,pY=0;

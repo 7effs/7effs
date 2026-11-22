@@ -51,7 +51,7 @@ test('frame-rate caps, pixel-ratio cap and adaptive quality', () => {
   assert.match(code, /MOBILE_FPS=36,DESKTOP_FPS=60/)
   assert.match(code, /if\(now-lastDraw<minDt\)return/)
   assert.match(code, /Math\.min\(devicePixelRatio\|\|1,mobile\?1\.5:2\)/, 'was a flat 2')
-  assert.match(code, /QUALITY=\[1,\.8,\.62\]/)
+  assert.match(code, /QUALITY=\[\.98,\.8,\.62\]/, 'level 0 is 98% of the ring particles; the lower levels are unchanged')
   assert.match(code, /function adapt\(/)
   assert.match(code, /setLevel\(level\+1,now\)/)
   assert.match(code, /setLevel\(level-1,now\)/, 'quality comes back when the device keeps up')
@@ -126,4 +126,16 @@ test('the three background layers keep one height and one anchor while a phone b
   // the canvas takes its height from CSS, never from the shrinking and growing innerHeight
   assert.match(code, /nh=canvas\.clientHeight\|\|innerHeight/)
   assert.doesNotMatch(code, /canvas\.style\.height/)
+})
+
+test('level 0 draws 2% fewer ring particles: same particles, the last 2% of the list is simply not drawn', () => {
+  // the first frame and every return to level 0 use the same count
+  assert.match(code, /let nRing=Math\.floor\(ringN\*QUALITY\[0\]\)/)
+  assert.match(code, /nRing=Math\.floor\(ringN\*QUALITY\[l\]\)/)
+  // the particles are still generated exactly as before (same count, same random draws), so every kept particle sits where it always did
+  assert.match(code, /ringCount=reduce\?2600:5750/)
+  assert.match(code, /const a=rand\(0,TAU\),r=Math\.sqrt\(rand\(1\.38\*1\.38,2\.62\*2\.62\)\),seed=Math\.random\(\),size=rand\(\.35,1\.15\),band=Math\.random\(\)/)
+  // the planet is untouched and the frame still draws only the first nRing particles
+  assert.match(code, /for\(let i=0;i<nRing;i\+\+\)\{/)
+  assert.doesNotMatch(code, /nCore/)
 })
