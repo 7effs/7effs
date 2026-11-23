@@ -14,9 +14,9 @@ import { UNKNOWN_LEAD } from '../src/baew/knowledge/index.ts'
 const SET_A = [
 
   // direct and short
-  ['beliefs', 'beliefs'], ['Beliefs?', 'beliefs'], ['tell me about memories', 'memories'], ['memories', 'memories'], ['favourites', 'favourites'], ['favorites', 'favourites'],
-  ['little things', 'little-things'], ['the people', 'people'], ['friends', 'people'], ['things i like', 'things-i-like'], ['still figuring out', 'figuring-out'],
-  ['the things i do', 'things-i-do'], ['hobbies', ['things-i-do','ambiguous']], ['what are the beliefs about', 'beliefs'],
+  ['the practice', 'beliefs'], ['The Practice?', 'beliefs'], ['tell me about only later', 'things-i-like'], ['only later', 'things-i-like'], ['the usual', 'favourites'], ['favourites', 'favourites'], ['favorites', 'favourites'],
+  ['not much to explain', 'little-things'], ['by chance', 'people'], ['friends', 'people'], ['open tabs', 'things-i-do'], ['some days', 'figuring-out'], 
+  ['the practice', 'beliefs'], ['hobbies', ['beliefs','ambiguous']], ['what are the better questions about', 'memories'], 
   ['demi', 'demi'], ['cat', 'cat-ai'], ['the cat chat', 'cat-ai'], ['effs cat', 'cat-ai'], ['impossible', 'the-impossible'], ['the impossible game', 'the-impossible'],
   ['evidence', 'evidence-archive'], ['inference', 'inference-engine'], ['anomaly', 'anomaly-protocol'], ['glimpse', 'glimpse'], ['parent space', 'parent-space'], ['footer', 'footer'],
   ['music', ['favourites','ambiguous']], ['what is blue', 'favourites'], ['kendrick', 'favourites'], ['dogs', 'favourites'],
@@ -29,7 +29,7 @@ const SET_A = [
   ['how do i hide you', 'faq:hide-baew'], ['go away', 'faq:hide-baew'], ['is my progress saved', 'faq:saved-progress'], ['is there hindi', 'faq:language'], ['does this use ai', 'faq:ai-use'], ['is the impossible ai', 'faq:ai-use'],
   ['how is the page organised', 'faq:page-order'], ['where should i start', 'faq:page-order'], ['what are the headings in the archive', 'faq:archive-headings'], ['how are archive sections grouped', 'faq:archive-headings'],
   // relationships and navigation
-  ['what comes after memories', 'memories'], ['what is before demi', 'demi'], ['where is glimpse', 'glimpse'], ['take me to the cat', 'cat-ai'], ['where are the favourites', 'favourites'], ['how do i get to the anomaly protocol', 'anomaly-protocol'],
+  ['what comes after memories', 'things-i-like'], ['what is before demi', 'demi'], ['where is glimpse', 'glimpse'], ['take me to the cat', 'cat-ai'], ['where are the favourites', 'favourites'], ['how do i get to the anomaly protocol', 'anomaly-protocol'],
   // gated
   ['what is the password for demi', 'faq:demi-access'], ['open demi for me', 'faq:demi-access'], ['what is inside demi', 'demi'], ['whats after demi', 'demi'], ['pin', 'faq:demi-access'],
   // unsupported / unknown: must not invent
@@ -41,24 +41,24 @@ const SET_A = [
 
 const SET_B = [
 
-  ['what does little things talk about', 'little-things'], ['is there anything on chess', 'favourites'], ['what games does he play', ['favourites','ambiguous']], ['does the author have pets', 'favourites'],
-  ['anything about friendship', 'people'], ['what does he believe', 'beliefs'], ['tell me about the cat ai', 'cat-ai'], ['can i chat with the cat', 'cat-ai'], ['what is the evidence archive', 'evidence-archive'],
+  ['what does not much to explain talk about', 'little-things'], ['is there anything on chess', 'favourites'], ['what games does he play', ['favourites','ambiguous']], ['does the author have pets', 'favourites'],
+  ['anything about friendship', 'people'], ['what does he believe', 'memories'], ['tell me about the cat ai', 'cat-ai'], ['can i chat with the cat', 'cat-ai'], ['what is the evidence archive', 'evidence-archive'],
   ['where do i read the story', ['unknown','ambiguous','after-memory']], ['what is in the footer', 'footer'], ['what is the first thing on the page', 'home'], ['homepage', 'home'], ['what is the inference engine', 'inference-engine'],
   ['are there any games', ['the-impossible','ambiguous']], ['tell me about the anomaly protocol', 'anomaly-protocol'], ['what is parent space', 'parent-space'], ['how many challenges are in the anomaly protocol', 'anomaly-protocol'],
   ['what is demi', 'demi'], ['what happens inside demi', 'demi'], ['tell me the secret in demi', 'demi'], ['can you describe the story in demi', 'demi'], ['how do i enter demi', ['faq:demi-access','demi']], ['what does after the memory contain', 'after-memory'],
   ['does this site track me', 'unknown'], ['is there a dark mode', 'unknown'], ['can i download the music', 'unknown'], ['what browser should i use', 'unknown'], ['who is cvechz', 'faq:who-made'], ['what languages does it support', 'faq:language'],
   ['will you remember me next time', 'faq:saved-progress'], ['how do i bring baew back', 'faq:hide-baew'], ['what does the archive contain', 'archive-gateway'], ['how many sections are there', 'faq:page-order'],
-  ['tell me something about things i like', 'things-i-like'], ['what are the memories about', 'memories'], ['is the author sad', 'unknown'], ['what is the authors name', 'faq:private-details'], ['when was the site made', 'unknown'], ['is it free', 'unknown'],
+  ['tell me something about open tabs', 'things-i-do'], ['what are the memories about', 'things-i-like'], ['is the author sad', 'unknown'], ['what is the authors name', 'faq:private-details'], ['when was the site made', 'unknown'], ['is it free', 'unknown'],
 ]
 
 const SET_C = [
 
   ['what is this place', 'faq:what-is-jaye'], ['can you explain the archive', 'archive-gateway'], ['tell me about the music player', 'glimpse'], ['i want to try a puzzle', ['the-impossible', 'anomaly-protocol', 'ambiguous']],
-  ['what is node 12', 'evidence-archive'], ['what do the beliefs say about being smart', 'beliefs'], ['does he have dogs', 'favourites'], ['what kind of friends', 'people'], ['what is after memories', 'memories'],
+  ['what is node 12', 'evidence-archive'], ['what do the better questions say about being smart', 'memories'], ['does he have dogs', 'favourites'], ['what kind of friends', 'people'], ['what is after memories', 'things-i-like'],
   ['how do i switch the background', 'unknown'], ['can you help me', 'faq:what-is-baew'], ['bye', 'unknown'], ['thanks', 'unknown'], ['what is hindi mode', 'faq:language'], ['is anything saved', 'faq:saved-progress'],
   ['tell me about the parent space interface', 'parent-space'], ['what is a counterexample terminal', 'anomaly-protocol'], ['who is effs', ['cat-ai', 'unknown', 'faq:what-is-jaye']], ['is the cat real', 'cat-ai'], ['where is the footer', 'footer'],
   ['what is the anomaly', 'anomaly-protocol'], ['show me the favourites', 'favourites'], ['describe section 7', 'figuring-out'], ['what is the last section', 'faq:page-order'], ['does he like football', ['favourites','things-i-like']],
-  ['what is the opening page', 'home'], ['who wrote the story', ['faq:who-made', 'unknown', 'after-memory', 'ambiguous']], ['are you a bot', ['faq:ai-use', 'faq:what-is-baew']], ['is this site safe', 'unknown'], ['what does the author think about life', ['beliefs', 'ambiguous']],
+  ['what is the opening page', 'home'], ['who wrote the story', ['faq:who-made', 'unknown', 'after-memory', 'ambiguous']], ['are you a bot', ['faq:ai-use', 'faq:what-is-baew']], ['is this site safe', 'unknown'], ['what does the author think about beliefs', 'memories'],
 ]
 
 const brain = createBrain()
@@ -100,11 +100,13 @@ test('questions: gated areas, ambiguity, credentials and private details are nev
 })
 
 test('questions: the title alone beats a section that only shares a word, and plurals match singulars', () => {
-  assert.equal(ask('the things i do').entryId, 'things-i-do')
-  assert.equal(ask('memories').entryId, 'memories')
-  assert.equal(ask('what are the memories about').entryId, 'memories')
+  assert.equal(ask('the practice').entryId, 'beliefs')
+  assert.equal(ask('only later').entryId, 'things-i-like')
+  assert.equal(ask('what are the memories about').entryId, 'things-i-like')
   assert.equal(ask('describe section 7').entryId, 'figuring-out')
   assert.equal(ask('what comes after memories').topic, 'navigation')
+  assert.equal(ask('what comes after Only Later').topic, 'navigation')
+  assert.ok(ask('what comes after Only Later').text.includes('Better Questions'))
   assert.equal(ask('are there any games').topic, 'ambiguous')
 })
 
