@@ -382,13 +382,15 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
       return current ? explain(current, req.progress) : unknownSection(req)
     }
 
-    // "What comes after Memories": the position of the area named, not its contents.
-    if (!titled && RELATION_WORDS.test(raw)) {
+    // A relation question asks for a section's position, even when its full title appears in the query.
+    // Resolve the titled section first; otherwise use the remaining words to identify it.
+    if (RELATION_WORDS.test(raw)) {
       RELATION_WORDS.lastIndex = 0
       const rest = new Set(contentTokens(raw.replace(RELATION_WORDS, ' ')).filter(word => !DEICTIC.has(word) && word !== 'come'))
       RELATION_WORDS.lastIndex = 0
       const { best: named } = bestByWords(rest, null)
-      if (named && named.kind === 'entry' && named.score >= 3) return answerFor(named.entry, position(named.entry), 'navigation', null)
+      const relationEntry = titled?.entry ?? (named && named.kind === 'entry' && named.score >= 3 ? named.entry : null)
+      if (relationEntry) return answerFor(relationEntry, position(relationEntry), 'navigation', null)
     }
     RELATION_WORDS.lastIndex = 0
 
