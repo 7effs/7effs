@@ -80,15 +80,15 @@ test('the built Baew bundle carries the flick (so the page that ships has it)', 
 })
 
 test('Saturn doorway stays fixed and does not follow pointer movement', () => {
-  assert.match(motion, /function follow\\(host, target, nameX, nameY\\)/)
-  assert.equal((motion.match(/requestAnimationFrame\\(/g) ?? []).length, 2, 'the hero parallax keeps its single armed loop')
-  assert.match(motion, /if\\(!raf\\)\\{last = performance\\.now\\(\\);raf = requestAnimationFrame\\(tick\\);\\}/, 'a second loop can never start while one is armed')
+  assert.match(motion, /function follow\(host, target, nameX, nameY\)/)
+  assert.equal((motion.match(/requestAnimationFrame\(/g) ?? []).length, 2, 'the hero parallax keeps its single armed loop')
+  assert.match(motion, /if\(!raf\)\{last = performance\.now\(\);raf = requestAnimationFrame\(tick\);\}/, 'a second loop can never start while one is armed')
   assert.match(motion, /raf = 0;return/, 'the loop ends once it has arrived')
-  assert.match(motion, /Math\\.exp\\(-dt\\*9\\)/, 'the hero easing remains unchanged')
-  assert.match(motion, /if \\(reduce \\|\\| !hover\\) return;/, 'the hero effect stays gated to fine hover pointers and reduced motion')
-  assert.match(motion, /follow\\(hero, artifact, '--px', '--py'\\)/, 'the hero artifact keeps its existing pointer effect')
+  assert.match(motion, /Math\.exp\(-dt\*9\)/, 'the hero easing remains unchanged')
+  assert.match(motion, /if \(reduce \|\| !hover\) return;/, 'the hero effect stays gated to fine hover pointers and reduced motion')
+  assert.match(motion, /follow\(hero, artifact, '--px', '--py'\)/, 'the hero artifact keeps its existing pointer effect')
   assert.doesNotMatch(motion, /saturnEntry|--saturn-x|--saturn-y/, 'Saturn is not registered with the pointer-follow handler')
-  assert.match(html, /\\.parent-entry-saturn\\{[^}]*right:clamp\\(10px,4\\.2vw,66px\\);top:47%;width:clamp\\(370px,42vw,540px\\);height:clamp\\(370px,42vw,540px\\);transform:translate3d\\(calc\\(var\\(--saturn-x,0\\)\\*5px\\),calc\\(-53% \\+ var\\(--saturn-y,0\\)\\*5px\\),0\\)/, 'Saturn keeps its original fixed CSS anchor, size, and zero-offset fallback')
+  assert.match(html, /\.parent-entry-saturn\{[^}]*right:clamp\(10px,4\.2vw,66px\);top:47%;width:clamp\(370px,42vw,540px\);height:clamp\(370px,42vw,540px\);transform:translate3d\(calc\(var\(--saturn-x,0\)\*5px\),calc\(-53% \+ var\(--saturn-y,0\)\*5px\),0\)/, 'Saturn keeps its original fixed CSS anchor, size, and zero-offset fallback')
 })
 
 test('no motion library was added by this pass', () => {
