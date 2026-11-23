@@ -32,7 +32,7 @@ export const FAQS: Faq[] = [
     questions: ['What are the headings in the Archive?', 'How are the Archive sections grouped?', 'How many parts does the Personal Record have?'],
     keywords: ['headings', 'heading', 'grouped', 'grouping', 'chapters', 'chapter', 'parts', 'titles', 'archive', 'section'],
     answer:
-      'The eight numbered sections of the Archive are split across two interfaces, one section per page. Interface 01, The Personal Record, holds Beliefs, The Things I Do, A Favourites and The People I Got Lucky With (02 to 05). Interface 02, The Continuing Record, holds Little Things, Things I’m Still Figuring Out, Things I Like and Memories (06 to 09). Prev and Next move between the pages.',
+      'The eight numbered sections of the Archive are split across two interfaces, one section per page. Interface 01, The Personal Record, holds The Practice, Open Tabs, The Usual and By Chance (02 to 05). Interface 02, The Continuing Record, holds Not Much to Explain, Some Days, Only Later and Better Questions (06 to 09). Prev and Next move between the pages.',
   },
   {
     id: 'private-details',
