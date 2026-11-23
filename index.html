@@ -4996,20 +4996,10 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
   border-color:rgba(176,190,212,.16)!important;
   box-shadow:inset 0 0 60px rgba(0,0,0,.3)!important;
 }
-/* One slow glass reflection that passes under the copy (z 1; copy is z 2), compositor-only. */
-#demi-system #demiGate::after{
-  content:"";position:absolute;top:-10%;bottom:-10%;left:0;right:auto;width:38%;z-index:1;
-  pointer-events:none;mix-blend-mode:normal;filter:none;opacity:0;
-  background:linear-gradient(90deg,transparent,rgba(226,233,245,.035) 30%,rgba(236,241,250,.10) 50%,rgba(226,233,245,.035) 70%,transparent);
-  transform:translate3d(-130%,0,0) skewX(-20deg);
-  animation:demiGlassSheen 12s cubic-bezier(.4,0,.2,1) infinite;
-}
-@keyframes demiGlassSheen{
-  0%,20%{transform:translate3d(-130%,0,0) skewX(-20deg);opacity:0}
-  30%{opacity:1}
-  64%{transform:translate3d(330%,0,0) skewX(-20deg);opacity:.7}
-  72%,100%{transform:translate3d(330%,0,0) skewX(-20deg);opacity:0}
-}
+/* No sweeping glass reflection. The gate's ::after used to run a 12 s "demiGlassSheen" band that crossed the whole surface under the copy,
+   read as a recurring light streak, and is the confirmed cause of it. The older ::after rules above (demiSkySweep, demiV20LightPass,
+   demiV21Arc, demiHardGlassSweep) are all overridden by this selector; display:none keeps them from ever coming back and drops the layer. */
+#demi-system #demiGate::after{display:none}
 #demi-system #demiGate .demi-gate-core{
   background:radial-gradient(circle at 50% 46%,rgba(205,216,235,.085),rgba(120,138,168,.03) 42%,transparent 62%);
   filter:drop-shadow(0 0 16px rgba(190,205,228,.12));
@@ -5033,7 +5023,6 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
   box-shadow:0 14px 34px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.18);
 }
 @media(prefers-reduced-motion:reduce){
-  #demi-system #demiGate::after{animation:none;opacity:0}
   #demi-system #demiGate .demi-gate-core{animation:none!important}
 }
 
