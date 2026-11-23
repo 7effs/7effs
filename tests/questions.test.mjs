@@ -16,7 +16,7 @@ const SET_A = [
   // direct and short
   ['the practice', 'beliefs'], ['The Practice?', 'beliefs'], ['tell me about only later', 'things-i-like'], ['only later', 'things-i-like'], ['the usual', 'favourites'], ['favourites', 'favourites'], ['favorites', 'favourites'],
   ['not much to explain', 'little-things'], ['by chance', 'people'], ['friends', 'people'], ['open tabs', 'things-i-do'], ['some days', 'figuring-out'], 
-  ['the practice', 'beliefs'], ['hobbies', ['beliefs','ambiguous']], ['what are the better questions about', 'memories'], 
+  ['better questions', 'memories'], ['hobbies', ['beliefs','ambiguous']], ['what are the better questions about', 'memories'], 
   ['demi', 'demi'], ['cat', 'cat-ai'], ['the cat chat', 'cat-ai'], ['effs cat', 'cat-ai'], ['impossible', 'the-impossible'], ['the impossible game', 'the-impossible'],
   ['evidence', 'evidence-archive'], ['inference', 'inference-engine'], ['anomaly', 'anomaly-protocol'], ['glimpse', 'glimpse'], ['parent space', 'parent-space'], ['footer', 'footer'],
   ['music', ['favourites','ambiguous']], ['what is blue', 'favourites'], ['kendrick', 'favourites'], ['dogs', 'favourites'],

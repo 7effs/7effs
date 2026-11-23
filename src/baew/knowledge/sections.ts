@@ -331,7 +331,7 @@ export const SECTIONS: SectionEntry[] = [
         text: 'It closes the eight numbered personal sections. The next area is the separate memory channel at node 10, which has its own access gate.',
       },
     ],
-    keywords: ['better questions', 'questions', 'thinking', 'ideas', 'opinions', 'why', 'reason', 'beliefs', 'understanding', 'intelligence', 'knowledge', '09'],
+    keywords: ['better questions', 'questions', 'thinking', 'ideas', 'opinions', 'why', 'reason', 'believe', 'believes', 'believing', 'beliefs', 'understanding', 'intelligence', 'knowledge', '09'],
     related: ['demi', 'things-i-like'],
   },
 

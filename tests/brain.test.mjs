@@ -95,6 +95,14 @@ test('questions are matched to the right area or answer', () => {
   assert.ok(q('what comes after Only Later').text.includes('Better Questions'))
   assert.equal(q('what comes after Better Questions').topic, 'navigation')
   assert.ok(q('what comes after Better Questions').text.includes('memory channel'))
+  assert.equal(q('the practice').entryId, 'beliefs')
+  assert.equal(q('open tabs').entryId, 'things-i-do')
+  assert.equal(q('the usual').entryId, 'favourites')
+  assert.equal(q('by chance').entryId, 'people')
+  assert.equal(q('not much to explain').entryId, 'little-things')
+  assert.equal(q('some days').entryId, 'figuring-out')
+  assert.equal(q('only later').entryId, 'things-i-like')
+  assert.equal(q('better questions').entryId, 'memories')
 })
 
 test('a question with no match is answered honestly, and a vague one explains the current section', () => {
