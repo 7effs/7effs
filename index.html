@@ -2157,6 +2157,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 /* Remove only the small decorative mark in Glimpse; preserve the listening controls and layout. */
 #glimpse .glimpse-vinyl-orbit{display:none!important}
 </style>
+
 </head>
 <body>
 <canvas id="jaye-tornado-background" aria-hidden="true"></canvas>
@@ -5982,7 +5983,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 </div>
 <div aria-label="Glimpse songs" class="glimpse-tracks" role="group">
 <button aria-label="Play You" class="glimpse-track" data-track="/glimpse/song1.mp3" type="button"><img alt="Original abstract cover artwork for about" class="glimpse-thumbnail" loading="lazy" src="/glimpse/cover1.jpg"/> <span class="glimpse-track-copy"><span class="glimpse-track-name">You</span><span class="glimpse-track-state">Tap to play</span></span> <span aria-hidden="true" class="glimpse-play">Play</span></button>
-<button aria-label="Play Sorus W" class="glimpse-track" data-track="/glimpse/song2.mp3" type="button"><img alt="Original abstract cover artwork for Walk." class="glimpse-thumbnail" loading="lazy" src="/glimpse/cover2.jpg"/> <span class="glimpse-track-copy"><span class="glimpse-track-name">Sorus W</span><span class="glimpse-track-state">Tap to play</span></span> <span aria-hidden="true" class="glimpse-play">Play</span></button>
+<button aria-label="Play Alan W" class="glimpse-track" data-track="/glimpse/song2.mp3" type="button"><img alt="Original abstract cover artwork for Walk." class="glimpse-thumbnail" loading="lazy" src="/glimpse/cover2.jpg"/> <span class="glimpse-track-copy"><span class="glimpse-track-name">Alan W</span><span class="glimpse-track-state">Tap to play</span></span> <span aria-hidden="true" class="glimpse-play">Play</span></button>
 </div>
 <audio id="glimpseAudio" preload="none"></audio>
 <p class="glimpse-note" id="glimpseNote">Original audio is not included in this file</p>
@@ -7150,10 +7151,6 @@ renderHistory();resizeInput();
     try { localStorage.setItem(key, JSON.stringify(value)); return true; }
     catch (_) { storageAvailable = false; return false; }
   };
-  const safeRemove = (key) => {
-    try { localStorage.removeItem(key); return true; }
-    catch (_) { storageAvailable = false; return false; }
-  };
 
   /* THE IMPOSSIBLE — local challenge engine v2
    Self-contained puzzle logic. No AI, API, network, or external dependencies. */
@@ -7799,9 +7796,8 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   ['playing','error','pause','ended','canplay'].forEach(function(type){backgroundAudio.addEventListener(type,clearAudioWatchdog);});
  }
  if (reduce || !hover) return;
- /* Pointer parallax. The two follow-the-cursor effects (hero artifact, Saturn doorway) used to jump to the pointer on every move and
-    snap home on leave. They now ease toward the pointer (a ~110 ms time constant, so fast moves feel weighted and a leave glides home)
-    in one frame loop that runs only while something is still moving. Same variables, same distances, same hover-and-fine-pointer gate. */
+ /* Pointer parallax for the hero artifact only. It eases toward the pointer in one frame loop that runs only while something
+    is still moving. The Parent Space Saturn remains at its fixed CSS position and is not pointer-driven. */
  function follow(host, target, nameX, nameY){
   let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, last = 0;
   function put(){target.style.setProperty(nameX, cx.toFixed(3));target.style.setProperty(nameY, cy.toFixed(3));}
@@ -7825,8 +7821,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  const hero = document.querySelector('.artifact-hero');
  const artifact = document.querySelector('.artifact-figure');
  if (hero && artifact) follow(hero, artifact, '--px', '--py');
- const saturnEntry = document.getElementById('parent-interface-open');
- if (saturnEntry) follow(saturnEntry, saturnEntry, '--saturn-x', '--saturn-y');
+
 })();
 </script>
 
