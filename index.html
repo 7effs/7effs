@@ -7795,9 +7795,8 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   ['playing','error','pause','ended','canplay'].forEach(function(type){backgroundAudio.addEventListener(type,clearAudioWatchdog);});
  }
  if (reduce || !hover) return;
- /* Pointer parallax. The two follow-the-cursor effects (hero artifact, Saturn doorway) used to jump to the pointer on every move and
-    snap home on leave. They now ease toward the pointer (a ~110 ms time constant, so fast moves feel weighted and a leave glides home)
-    in one frame loop that runs only while something is still moving. Same variables, same distances, same hover-and-fine-pointer gate. */
+ /* Pointer parallax for the hero artifact only. It eases toward the pointer in one frame loop that runs only while something
+    is still moving. The Parent Space Saturn remains at its fixed CSS position and is not pointer-driven. */
  function follow(host, target, nameX, nameY){
   let tx = 0, ty = 0, cx = 0, cy = 0, raf = 0, last = 0;
   function put(){target.style.setProperty(nameX, cx.toFixed(3));target.style.setProperty(nameY, cy.toFixed(3));}
@@ -7821,8 +7820,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  const hero = document.querySelector('.artifact-hero');
  const artifact = document.querySelector('.artifact-figure');
  if (hero && artifact) follow(hero, artifact, '--px', '--py');
- const saturnEntry = document.getElementById('parent-interface-open');
- if (saturnEntry) follow(saturnEntry, saturnEntry, '--saturn-x', '--saturn-y');
+
 })();
 </script>
 
