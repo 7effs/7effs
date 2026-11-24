@@ -357,9 +357,25 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
     if (!raw) return current ? explain(current, req.progress) : unknownSection(req)
     if (!spoken) return unknownAnswer(current)
 
-    if (CREDENTIAL_WORDS.test(raw)) {
+    const asksToOpenMemory = /\b(open|open up)\b.{0,35}\b(demi|memory)\b|\b(demi|memory)\b.{0,35}\b(open|open up)\b/i.test(raw)
+    if (CREDENTIAL_WORDS.test(raw) || asksToOpenMemory) {
       const access = faqById('demi-access')
       if (access) return faqAnswer(access)
+    }
+
+    // The singular "memory" names the gated channel. Do not let plural stemming
+    // redirect it to the open Only Later section.
+    const exactQuestionWords = tokenize(raw).filter(word => !STOPWORDS.has(word))
+    if (exactQuestionWords.length === 1 && exactQuestionWords[0] === 'memory') {
+      const memory = entryById('demi')
+      if (memory) return explain(memory, req.progress)
+    }
+
+    // A question about the author's game preferences belongs to The Usual,
+    // which contains the verified list of games and sports.
+    if (PERSONAL_CUE.test(raw) && /\bwhat\s+(?:kind of\s+)?games?\b/i.test(raw)) {
+      const usual = entryById('favourites')
+      if (usual) return explain(usual, req.progress)
     }
 
     if (AI_WORDS.test(raw) && !/\bcat\b/i.test(raw)) {
@@ -388,8 +404,10 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
 
     // A question that is, or contains, one of the vetted questions word for word ("who are you").
     for (const faq of knowledge.faqs) {
-      const listed = faq.questions.map(normalise)
-      if (listed.some(item => spoken === item || (item.split(' ').length >= 3 && ` ${spoken} `.includes(` ${item} `)))) return faqAnswer(faq)
+      const comparable = (value: string) => normalise(value).replace(/\b(the|a|an)\b/g, ' ').replace(/\s+/g, ' ').trim()
+      const queryPhrase = comparable(raw)
+      const listed = faq.questions.map(comparable)
+      if (listed.some(item => queryPhrase === item || (item.split(' ').length >= 3 && ` ${queryPhrase} `.includes(` ${item} `)))) return faqAnswer(faq)
     }
 
     // A question that names an area by its full title ("the things i do") goes to that area, even though
