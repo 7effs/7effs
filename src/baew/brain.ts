@@ -240,14 +240,26 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
     }
   }
 
-  function scoreEntry(entry: SectionEntry, query: Set<string>): number {
+  function scoreEntry(entry: SectionEntry, query: Set<string>, exactQuery: Set<string> = query, spoken = ''): number {
     let score = 0
-    const keywords = new Set(entry.keywords.flatMap(contentTokens))
+    // Keep multi-word keywords intact. Flattening "in real life" made the single word "life"
+    // identify By Chance even when the visitor was asking an unrelated philosophical question.
+    const singleKeywords = entry.keywords.filter(keyword => tokenize(keyword).length === 1)
+    const keywords = new Set(singleKeywords.flatMap(contentTokens))
+    const exactKeywords = new Set(singleKeywords.flatMap(tokenize))
+    const phraseKeywords = entry.keywords.filter(keyword => tokenize(keyword).length > 1).map(normalise)
     const title = new Set(contentTokens(entry.title))
     const aliases = new Set((entry.aliases ?? []).flatMap(contentTokens))
+    const exactTitle = new Set(tokenize(entry.title))
+    const exactAliases = new Set((entry.aliases ?? []).flatMap(tokenize))
     for (const word of query) {
       if (keywords.has(word)) score += 3
+      if ([...exactQuery].some(exact => stem(exact) === word && exactKeywords.has(exact))) score += 3
       if (title.has(word) || aliases.has(word)) score += 3
+      if ([...exactQuery].some(exact => stem(exact) === word && (exactTitle.has(exact) || exactAliases.has(exact)))) score += 3
+    }
+    for (const phrase of phraseKeywords) {
+      if (phrase && ` ${spoken} `.includes(` ${phrase} `)) score += 3
     }
     // Section numbers are written "07" on the page and often asked as "7".
     if (entry.node && [...query].some(word => /^\d+$/.test(word) && /^\d+$/.test(entry.node!) && Number(word) === Number(entry.node))) score += 4
@@ -296,13 +308,12 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
   type Match = { kind: 'entry'; entry: SectionEntry; score: number } | { kind: 'faq'; faq: Faq; score: number }
   // "What games does he play": a question about the author belongs with the author's own sections.
   const PERSONAL_CUE = /\b(he|his|him|she|her|author|their)\b/i
-  function bestByWords(query: Set<string>, current: SectionEntry | null, personal = false): { best: Match | null; tied: SectionEntry | null } {
+  function bestByWords(query: Set<string>, current: SectionEntry | null, exactQuery: Set<string> = query, spoken = ''): { best: Match | null; tied: SectionEntry | null } {
     let best: Match | null = null
     let tied: SectionEntry | null = null
     for (const entry of knowledge.sections) {
-      const base = scoreEntry(entry, query)
-      let score = base + (current && entry.id === current.id ? 0.5 : 0)
-      if (personal && base > 0 && /^archive-(one|two)-/.test(entry.domIds[0] ?? '')) score += 4
+      const base = scoreEntry(entry, query, exactQuery, spoken)
+      const score = base + (current && entry.id === current.id ? 0.5 : 0)
       if (score > (best?.score ?? 0)) {
         best = { kind: 'entry', entry, score }
         tied = null
@@ -363,6 +374,13 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
 
     if (OUT_OF_SCOPE.test(raw) && !/\bfree fire\b/i.test(raw)) return unknownAnswer(current)
 
+    // Belief questions about the author belong to Better Questions, not to every Archive
+    // section that happens to mention changing beliefs.
+    if (PERSONAL_CUE.test(raw) && /\b(belief|beliefs|believe|believes|believing|think|thinks|thinking)\b/i.test(raw)) {
+      const beliefs = entryById('memories')
+      if (beliefs) return explain(beliefs, req.progress)
+    }
+
     if (GREETING.test(raw) || ABOUT_BAEW.test(raw)) {
       const self = faqById('what-is-baew')
       if (self) return faqAnswer(self)
@@ -386,15 +404,18 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
     // Resolve the titled section first; otherwise use the remaining words to identify it.
     if (RELATION_WORDS.test(raw)) {
       RELATION_WORDS.lastIndex = 0
-      const rest = new Set(contentTokens(raw.replace(RELATION_WORDS, ' ')).filter(word => !DEICTIC.has(word) && word !== 'come'))
+      const restText = raw.replace(RELATION_WORDS, ' ')
+      const rest = new Set(contentTokens(restText).filter(word => !DEICTIC.has(word) && word !== 'come'))
+      const exactRest = new Set(tokenize(restText).filter(word => !STOPWORDS.has(word) && !DEICTIC.has(word) && word !== 'come'))
       RELATION_WORDS.lastIndex = 0
-      const { best: named } = bestByWords(rest, null)
+      const { best: named } = bestByWords(rest, null, exactRest, normalise(restText))
       const relationEntry = titled?.entry ?? (named && named.kind === 'entry' && named.score >= 3 ? named.entry : null)
       if (relationEntry) return answerFor(relationEntry, position(relationEntry), 'navigation', null)
     }
     RELATION_WORDS.lastIndex = 0
 
-    const found = titled ? { best: { kind: 'entry', entry: titled.entry, score: 100 } as Match, tied: null } : bestByWords(new Set(meaningful), current, PERSONAL_CUE.test(raw))
+    const exactMeaningful = new Set(tokenize(raw).filter(word => !STOPWORDS.has(word) && !DEICTIC.has(word)))
+    const found = titled ? { best: { kind: 'entry', entry: titled.entry, score: 100 } as Match, tied: null } : bestByWords(new Set(meaningful), current, exactMeaningful, spoken)
     const best = found.best
 
     if (!best || best.score < 3) return unknownAnswer(current)
