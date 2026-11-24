@@ -8,9 +8,9 @@ const grounding = brain.grounding('beliefs')
 
 test('a known section sends only the verified answer, never the page text', () => {
   const answer = brain.respond({ intent: 'explain', domId: 'archive-one-beliefs' })
-  const prompt = buildPrompt({ intent: 'explain', answer: answer.text, grounding, title: 'Beliefs', pageText: 'SECRET PAGE TEXT', recent: [] })
+  const prompt = buildPrompt({ intent: 'explain', answer: answer.text, grounding, title: 'The Practice', pageText: 'SECRET PAGE TEXT', recent: [] })
   assert.ok(prompt.includes(`VERIFIED ANSWER: ${answer.text}`))
-  assert.ok(prompt.includes('Section: Beliefs (node 02)'))
+  assert.ok(prompt.includes('Section: The Practice (node 02)'))
   assert.ok(!prompt.includes('SECRET PAGE TEXT'))
   assert.ok(prompt.includes('calm, professional, informative'))
   assert.ok(!/playful|freaky|vibes|tiny/i.test(prompt))
@@ -25,7 +25,7 @@ test('an unknown section sends its own text, marked as untrusted data', () => {
 
 test('the prompt always fits the API limit and drops history before dropping facts', () => {
   const long = 'x '.repeat(400)
-  const prompt = buildPrompt({ intent: 'deeper', answer: 'A verified answer that must survive.', grounding, title: 'Beliefs', recent: [long, long, long, long] })
+  const prompt = buildPrompt({ intent: 'deeper', answer: 'A verified answer that must survive.', grounding, title: 'The Practice', recent: [long, long, long, long] })
   assert.ok(prompt.length <= MAX_PROMPT_CHARS && prompt.length <= 2000)
   assert.ok(prompt.includes('A verified answer that must survive.'))
   const huge = buildPrompt({ intent: 'explain', answer: null, grounding: null, title: 't', pageText: 'y'.repeat(5000), recent: [] })
@@ -33,7 +33,7 @@ test('the prompt always fits the API limit and drops history before dropping fac
 })
 
 test('recent explanations are passed so they are not repeated', () => {
-  const prompt = buildPrompt({ intent: 'explain', answer: 'A.', grounding, title: 'Beliefs', recent: ['Earlier one.'] })
+  const prompt = buildPrompt({ intent: 'explain', answer: 'A.', grounding, title: 'The Practice', recent: ['Earlier one.'] })
   assert.ok(prompt.includes('Do not repeat these recent explanations: Earlier one.'))
 })
 

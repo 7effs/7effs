@@ -91,6 +91,18 @@ test('questions are matched to the right area or answer', () => {
   assert.ok(where.text.includes('Parent Space'))
   assert.equal(where.target, 'postAI-signal-room')
   assert.equal(q('who made this').topic, 'who-made')
+  assert.equal(q('what comes after Only Later').topic, 'navigation')
+  assert.ok(q('what comes after Only Later').text.includes('Better Questions'))
+  assert.equal(q('what comes after Better Questions').topic, 'navigation')
+  assert.ok(q('what comes after Better Questions').text.includes('memory channel'))
+  assert.equal(q('the practice').entryId, 'beliefs')
+  assert.equal(q('open tabs').entryId, 'things-i-do')
+  assert.equal(q('the usual').entryId, 'favourites')
+  assert.equal(q('by chance').entryId, 'people')
+  assert.equal(q('not much to explain').entryId, 'little-things')
+  assert.equal(q('some days').entryId, 'figuring-out')
+  assert.equal(q('only later').entryId, 'things-i-like')
+  assert.equal(q('better questions').entryId, 'memories')
 })
 
 test('a question with no match is answered honestly, and a vague one explains the current section', () => {
@@ -111,7 +123,7 @@ test('gated and chat areas are local only and are never handed to the online ass
     assert.equal(brain.grounding(brain.entryForDomId(domId).id), null, domId)
   }
   const g = brain.grounding('beliefs')
-  assert.ok(g && g.facts.length === 3 && g.title === 'Beliefs')
+  assert.ok(g && g.facts.length === 3 && g.title === 'The Practice')
 })
 
 test('the Demi answer is spoiler-free and never contains a credential', () => {
