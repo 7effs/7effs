@@ -10,6 +10,7 @@ const style = id => {
   return html.slice(start, end)
 }
 const hi = style('jaye-intro-hi-v8')
+const cinematic = style('jaye-intro-cinematic-peak-v5')
 const brutal = style('jaye-intro-brutalist-v9')
 const sequenceStart = html.indexOf('<div class="jaye-v5-sequence"')
 const sequenceEnd = html.indexOf('\n  </div>\n  <div class="jaye-intro-counter"', sequenceStart)
@@ -17,19 +18,23 @@ const sequence = sequenceStart >= 0 && sequenceEnd >= 0 ? html.slice(sequenceSta
 
 test('Hi remains the only opening greeting and keeps its left-anchored construction', () => {
   assert.match(sequence, /<div class="jaye-v5-hi-core"><span>H<\/span><span>i<\/span><\/div>/)
-  assert.match(hi, /--hi-cx:26vw/)
+  assert.match(cinematic, /--hi-cx:26vw/)
   assert.match(hi, /@keyframes jayeV8H/)
   assert.match(hi, /@keyframes jayeV8i/)
   assert.match(hi, /@keyframes jayeV8Wall/)
   assert.match(hi, /@keyframes jayeV8Plinth/)
-  assert.doesNotMatch(sequence, /A PRESENCE|SUBJECTS OF|PEOPLE \/|PLACES \/ OBJECTS/)
+  assert.doesNotMatch(sequence, /A PRESENCE/)
 })
 
-test('everything after Hi is one paper field and the JAYE wordmark', () => {
+test('the original phrase copy is preserved alongside the paper-field JAYE wordmark', () => {
   assert.match(sequence, /class="jaye-b9-stage"/)
   assert.match(sequence, /class="jaye-b9-title"/)
   assert.equal((sequence.match(/class="jaye-b9-slice jaye-b9-slice--/g) ?? []).length, 4)
-  assert.doesNotMatch(sequence, /jaye-v5-strip|jaye-v5-phrase|jaye-v5-wipe|jaye-v5-blade|jaye-v5-wordmark|jaye-intro-phrase|AN OPEN INDEX|THE LIVING ARCHIVE/)
+  assert.equal((sequence.match(/class="jaye-v5-phrase jaye-v5-phrase--/g) ?? []).length, 2)
+  assert.equal((sequence.match(/class="jaye-intro-phrase jaye-intro-phrase--/g) ?? []).length, 2)
+  assert.ok(sequence.includes('SUBJECTS OF') && sequence.includes('INTEREST.'))
+  assert.ok(sequence.includes('PEOPLE /') && sequence.includes('PLACES / OBJECTS'))
+  assert.doesNotMatch(sequence, /jaye-v5-strip|jaye-v5-wipe|jaye-v5-blade|jaye-v5-wordmark|AN OPEN INDEX|THE LIVING ARCHIVE/)
 })
 
 test('JAYE is reconstructed from four alternating horizontal cuts', () => {
@@ -46,7 +51,11 @@ test('the new entrance uses hard material contrast without decorative effects', 
   assert.match(brutal, /jayeB9PaperPress/)
   assert.match(brutal, /jayeB9RailDown/)
   assert.match(brutal, /jayeB9RailAcross/)
-  assert.match(brutal, /perspective:none!important/)\n  assert.match(brutal, /transform-style:flat!important/)\n  assert.match(brutal, /jaye-intro-grain\{display:none!important\}/)\n  assert.match(brutal, /background:#080808;color:#eeeae1/)\n  assert.doesNotMatch(brutal, /filter:|blur\(|box-shadow|backdrop-filter|mix-blend-mode|url\(/)
+  assert.match(brutal, /perspective:none!important/)
+  assert.match(brutal, /transform-style:flat!important/)
+  assert.match(brutal, /jaye-intro-grain\{display:none!important\}/)
+  assert.match(brutal, /background:#080808;color:#eeeae1/)
+  assert.doesNotMatch(brutal, /filter:|blur\(|box-shadow|backdrop-filter|mix-blend-mode|url\(/)
   assert.doesNotMatch(html, /jaye-intro-peak-light-v7|jaye-peak-light/)
 })
 

@@ -110,6 +110,18 @@ test('questions: the title alone beats a section that only shares a word, and pl
   assert.equal(ask('are there any games').topic, 'ambiguous')
 })
 
+test('questions: exact plurals, phrase keywords and author-belief intent stay distinct', () => {
+  assert.equal(ask('what are the memories about').entryId, 'things-i-like')
+  assert.equal(ask('what comes after memories').entryId, 'things-i-like')
+  assert.equal(ask('what is after memories').entryId, 'things-i-like')
+  assert.equal(ask('memory').entryId, 'demi')
+  assert.equal(ask('what is the meaning of life').basis, 'unknown')
+  assert.equal(ask('does the author have pets').entryId, 'favourites')
+  assert.equal(ask('what does the author think about beliefs').entryId, 'memories')
+  assert.equal(ask('what does he believe').entryId, 'memories')
+  assert.equal(ask('tell me about friends met in real life').entryId, 'people')
+})
+
 test('questions: the same question always gets the same answer', () => {
   for (const [question] of [...SET_A, ...SET_B, ...SET_C]) assert.equal(ask(question).text, ask(question).text)
 })
