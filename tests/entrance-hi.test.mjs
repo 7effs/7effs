@@ -46,7 +46,11 @@ test('the new entrance uses hard material contrast without decorative effects', 
   assert.match(brutal, /jayeB9PaperPress/)
   assert.match(brutal, /jayeB9RailDown/)
   assert.match(brutal, /jayeB9RailAcross/)
-  assert.match(brutal, /perspective:none!important/)\n  assert.match(brutal, /transform-style:flat!important/)\n  assert.match(brutal, /jaye-intro-grain\{display:none!important\}/)\n  assert.match(brutal, /background:#080808;color:#eeeae1/)\n  assert.doesNotMatch(brutal, /filter:|blur\(|box-shadow|backdrop-filter|mix-blend-mode|url\(/)
+  assert.match(brutal, /perspective:none!important/)
+  assert.match(brutal, /transform-style:flat!important/)
+  assert.match(brutal, /jaye-intro-grain\{display:none!important\}/)
+  assert.match(brutal, /background:#080808;color:#eeeae1/)
+  assert.doesNotMatch(brutal, /filter:|blur\(|box-shadow|backdrop-filter|mix-blend-mode|url\(/)
   assert.doesNotMatch(html, /jaye-intro-peak-light-v7|jaye-peak-light/)
 })
 
