@@ -2,8 +2,8 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { readFileSync, openSync, readSync, fstatSync, closeSync } from 'node:fs'
 
-// The optional backgrounds (the video and the two photographs) cost nothing while the page parses; the video and photographs
-// are then fetched after the page has loaded, or at once when the switch is used (see also media-lifecycle.test.mjs).
+// No background is fetched while the page parses, and none is fetched in advance: the video (the first-visit default) starts after the page
+// has loaded and the browser is idle; a photograph only when it is the saved choice or is picked (see also media-lifecycle.test.mjs).
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
 const script = (id) => {
   const start = html.indexOf(`<script id="${id}">`)
@@ -16,7 +16,9 @@ const toggle = script('jaye-global-background-video-toggle-runtime')
 test('the background video asks for nothing while the page is parsing', () => {
   assert.match(html, /<video id="jaye-global-video-background"[^>]*preload="none"[^>]*data-src="jaye-video-background\.mp4"/, 'the markup carries only data-src and preload="none"')
   assert.doesNotMatch(html, /<video id="jaye-global-video-background"[^>]* src=/, 'no src attribute until a script sets it')
-  assert.match(toggle, /await video\.play\(\)/, 'the press itself still fetches it (and waits for playback before showing it)')
+  assert.match(toggle, /await video\.play\(\)/, 'it is fetched by play() (and shown only once playback has started)')
+  assert.match(toggle, /requestIdleCallback\(fn,\{timeout:2500\}\)/, 'the default start waits for an idle moment')
+  assert.match(toggle, /window\.addEventListener\('load',run,\{once:true\}\)/, 'and for the page to have loaded')
 })
 
 test('the background photographs are fetched at full priority, and the picker thumbnails wait for the visitor', () => {
@@ -26,9 +28,10 @@ test('the background photographs are fetched at full priority, and the picker th
 })
 
 test('choosing a background still waits for download + decode, so the swap never flashes empty', () => {
-  assert.match(images, /warmUp\(key\)\.then\(photo=>photo&&photo\.decode\?photo\.decode\(\)/)
+  assert.match(images, /const ready=key=>warmUp\(key\)\.then\(photo=>photo&&photo\.decode\?photo\.decode\(\)/)
+  assert.match(images, /ready\(key\)\.then\(photo=>\{/)
   assert.match(images, /if\(choice!==latestChoice\)return;/, 'a newer choice cancels an older one')
-  assert.match(images, /if\(photo\)applyImage\(key\);else closePanel\(\);/, 'a failed download leaves the current background in place')
+  assert.match(images, /if\(photo\)applyImage\(key,true\);else closePanel\(\);/, 'a failed download leaves the current background in place')
 })
 
 test('the video file has its index first (faststart), so playback can begin from the first bytes', () => {

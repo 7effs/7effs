@@ -2160,6 +2160,27 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 
 </head>
 <body>
+<script id="jaye-background-choice-runtime">
+/* Which background the page opens with, and the one place a choice is remembered.
+   - nothing saved (a first visit): the video
+   - something saved: that, exactly as it was chosen. A default or a fallback never replaces it; only a deliberate selection (the switch, or a
+     photograph in the picker) is written
+   - reduced motion never auto-plays the video: it opens on Saturn's still frame instead (not saved; the switch still starts the video)
+   The mode is published as <html data-jaye-bg>, and nothing else is started until it is chosen: Saturn is built only for "saturn", the video is
+   fetched only for "video", a photograph only for "amber" / "noir". Storage can be blocked or full, so every access is guarded. */
+(()=>{
+  const KEY='jaye-background',MODES=['video','saturn','amber','noir'],root=document.documentElement;
+  let mode='';try{mode=localStorage.getItem(KEY)||''}catch(_){}
+  if(MODES.indexOf(mode)<0)mode='video';
+  if(mode==='video'&&matchMedia('(prefers-reduced-motion: reduce)').matches)mode='saturn';
+  root.setAttribute('data-jaye-bg',mode);
+  document.addEventListener('jaye-background-choice',e=>{
+    const d=e.detail||{};if(MODES.indexOf(d.mode)<0)return;
+    root.setAttribute('data-jaye-bg',d.mode);
+    if(d.manual)try{localStorage.setItem(KEY,d.mode)}catch(_){}
+  });
+})();
+</script>
 <canvas id="jaye-tornado-background" aria-hidden="true"></canvas>
 <video id="jaye-global-video-background" aria-hidden="true" muted loop playsinline preload="none" data-src="jaye-video-background.mp4" tabindex="-1"></video>
 <button id="jaye-background-switch" type="button" aria-pressed="false" aria-label="Switch global background to video">Switch background</button>
@@ -7888,6 +7909,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
 /* Premium Particle Saturn — standalone canvas adaptation for the existing single-file JAYE site.
    Preserves the existing background canvas and all unrelated homepage/entrance code.
    Rendering-cost pass (the picture is the same planet, ring and dust; only the cost of drawing it changed):
+   - nothing is built until Saturn is the chosen background (the video is the first-visit default): see start() below
    - about 30% fewer particles, and a slightly slower turn (spin .12 -> .104 rad/s)
    - one animation loop; it only runs while the canvas can be seen: it stops when the tab is hidden, the canvas is off screen, the
      opening is covering it, a video / image background has replaced it, or an Archive collection is open (the last frame stays on screen,
@@ -7907,6 +7929,11 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
      phone's browser bar shows or hides */
 (()=>{
  const canvas=document.getElementById('jaye-tornado-background');if(!canvas)return;
+ const rootEl=document.documentElement;
+ /* Saturn exists only while it is the chosen background (<html data-jaye-bg="saturn">: a saved choice, the switch, or the fallback when the video
+    cannot play). Until then nothing below runs: no canvas context, no particle cloud, no bitmaps, no observers, no listeners and no frames.
+    start() builds all of it once; after that the pause rules below decide when it draws. */
+ function start(){
  const ctx=canvas.getContext('2d',{alpha:true,desynchronized:true});if(!ctx)return;
  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
  const TAU=Math.PI*2;
@@ -8070,7 +8097,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
    if(level>0&&now-lastShift>8000){const next=ema*QUALITY[level-1]/QUALITY[level];if(next<budget*.4){if(++calm>=300)setLevel(level-1,now)}else calm=0}else calm=0;
  }
  /* ---- run only while the canvas can be seen ---- */
- const rootEl=document.documentElement,introEl=document.getElementById('jaye-intro-v1'),coverLimit=performance.now()+60000;
+ const introEl=document.getElementById('jaye-intro-v1'),coverLimit=performance.now()+60000;
  let raf=0,inView=true,bgCoverAt=0,bgTimer=0,state='';
  const bgOn=()=>rootEl.classList.contains('jaye-video-background-active')||rootEl.classList.contains('jaye-image-background-active');
  function pauseReason(now){
@@ -8122,6 +8149,9 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
  if('IntersectionObserver' in window)new IntersectionObserver(es=>{const v=es[es.length-1].isIntersecting;if(v!==inView){inView=v;evaluate()}}).observe(canvas);
  setTimeout(evaluate,coverLimit-performance.now()+50); /* the opening cover is honoured for at most 60 s */
  evaluate();
+ }
+ if(rootEl.getAttribute('data-jaye-bg')==='saturn')start();
+ else document.addEventListener('jaye-background-choice',function wait(e){if(e.detail&&e.detail.mode==='saturn'){document.removeEventListener('jaye-background-choice',wait);start()}});
 })();
 </script>
 
@@ -8195,10 +8225,10 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
     amber:'assets/amber-background.jpg',
     noir:'assets/noir-background.jpg'
   };
-  /* Performance only. None of the optional backgrounds is visible when the page opens, so none of them is downloaded until it is asked for:
-       1. the background video is fetched by the first press of the switch (video.play() in the toggle script), never in advance;
+  /* Performance only. A background is downloaded only when it is the one in use or has just been asked for; nothing is fetched in advance:
+       1. the video is fetched by the toggle script, when it is the chosen background (first visit, saved choice, or the switch);
        2. the picker's thumbnail images are attached only when the visitor approaches the switch, or at once if they open the picker early;
-       3. a photograph is fetched at full priority when it is chosen, because by then someone is waiting for it.
+       3. a photograph is fetched at full priority when it is chosen (or saved as the choice), because by then someone is waiting for it.
      The photographs and the thumbnails are the same two files, so a thumbnail never needs a second download.
      Nothing is swapped in until it is ready (downloaded and decoded), so the current background stays in place while a choice is still loading. */
   const warm={};
@@ -8207,19 +8237,8 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
     photo.onload=()=>resolve(photo);photo.onerror=()=>{delete warm[key];resolve(null);};
     photo.src=images[key];
   }));
-  const photosSettled=new Promise(resolve=>{const go=()=>resolve(Promise.all(Object.keys(images).map(warmUp)));document.readyState==='loading'?addEventListener('DOMContentLoaded',go,{once:true}):go();});
-  const pageLoaded=document.readyState==='complete'?Promise.resolve():new Promise(resolve=>addEventListener('load',resolve,{once:true}));
-  Promise.all([pageLoaded,photosSettled]).then(()=>{
-    const video=document.getElementById('jaye-global-video-background');
-    /* Only an untouched video is started; pressing the switch already fetches it on demand. */
-    if(video&&video.preload==='none'&&video.paused&&video.readyState===0&&video.networkState!==2&&!root.classList.contains('jaye-video-background-active')&&!root.classList.contains('jaye-image-background-active')){
-      video.preload='auto';
-      const source=video.getAttribute('data-src');
-      if(source&&!video.hasAttribute('src')){
-        try{const parsed=new URL(source,document.baseURI);if(parsed.origin===window.location.origin)video.setAttribute('src',parsed.href);}catch(_){}
-      }
-    }
-  });
+  const ready=key=>warmUp(key).then(photo=>photo&&photo.decode?photo.decode().then(()=>photo,()=>photo):photo);
+  const choose=(mode,manual)=>document.dispatchEvent(new CustomEvent('jaye-background-choice',{detail:{mode,manual}}));
   const attachThumbnails=()=>{
     panel.querySelectorAll('img[data-deferred-src]').forEach(thumb=>{thumb.src=thumb.getAttribute('data-deferred-src');thumb.removeAttribute('data-deferred-src');});
   };
@@ -8233,8 +8252,9 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   });
   nudge.addEventListener('click',()=>{attachThumbnails();nudge.classList.remove('is-visible');panel.classList.add('is-visible');});
   close.addEventListener('click',()=>{closePanel();nudgeDismissed=true;});
-  const applyImage=key=>{
+  const applyImage=(key,manual)=>{
     layer.style.backgroundImage='url("'+images[key]+'")';
+    choose(key,manual);
     root.classList.remove('jaye-video-background-active');
     root.classList.add('jaye-image-background-active');
     document.dispatchEvent(new Event('jaye-background-image-selected'));
@@ -8253,11 +8273,17 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
     if(!images[key])return;
     const choice=++latestChoice;
     /* Wait until the photograph is downloaded and decoded, so the swap never shows an empty layer; a newer choice cancels this one. */
-    warmUp(key).then(photo=>photo&&photo.decode?photo.decode().then(()=>photo,()=>photo):photo).then(photo=>{
+    ready(key).then(photo=>{
       if(choice!==latestChoice)return;
-      if(photo)applyImage(key);else closePanel();
+      if(photo)applyImage(key,true);else closePanel();
     });
   }));
+  /* A saved photograph is shown as soon as it is ready. A deliberate choice made meanwhile wins, and a photograph that cannot load puts the page on Saturn for this visit (not saved). */
+  const saved=root.getAttribute('data-jaye-bg');
+  if(images[saved])ready(saved).then(photo=>{
+    if(latestChoice||root.getAttribute('data-jaye-bg')!==saved)return;
+    if(photo)applyImage(saved,false);else choose('saturn',false);
+  });
   document.addEventListener('pointerdown',event=>{
     if(panel.classList.contains('is-visible')&&!panel.contains(event.target)&&!nudge.contains(event.target))panel.classList.remove('is-visible');
     else if(nudge.classList.contains('is-visible')&&!nudge.contains(event.target)&&event.target!==switcher)nudge.classList.remove('is-visible');
@@ -8428,6 +8454,9 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   if(!video||!canvas||!button)return;
   const root=document.documentElement, activeClass='jaye-video-background-active';
   let wanted=false, suspended=false, generation=0, pauseRecoveryUsed=false;
+  /* The choice is announced to jaye-background-choice-runtime, the one script that stores it. manual = a deliberate selection, which is
+     remembered; the first-visit default and the fallback below are not. */
+  const choose=(mode,manual)=>document.dispatchEvent(new CustomEvent('jaye-background-choice',{detail:{mode,manual}}));
   const setButton=active=>{
     button.textContent=active?'SATURN BACKGROUND':'CHANGE BACKGROUND';
     button.setAttribute('aria-label',active?'Switch global background to Saturn':'Switch global background to video');
@@ -8441,6 +8470,8 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
     generation++;wanted=false;suspended=false;
     root.classList.remove(activeClass);releaseSource();setButton(false);
   };
+  /* The video cannot be played (blocked autoplay, unsupported, broken file): this visit shows Saturn instead. Not saved, so a saved choice stays. */
+  const fallback=()=>{deactivate();choose('saturn',false);};
   const attachSource=()=>{
     const source=video.getAttribute('data-src');
     if(!source)return false;
@@ -8453,21 +8484,28 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
   };
   const playForRequest=async id=>{
     if(id!==generation||!wanted||suspended||document.hidden)return;
-    if(!attachSource()){deactivate();return;}
+    if(!attachSource()){fallback();return;}
     try{
       await video.play();
       if(id!==generation||!wanted||suspended||document.hidden)return;
       if(!video.paused){root.classList.add(activeClass);setButton(true);}
     }catch(_){
       if(id!==generation||!wanted||suspended||document.hidden)return;
-      deactivate();
+      fallback();
     }
   };
-  const activate=()=>{
-    wanted=true;suspended=false;pauseRecoveryUsed=false;setButton(true);
-    const id=++generation;void playForRequest(id);
+  /* The first-visit / saved video starts after the page has loaded and the browser is idle, so it never competes with the page itself. */
+  const afterLoad=fn=>{
+    const run=()=>{'requestIdleCallback' in window?requestIdleCallback(fn,{timeout:2500}):setTimeout(fn,300)};
+    document.readyState==='complete'?run():window.addEventListener('load',run,{once:true});
   };
-  button.addEventListener('click',()=>{if(wanted)deactivate();else activate();});
+  const activate=manual=>{
+    wanted=true;suspended=false;pauseRecoveryUsed=false;setButton(true);
+    const id=++generation;
+    if(manual){choose('video',true);void playForRequest(id);}
+    else afterLoad(()=>{void playForRequest(id);});
+  };
+  button.addEventListener('click',()=>{if(wanted){deactivate();choose('saturn',true);}else activate(true);});
   video.addEventListener('playing',()=>{
     if(!wanted||suspended||document.hidden)return;
     root.classList.add(activeClass);setButton(true);
@@ -8486,7 +8524,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
     const id=++generation;void playForRequest(id);
   });
   video.addEventListener('error',()=>{
-    if(wanted&&!suspended&&!document.hidden&&video.error&&video.currentSrc&&video.currentSrc===video.getAttribute('src'))deactivate();
+    if(wanted&&!suspended&&!document.hidden&&video.error&&video.currentSrc&&video.currentSrc===video.getAttribute('src'))fallback();
   });
   document.addEventListener('visibilitychange',()=>{
     if(!wanted)return;
@@ -8498,6 +8536,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
     }
   });
   document.addEventListener('jaye-background-image-selected',deactivate);
+  if(root.getAttribute('data-jaye-bg')==='video')activate(false);
 })();
 </script>
 
