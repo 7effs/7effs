@@ -1994,6 +1994,21 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
   #jaye-intro-v1 .jaye-v6-title-sweep{left:18%;width:10vw;max-width:44px;min-width:30px;top:37%;height:29%;}
 }
 @media(prefers-reduced-motion:reduce){#jaye-intro-v1 .jaye-v6-final-frame,#jaye-intro-v1 .jaye-v6-title-sweep{display:none!important}}
+
+/* V7: JAYE is treated as one monolithic typographic object, not four flying characters. */
+#jaye-intro-v1 .jaye-v5-wordmark>span{opacity:1;clip-path:inset(0);transform:none;filter:none;will-change:auto;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark{animation:jayeV7MonolithReveal .58s cubic-bezier(.82,0,.18,1) 7.98s both;transform-origin:50% 50%;will-change:transform,opacity,clip-path;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(-n+4){animation:none;}
+#jaye-intro-v1 .jaye-v5-wordmark-echo,
+#jaye-intro-v1 .jaye-v6-final-frame,
+#jaye-intro-v1 .jaye-v6-title-sweep{display:none!important;}
+@keyframes jayeV7MonolithReveal{
+  0%{opacity:0;clip-path:inset(0 50% 0 50%);transform:scaleX(.90) scaleY(.92);}
+  14%{opacity:1;clip-path:inset(0 43% 0 43%);transform:scaleX(.93) scaleY(.95);}
+  72%{opacity:1;clip-path:inset(0);transform:scaleX(1.024) scaleY(1.012);}
+  86%{opacity:1;clip-path:inset(0);transform:scaleX(.996) scaleY(.997);}
+  100%{opacity:1;clip-path:inset(0);transform:scale(1);}
+}
 </style>
 
 <style id="jaye-intro-hi-v8">
