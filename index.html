@@ -2211,59 +2211,117 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
       <span class="jaye-v8-wall"></span>
       <span class="jaye-v8-plinth"></span>
     </div>
-
     <div class="jaye-v5-greeting">
       <div class="jaye-v5-hi-core"><span>H</span><span>i</span></div>
       <span class="jaye-v5-hi-rule"></span>
-      <span class="jaye-v5-hi-index">A PRESENCE / 001</span>
     </div>
-
-    <div class="jaye-v5-strip"><span>MEMORY / ART&nbsp;&nbsp; — &nbsp;&nbsp;JAYE ARCHIVE</span></div>
-
-    <p class="jaye-v5-phrase jaye-v5-phrase--one jaye-sig"><span><b>SUBJECTS OF</b></span><span><b>INTEREST.</b></span></p>
-    <p class="jaye-v5-phrase jaye-v5-phrase--two jaye-sig"><span><b>PEOPLE /</b></span><span><b>PLACES / OBJECTS</b></span></p>
-
-    <span class="jaye-v5-blade"></span>
-    <span class="jaye-v5-wipe jaye-v5-wipe--ivory"></span>
-    <span class="jaye-v5-wipe jaye-v5-wipe--black"></span>
-
-    <div class="jaye-v5-final-stage">
-      <span class="jaye-v5-wordmark-echo">JAYE</span>
-      <div class="jaye-v5-wordmark"><span>J</span><span>A</span><span>Y</span><span>E</span><small>AN OPEN INDEX</small></div>
-      <span class="jaye-v5-final-rule"></span>
-      <span class="jaye-v5-final-tag">MEMORY / ART / EVERYTHING THAT REMAINS</span>
-      <span class="jaye-v6-final-frame" aria-hidden="true"></span>
-      <span class="jaye-v6-title-sweep" aria-hidden="true"></span>
+    <div class="jaye-b9-stage" aria-hidden="true">
+      <div class="jaye-b9-grid"></div>
+      <div class="jaye-b9-title">
+        <span class="jaye-b9-slice jaye-b9-slice--one">JAYE</span>
+        <span class="jaye-b9-slice jaye-b9-slice--two">JAYE</span>
+        <span class="jaye-b9-slice jaye-b9-slice--three">JAYE</span>
+        <span class="jaye-b9-slice jaye-b9-slice--four">JAYE</span>
+      </div>
+      <span class="jaye-b9-side-rail"></span>
+      <span class="jaye-b9-foot-rail"></span>
     </div>
-    <span class="jaye-v5-progress"><span></span></span>
   </div>
-  
-    <div class="jaye-intro-depth" aria-hidden="true">
-      <span class="jaye-intro-depth-frame"></span>
-      <span class="jaye-intro-depth-frame"></span>
-      <span class="jaye-intro-depth-frame"></span>
-      <span class="jaye-intro-depth-frame"></span>
-      <span class="jaye-intro-depth-axis jaye-intro-depth-axis--horizontal"></span>
-      <span class="jaye-intro-depth-axis jaye-intro-depth-axis--vertical"></span>
-    </div>
-    <div class="jaye-intro-ghost" aria-hidden="true">JAYE</div>
-    <div class="jaye-intro-strip"><div class="jaye-intro-strip-text">MEMORY / ART&nbsp;&nbsp; — &nbsp;&nbsp;JAYE ARCHIVE</div></div>
-    <p class="jaye-intro-phrase jaye-intro-phrase--one jaye-sig"><span><b>SUBJECTS OF</b></span><span><b>INTEREST.</b></span></p>
-    <p class="jaye-intro-phrase jaye-intro-phrase--two jaye-sig"><span><b>PEOPLE /</b></span><span><b>PLACES / OBJECTS</b></span></p>
-    <div class="jaye-intro-symbol"></div>
-    <div class="jaye-intro-light"></div><div class="jaye-intro-blackout"></div>
-    <div class="jaye-intro-final-stage">
-      <div class="jaye-intro-final"><span>J</span><span>A</span><span>Y</span><span>E</span><small>THE LIVING ARCHIVE</small></div>
-      <div class="jaye-intro-rule"></div><div class="jaye-intro-tag">MEMORY / ART / EVERYTHING THAT REMAINS</div>
-    </div>
   </div>
   <div class="jaye-intro-counter" aria-hidden="true">JAYE / 001 — ENTERING</div>
 </div>
-<style id="jaye-intro-peak-light-v7">
-/* Peak-light layer: one Canvas 2D overlay synced to the existing intro clock. Decorative only. */
-#jaye-intro-v1 .jaye-peak-light{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;mix-blend-mode:screen;opacity:1;transition:opacity .5s ease}
-#jaye-intro-v1.jaye-intro-exit .jaye-peak-light{opacity:0}
-@media(prefers-reduced-motion:reduce){#jaye-intro-v1 .jaye-peak-light{display:none}}
+
+<style id="jaye-intro-brutalist-v9">
+/* V9 — the greeting stays; the archive name is built like a four-pass letterpress impression. */
+#jaye-intro-v1 .jaye-v5-hi-index{display:none!important}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-greeting{
+  animation:jayeB9HiCut .12s steps(1,end) 2.14s both!important;
+}
+#jaye-intro-v1 .jaye-b9-stage{
+  position:absolute;inset:0;z-index:8;overflow:hidden;
+  background:#eeeae1;color:#080808;transform:translateY(105%);
+  pointer-events:none;isolation:isolate;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-stage{
+  animation:jayeB9PaperPress .38s cubic-bezier(.78,0,.16,1) 2.15s both;
+}
+#jaye-intro-v1 .jaye-b9-grid{
+  position:absolute;inset:0;pointer-events:none;
+  background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),rgba(8,8,8,.12) calc(25% - 1px) 25%);
+}
+#jaye-intro-v1 .jaye-b9-title{
+  position:absolute;left:0;right:0;top:49%;height:1.08em;
+  transform:translateY(-50%);color:#080808;
+  font-family:Arial,Helvetica,sans-serif;font-size:clamp(124px,40vw,760px);
+  font-weight:900;letter-spacing:-.13em;line-height:.76;white-space:nowrap;
+}
+#jaye-intro-v1 .jaye-b9-slice{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;
+  padding-left:4.6vw;white-space:nowrap;will-change:transform;
+}
+#jaye-intro-v1 .jaye-b9-slice--one{clip-path:inset(0 0 75% 0);transform:translateX(-110%)}
+#jaye-intro-v1 .jaye-b9-slice--two{clip-path:inset(25% 0 50% 0);transform:translateX(110%)}
+#jaye-intro-v1 .jaye-b9-slice--three{clip-path:inset(50% 0 25% 0);transform:translateX(-110%)}
+#jaye-intro-v1 .jaye-b9-slice--four{clip-path:inset(75% 0 0 0);transform:translateX(110%)}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--one{animation:jayeB9SliceLeft .72s cubic-bezier(.76,0,.12,1) 2.46s both}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--two{animation:jayeB9SliceRight .72s cubic-bezier(.76,0,.12,1) 2.56s both}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--three{animation:jayeB9SliceLeft .72s cubic-bezier(.76,0,.12,1) 2.66s both}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--four{animation:jayeB9SliceRight .72s cubic-bezier(.76,0,.12,1) 2.76s both}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-title{animation:jayeB9TitleLock .28s cubic-bezier(.82,0,.18,1) 3.48s both}
+#jaye-intro-v1 .jaye-b9-side-rail{
+  position:absolute;left:0;top:0;bottom:0;width:clamp(18px,3.6vw,58px);
+  background:#080808;transform:scaleY(0);transform-origin:top;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-side-rail{
+  animation:jayeB9RailDown .22s steps(7,end) 3.18s both;
+}
+#jaye-intro-v1 .jaye-b9-foot-rail{
+  position:absolute;left:0;right:0;bottom:0;height:clamp(12px,3vh,32px);
+  background:#080808;transform:scaleX(0);transform-origin:right;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-b9-foot-rail{
+  animation:jayeB9RailAcross .22s steps(7,end) 3.52s both;
+}
+#jaye-intro-v1.jaye-intro-exit{
+  animation:jayeB9Exit .56s steps(7,end) both!important;
+  pointer-events:none;
+}
+@keyframes jayeB9HiCut{to{opacity:0;visibility:hidden;transform:translateY(-53%) translateX(-2vw)}}
+@keyframes jayeB9PaperPress{
+  0%{transform:translateY(105%)}
+  72%{transform:translateY(-2.2%)}
+  100%{transform:translateY(0)}
+}
+@keyframes jayeB9SliceLeft{
+  0%{transform:translateX(-110%)}
+  68%{transform:translateX(2.2vw)}
+  84%{transform:translateX(-.45vw)}
+  100%{transform:translateX(0)}
+}
+@keyframes jayeB9SliceRight{
+  0%{transform:translateX(110%)}
+  68%{transform:translateX(-2.2vw)}
+  84%{transform:translateX(.45vw)}
+  100%{transform:translateX(0)}
+}
+@keyframes jayeB9TitleLock{
+  0%{transform:translateY(-50%) scaleY(.96)}
+  72%{transform:translateY(-50%) scaleY(1.018)}
+  100%{transform:translateY(-50%) scaleY(1)}
+}
+@keyframes jayeB9RailDown{to{transform:scaleY(1)}}
+@keyframes jayeB9RailAcross{to{transform:scaleX(1)}}
+@keyframes jayeB9Exit{0%{clip-path:inset(0);visibility:visible}100%{clip-path:inset(0 0 100% 0);visibility:hidden}}
+@media(max-width:600px){
+  #jaye-intro-v1 .jaye-b9-title{font-size:clamp(124px,40vw,250px);top:48%}
+  #jaye-intro-v1 .jaye-b9-slice{padding-left:4.4vw}
+  #jaye-intro-v1 .jaye-b9-side-rail{width:clamp(14px,3.6vw,24px)}
+  #jaye-intro-v1 .jaye-b9-foot-rail{height:clamp(12px,3vh,20px)}
+}
+@media(prefers-reduced-motion:reduce){
+  #jaye-intro-v1 .jaye-b9-stage{display:none!important}
+  #jaye-intro-v1 .jaye-v5-sequence{display:none!important}
+}
 </style>
 <script id="jaye-intro-controller-v2">
 (function(){
@@ -2328,68 +2386,14 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
     requestAnimationFrame(function(){requestAnimationFrame(function(){
       if(closed)return;
       layer.classList.add('jaye-intro-play');
-      timer=window.setTimeout(closeIntro,10760);
+      timer=window.setTimeout(closeIntro,6350);
     });});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',beginIntro,{once:true});
   else beginIntro();
 })();
 </script>
-<script id="jaye-intro-peak-light-v7">
-(function(){
-  'use strict';
-  var layer=document.getElementById('jaye-intro-v1');
-  if(!layer||layer.dataset.peakLight==='true')return;
-  layer.dataset.peakLight='true';
-  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  var scene=layer.querySelector('.jaye-intro-scene')||layer;
-  var cv=document.createElement('canvas');cv.className='jaye-peak-light';cv.setAttribute('aria-hidden','true');
-  var cx=null;try{cx=cv.getContext('2d');}catch(err){}
-  if(!cx)return;
-  var W=0,H=0,dpr=1,raf=0,t0=0,mo=null,done=false,exiting=false,i;
-  var small=Math.min(window.innerWidth,window.innerHeight)<600;
-  var NS=small?44:88,NM=small?16:32,streaks=[],motes=[];
-  for(i=0;i<NS;i++)streaks.push({a:Math.random()*6.2832,r:.05+Math.random()*.18,l:.05+Math.random()*.16,s:.55+Math.random()*.9,o:.25+Math.random()*.6});
-  for(i=0;i<NM;i++)motes.push({x:Math.random(),y:Math.random(),v:.004+Math.random()*.012,z:1+Math.random()*1.4,p:Math.random()});
-  function clamp(v){return v<0?0:v>1?1:v;}
-  function ss(a,b,t){t=clamp((t-a)/(b-a));return t*t*(3-2*t);}
-  function size(){dpr=Math.min(window.devicePixelRatio||1,1.5);W=layer.clientWidth||window.innerWidth;H=layer.clientHeight||window.innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cx.setTransform(dpr,0,0,dpr,0,0);}
-  function frame(now){
-    raf=0;if(done)return;
-    if(!layer.isConnected){stop();return;}
-    var t=(now-t0)/1000,mx=W*.5,my=H*.5,R=Math.hypot(mx,my),k,p,m,s,r0,r1,ca,sn;
-    cx.clearRect(0,0,W,H);
-    /* Orientation (quiet motes) and settle (slow drift into idle). */
-    var ma=ss(.3,1.2,t)*(1-ss(2.6,3.4,t))*.22+ss(7.9,8.8,t)*(1-ss(9.8,10.5,t))*.5;
-    if(ma>.003){cx.fillStyle='#efeee9';
-      for(k=0;k<NM;k++){m=motes[k];cx.globalAlpha=ma*(.55+.45*Math.sin(t*1.3+m.p*6.28));cx.fillRect(m.x*W,(((m.y-t*m.v)%1)+1)%1*H,m.z,m.z);}}
-    /* Anticipation to acceleration: streaks converge outward, cubic ease-in, cut at the wipe. */
-    var e=clamp((t-5)/1.9),sa=Math.pow(e,1.6)*(1-ss(6.9,7.4,t));
-    if(sa>.003){cx.strokeStyle='#efeee9';cx.lineWidth=1;p=e*e*e;
-      for(k=0;k<NS;k++){s=streaks[k];ca=Math.cos(s.a);sn=Math.sin(s.a);
-        r1=R*(s.r+p*s.s*1.1);r0=Math.max(R*s.r*.6,r1-R*s.l*(.2+p*2.4));
-        cx.globalAlpha=sa*s.o*.55;cx.beginPath();cx.moveTo(mx+ca*r0,my+sn*r0);cx.lineTo(mx+ca*r1,my+sn*r1);cx.stroke();}}
-    /* Peak: a short bloom landing on the ivory wipe (about 6.85s). */
-    var f=Math.max(0,1-Math.abs(t-6.85)/.5);f*=f;
-    if(f>.01){var g=cx.createRadialGradient(mx,my,0,mx,my,R*.7);
-      g.addColorStop(0,'rgba(243,242,239,'+(f*.5).toFixed(3)+')');g.addColorStop(.35,'rgba(243,242,239,'+(f*.14).toFixed(3)+')');g.addColorStop(1,'rgba(243,242,239,0)');
-      cx.globalAlpha=1;cx.fillStyle=g;cx.fillRect(0,0,W,H);}
-    raf=requestAnimationFrame(frame);
-  }
-  function start(){if(raf||done)return;if(!cv.parentNode){size();scene.insertBefore(cv,scene.firstChild);}if(!t0)t0=performance.now();raf=requestAnimationFrame(frame);}
-  function onVis(){if(document.hidden){if(raf){cancelAnimationFrame(raf);raf=0;}}else if(!done&&t0&&!raf){raf=requestAnimationFrame(frame);}}
-  function stop(){if(done)return;done=true;if(raf)cancelAnimationFrame(raf);raf=0;if(mo)mo.disconnect();
-    window.removeEventListener('resize',size);document.removeEventListener('visibilitychange',onVis);
-    if(cv.parentNode)cv.parentNode.removeChild(cv);cv.width=cv.height=0;}
-  function sync(){
-    if(layer.classList.contains('jaye-intro-exit')){if(!exiting){exiting=true;window.setTimeout(stop,600);}return;}
-    if(layer.classList.contains('jaye-intro-play'))start();
-  }
-  mo=new MutationObserver(sync);mo.observe(layer,{attributes:true,attributeFilter:['class']});
-  window.addEventListener('resize',size,{passive:true});document.addEventListener('visibilitychange',onVis);
-  sync();
-})();
-</script>
+
 
 
 <div aria-hidden="true" class="big-star"></div>
