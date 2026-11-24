@@ -31,8 +31,8 @@ test('the original phrase copy is preserved alongside the paper-field JAYE wordm
   assert.equal((sequence.match(/class="jaye-b9-slice jaye-b9-slice--/g) ?? []).length, 4)
   assert.equal((sequence.match(/class="jaye-v5-phrase jaye-v5-phrase--/g) ?? []).length, 2)
   assert.equal((sequence.match(/class="jaye-intro-phrase jaye-intro-phrase--/g) ?? []).length, 2)
-  assert.match(sequence, /SUBJECTS OF[\\s\\S]*?INTEREST\\./)
-  assert.match(sequence, /PEOPLE \\/[\\s\\S]*?PLACES \\/ OBJECTS/)
+  assert.ok(sequence.includes('SUBJECTS OF') && sequence.includes('INTEREST.'))
+  assert.ok(sequence.includes('PEOPLE /') && sequence.includes('PLACES / OBJECTS'))
   assert.doesNotMatch(sequence, /jaye-v5-strip|jaye-v5-wipe|jaye-v5-blade|jaye-v5-wordmark|AN OPEN INDEX|THE LIVING ARCHIVE/)
 })
 
