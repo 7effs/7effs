@@ -45,6 +45,14 @@ test('the four phases keep their order and the greeting still leaves at 2.15 s',
   assert.match(css, /\.jaye-v5-greeting\{animation:jayeV5GreetingExit \.62s [^;]*? 2\.15s both\}/, 'P4 exit unchanged')
 })
 
+test('JAYE enters as one centre-split monolith, without letter effects or sci-fi decoration', () => {
+  assert.match(css, /#jaye-intro-v1\\.jaye-intro-play \\.jaye-v5-wordmark\\{animation:jayeV7MonolithReveal \\.58s cubic-bezier\\(\\.82,0,\\.18,1\\) 7\\.98s both/)
+  assert.match(css, /#jaye-intro-v1 \\.jaye-v5-wordmark>span\\{opacity:1;clip-path:inset\\(0\\);transform:none;filter:none/)
+  assert.match(css, /#jaye-intro-v1\\.jaye-intro-play \\.jaye-v5-wordmark>span:nth-child\\(-n\\+4\\)\\{animation:none/)
+  assert.match(css, /@keyframes jayeV7MonolithReveal\\{0%\\{opacity:0;clip-path:inset\\(0 50% 0 50%\\)/)
+  assert.match(css, /#jaye-intro-v1 \\.jaye-v5-wordmark-echo,[\\s\\S]*?\\.jaye-v6-title-sweep\\{display:none!important\\}/)
+})
+
 test('only cheap properties animate and the clip box never cuts the glyphs', () => {
   const frames = [...hi.matchAll(/@keyframes (jayeV8\w+)\{([\s\S]*?)\n/g)]
   assert.ok(frames.length >= 5)
@@ -62,8 +70,6 @@ test('later scenes keep their timing and the final reveal stays centred', () => 
     ['.jaye-v5-phrase--two b:last-child{animation:jayeV6PhraseLeft .72s', '4.94s'],
     ['.jaye-v5-wipe--ivory{animation:jayeV5Wipe .62s', '6.86s'],
     ['.jaye-v5-wipe--black{animation:jayeV5Wipe .57s', '7.49s'],
-    ['.jaye-v5-wordmark>span:nth-child(1){animation:jayeV6LetterJ .76s', '7.98s'],
-    ['.jaye-v6-title-sweep{animation:jayeV6TitleSweep 1.34s', '9.08s'],
   ]
   for (const [a, delay] of timings) {
     const i = css.indexOf(a)
