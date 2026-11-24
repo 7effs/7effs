@@ -168,7 +168,7 @@ export const SECTIONS: SectionEntry[] = [
         text: 'It follows Open Tabs and is followed by By Chance, moving from personal preferences to the friendships the author encountered.',
       },
     ],
-    keywords: ['usual', 'favourites', 'favorites', 'favourite', 'favorite', 'colour', 'color', 'blue', 'milk', 'water', 'music', 'kendrick', 'games', 'animals', 'dogs', 'bunnies', 'volleyball', 'football', 'cricket', 'badminton', 'free fire', 'roblox', 'chess.com', '04'],
+    keywords: ['usual', 'favourites', 'favorites', 'favourite', 'favorite', 'colour', 'color', 'blue', 'milk', 'water', 'music', 'kendrick', 'games', 'animals', 'pets', 'dogs', 'bunnies', 'volleyball', 'football', 'cricket', 'badminton', 'free fire', 'roblox', 'chess.com', '04'],
     related: ['people'],
   },
 
