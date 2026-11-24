@@ -10,6 +10,7 @@ const style = id => {
   return html.slice(start, end)
 }
 const hi = style('jaye-intro-hi-v8')
+const cinematic = style('jaye-intro-cinematic-peak-v5')
 const brutal = style('jaye-intro-brutalist-v9')
 const sequenceStart = html.indexOf('<div class="jaye-v5-sequence"')
 const sequenceEnd = html.indexOf('\n  </div>\n  <div class="jaye-intro-counter"', sequenceStart)
@@ -17,7 +18,7 @@ const sequence = sequenceStart >= 0 && sequenceEnd >= 0 ? html.slice(sequenceSta
 
 test('Hi remains the only opening greeting and keeps its left-anchored construction', () => {
   assert.match(sequence, /<div class="jaye-v5-hi-core"><span>H<\/span><span>i<\/span><\/div>/)
-  assert.match(hi, /--hi-cx:26vw/)
+  assert.match(cinematic, /--hi-cx:26vw/)
   assert.match(hi, /@keyframes jayeV8H/)
   assert.match(hi, /@keyframes jayeV8i/)
   assert.match(hi, /@keyframes jayeV8Wall/)
