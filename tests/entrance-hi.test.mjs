@@ -49,7 +49,7 @@ test('JAYE enters as one centre-split monolith, without letter effects or sci-fi
   assert.match(css, /#jaye-intro-v1\.jaye-intro-play \.jaye-v5-wordmark\{animation:jayeV7MonolithReveal \.58s cubic-bezier\(\.82,0,\.18,1\) 7\.98s both/)
   assert.match(css, /#jaye-intro-v1 \.jaye-v5-wordmark>span\{opacity:1;clip-path:inset\(0\);transform:none;filter:none/)
   assert.match(css, /#jaye-intro-v1\.jaye-intro-play \.jaye-v5-wordmark>span:nth-child\(-n\+4\)\{animation:none/)
-  assert.match(css, /@keyframes jayeV7MonolithReveal\{0%\{opacity:0;clip-path:inset\(0 50% 0 50%\)/)
+  assert.match(css, /@keyframes jayeV7MonolithReveal\{\s*0%\{opacity:0;clip-path:inset\(0 50% 0 50%\)/)
   assert.match(css, /#jaye-intro-v1 \.jaye-v5-wordmark-echo,[\s\S]*?\.jaye-v6-title-sweep\{display:none!important;\}/)
 })
 
