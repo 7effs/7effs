@@ -376,7 +376,7 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
 
     // Belief questions about the author belong to Better Questions, not to every Archive
     // section that happens to mention changing beliefs.
-    if (PERSONAL_CUE.test(raw) && /\b(belief|beliefs|believe|believes|believing|think|thinks|thinking)\b/i.test(raw)) {
+    if (PERSONAL_CUE.test(raw) && /\b(belief|beliefs|believe|believes|believing)\b/i.test(raw)) {
       const beliefs = entryById('memories')
       if (beliefs) return explain(beliefs, req.progress)
     }
