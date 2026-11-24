@@ -285,7 +285,9 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
     const before = knowledge.sections[index - 1]
     const after = knowledge.sections[index + 1]
     const label = entry.node ? `${entry.title} is node ${entry.node}.` : `${entry.title} is one of the sections of the page.`
-    const place = before && after ? ` It comes after ${before.title} and before ${after.title}.` : before ? ` It comes after ${before.title}.` : after ? ` It comes before ${after.title}.` : ''
+    const beforeTitle = before?.id === 'demi' ? before.title.toLowerCase() : before?.title
+    const afterTitle = after?.id === 'demi' ? after.title.toLowerCase() : after?.title
+    const place = before && after ? ` It comes after ${beforeTitle} and before ${afterTitle}.` : before ? ` It comes after ${beforeTitle}.` : after ? ` It comes before ${afterTitle}.` : ''
     return `${label}${place} ${entry.summary}`
   }
 
