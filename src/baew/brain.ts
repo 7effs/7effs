@@ -254,9 +254,9 @@ export function createBrain(knowledge: Knowledge = KNOWLEDGE) {
     const exactAliases = new Set((entry.aliases ?? []).flatMap(tokenize))
     for (const word of query) {
       if (keywords.has(word)) score += 3
-      if ([...exactQuery].some(exact => stem(exact) === word && exactKeywords.has(exact))) score += 3
+      if ([...exactQuery].some(exact => stem(exact) === word && exactKeywords.has(exact))) score += 6
       if (title.has(word) || aliases.has(word)) score += 3
-      if ([...exactQuery].some(exact => stem(exact) === word && (exactTitle.has(exact) || exactAliases.has(exact)))) score += 3
+      if ([...exactQuery].some(exact => stem(exact) === word && (exactTitle.has(exact) || exactAliases.has(exact)))) score += 6
     }
     for (const phrase of phraseKeywords) {
       if (phrase && ` ${spoken} `.includes(` ${phrase} `)) score += 3
