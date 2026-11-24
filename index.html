@@ -2211,124 +2211,335 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
       <span class="jaye-v8-wall"></span>
       <span class="jaye-v8-plinth"></span>
     </div>
+
     <div class="jaye-v5-greeting">
       <div class="jaye-v5-hi-core"><span>H</span><span>i</span></div>
       <span class="jaye-v5-hi-rule"></span>
+      <span class="jaye-v5-hi-index">A PRESENCE / 001</span>
     </div>
-    <div class="jaye-b9-stage" aria-hidden="true">
-      <div class="jaye-b9-grid"></div>
-      <div class="jaye-b9-title">
-        <span class="jaye-b9-slice jaye-b9-slice--one">JAYE</span>
-        <span class="jaye-b9-slice jaye-b9-slice--two">JAYE</span>
-        <span class="jaye-b9-slice jaye-b9-slice--three">JAYE</span>
-        <span class="jaye-b9-slice jaye-b9-slice--four">JAYE</span>
-      </div>
-      <span class="jaye-b9-side-rail"></span>
-      <span class="jaye-b9-foot-rail"></span>
+
+    <div class="jaye-v5-strip"><span>MEMORY / ART&nbsp;&nbsp; — &nbsp;&nbsp;JAYE ARCHIVE</span></div>
+
+    <p class="jaye-v5-phrase jaye-v5-phrase--one jaye-sig"><span><b>SUBJECTS OF</b></span><span><b>INTEREST.</b></span></p>
+    <p class="jaye-v5-phrase jaye-v5-phrase--two jaye-sig"><span><b>PEOPLE /</b></span><span><b>PLACES / OBJECTS</b></span></p>
+
+    <span class="jaye-v5-blade"></span>
+    <span class="jaye-v5-wipe jaye-v5-wipe--ivory"></span>
+    <span class="jaye-v5-wipe jaye-v5-wipe--black"></span>
+
+    <div class="jaye-v5-final-stage">
+      <span class="jaye-v5-wordmark-echo">JAYE</span>
+      <div class="jaye-v5-wordmark"><span>J</span><span>A</span><span>Y</span><span>E</span><small>AN OPEN INDEX</small></div>
+      <span class="jaye-v5-final-rule"></span>
+      <span class="jaye-v5-final-tag">MEMORY / ART / EVERYTHING THAT REMAINS</span>
+      <span class="jaye-v6-final-frame" aria-hidden="true"></span>
+      <span class="jaye-v6-title-sweep" aria-hidden="true"></span>
     </div>
+    <span class="jaye-v5-progress"><span></span></span>
   </div>
+  
   </div>
   <div class="jaye-intro-counter" aria-hidden="true">JAYE / 001 — ENTERING</div>
 </div>
 
-<style id="jaye-intro-brutalist-v9">
-/* V9 — the greeting stays; the archive name is built like a four-pass letterpress impression. */
-#jaye-intro-v1 .jaye-intro-scene,
-#jaye-intro-v1 .jaye-v5-sequence,
-#jaye-intro-v1 .jaye-v5-sequence *{perspective:none!important;transform-style:flat!important}
-#jaye-intro-v1 .jaye-intro-grain{display:none!important}
+<style id="jaye-intro-editorial-v10">
+/*
+  OFFSET / IMPOSITION
+  One continuous editorial press: registration strip, two opposing type plates,
+  a diagonal cut, paper/ink wipes, and the final JAYE plate.
+  All authored copy and the original 10.76s animation clock are retained.
+*/
 #jaye-intro-v1 .jaye-intro-skip{
-  background:#080808;color:#eeeae1;padding:10px 12px;border:1px solid #080808;
+  background:#080808;color:#eeeae1;border:1px solid rgba(238,234,225,.58);
+  border-radius:0;padding:10px 13px;letter-spacing:.16em;
 }
-#jaye-intro-v1 .jaye-v5-hi-index{display:none!important}
-#jaye-intro-v1.jaye-intro-play .jaye-v5-greeting{
-  animation:jayeB9HiCut .12s steps(1,end) 2.14s both!important;
+#jaye-intro-v1 .jaye-v5-sequence{
+  background:#080808;color:#eeeae1;
 }
-#jaye-intro-v1 .jaye-b9-stage{
-  position:absolute;inset:0;z-index:8;overflow:hidden;
-  background:#eeeae1;color:#080808;transform:translateY(105%);
-  pointer-events:none;isolation:isolate;
+
+/* Registration strip: the first paper impression crosses the same central seam. */
+#jaye-intro-v1 .jaye-v5-strip{
+  top:43%;height:14%;justify-content:flex-start;padding:0 7vw;
+  background:#eeeae1;color:#080808;border-top:2px solid #080808;
+  border-bottom:2px solid #080808;
 }
-#jaye-intro-v1.jaye-intro-play .jaye-b9-stage{
-  animation:jayeB9PaperPress .38s cubic-bezier(.78,0,.16,1) 2.15s both;
+#jaye-intro-v1 .jaye-v5-strip::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:clamp(5px,.72vw,10px);
+  background:#c94b37;
 }
-#jaye-intro-v1 .jaye-b9-grid{
-  position:absolute;inset:0;pointer-events:none;
-  background:repeating-linear-gradient(90deg,transparent 0 calc(25% - 1px),rgba(8,8,8,.12) calc(25% - 1px) 25%);
+#jaye-intro-v1 .jaye-v5-strip span{
+  font-family:Arial,Helvetica,sans-serif;font-size:clamp(10px,1.55vw,20px);
+  font-weight:800;letter-spacing:.19em;color:#080808;
 }
-#jaye-intro-v1 .jaye-b9-title{
-  position:absolute;left:0;right:0;top:49%;height:1.08em;
-  transform:translateY(-50%);color:#080808;
-  font-family:Arial,Helvetica,sans-serif;font-size:clamp(124px,40vw,760px);
-  font-weight:900;letter-spacing:-.13em;line-height:.76;white-space:nowrap;
+#jaye-intro-v1.jaye-intro-play .jaye-v5-strip{
+  animation:jayeV10Register 1.1s cubic-bezier(.76,0,.24,1) 2.34s both;
 }
-#jaye-intro-v1 .jaye-b9-slice{
-  position:absolute;inset:0;display:flex;align-items:center;justify-content:flex-start;
-  padding-left:4.6vw;white-space:nowrap;will-change:transform;
+#jaye-intro-v1.jaye-intro-play .jaye-v5-strip span{
+  animation:jayeV10RegisterText .48s cubic-bezier(.16,1,.3,1) 2.58s both;
 }
-#jaye-intro-v1 .jaye-b9-slice--one{clip-path:inset(0 0 75% 0);transform:translateX(-110%)}
-#jaye-intro-v1 .jaye-b9-slice--two{clip-path:inset(25% 0 50% 0);transform:translateX(110%)}
-#jaye-intro-v1 .jaye-b9-slice--three{clip-path:inset(50% 0 25% 0);transform:translateX(-110%)}
-#jaye-intro-v1 .jaye-b9-slice--four{clip-path:inset(75% 0 0 0);transform:translateX(110%)}
-#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--one{animation:jayeB9SliceLeft .72s cubic-bezier(.76,0,.12,1) 2.46s both}
-#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--two{animation:jayeB9SliceRight .72s cubic-bezier(.76,0,.12,1) 2.56s both}
-#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--three{animation:jayeB9SliceLeft .72s cubic-bezier(.76,0,.12,1) 2.66s both}
-#jaye-intro-v1.jaye-intro-play .jaye-b9-slice--four{animation:jayeB9SliceRight .72s cubic-bezier(.76,0,.12,1) 2.76s both}
-#jaye-intro-v1.jaye-intro-play .jaye-b9-title{animation:jayeB9TitleLock .28s cubic-bezier(.82,0,.18,1) 3.48s both}
-#jaye-intro-v1 .jaye-b9-side-rail{
-  position:absolute;left:0;top:0;bottom:0;width:clamp(18px,3.6vw,58px);
-  background:#080808;transform:scaleY(0);transform-origin:top;
+
+/* The first phrase is ink pressed into an ivory plate, arriving from the left. */
+#jaye-intro-v1 .jaye-v5-phrase{
+  top:50%;transform:translateY(-50%);display:block;margin:0;
+  font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-size:clamp(42px,7.4vw,122px);font-weight:900;
+  letter-spacing:-.082em;line-height:.82;text-transform:uppercase;
+  overflow:hidden;overflow-wrap:normal;
 }
-#jaye-intro-v1.jaye-intro-play .jaye-b9-side-rail{
-  animation:jayeB9RailDown .22s steps(7,end) 3.18s both;
+#jaye-intro-v1 .jaye-v5-phrase span{
+  display:block;overflow:hidden;perspective:none;
 }
-#jaye-intro-v1 .jaye-b9-foot-rail{
-  position:absolute;left:0;right:0;bottom:0;height:clamp(12px,3vh,32px);
-  background:#080808;transform:scaleX(0);transform-origin:right;
+#jaye-intro-v1 .jaye-v5-phrase b{
+  display:block;font-weight:inherit;opacity:0;
+  transform:translate3d(-8vw,0,0) scaleX(.91);
+  transform-origin:left center;clip-path:inset(0 100% 0 0);
+  filter:none;will-change:transform,clip-path,opacity;
 }
-#jaye-intro-v1.jaye-intro-play .jaye-b9-foot-rail{
-  animation:jayeB9RailAcross .22s steps(7,end) 3.52s both;
+#jaye-intro-v1 .jaye-v5-phrase--one{
+  left:0;right:10vw;padding:clamp(20px,3.3vh,38px) 6vw;
+  color:#080808;background:#eeeae1;
+  border-left:clamp(7px,.9vw,13px) solid #c94b37;
+  border-top:1px solid rgba(8,8,8,.7);border-bottom:1px solid rgba(8,8,8,.7);
+  clip-path:inset(0 100% 0 0);
 }
-#jaye-intro-v1.jaye-intro-exit{
-  animation:jayeB9Exit .56s steps(7,end) both!important;
-  pointer-events:none;
+#jaye-intro-v1.jaye-intro-play .jaye-v5-phrase--one{
+  animation:jayeV10PlateLeft .58s cubic-bezier(.78,0,.16,1) 3.10s both,
+            jayeV10PlateExitLeft .44s cubic-bezier(.72,0,.22,1) 4.55s both;
 }
-@keyframes jayeB9HiCut{to{opacity:0;visibility:hidden;transform:translateY(-53%) translateX(-2vw)}}
-@keyframes jayeB9PaperPress{
-  0%{transform:translateY(105%)}
-  72%{transform:translateY(-2.2%)}
-  100%{transform:translateY(0)}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-phrase--one b:first-child{
+  animation:jayeV10TypeLeft .66s cubic-bezier(.72,0,.16,1) 3.28s both;
 }
-@keyframes jayeB9SliceLeft{
-  0%{transform:translateX(-110%)}
-  68%{transform:translateX(2.2vw)}
-  84%{transform:translateX(-.45vw)}
-  100%{transform:translateX(0)}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-phrase--one b:last-child{
+  animation:jayeV10TypeLeft .70s cubic-bezier(.72,0,.16,1) 3.45s both;
 }
-@keyframes jayeB9SliceRight{
-  0%{transform:translateX(110%)}
-  68%{transform:translateX(-2.2vw)}
-  84%{transform:translateX(.45vw)}
-  100%{transform:translateX(0)}
+
+/* The second plate reverses the material and direction; the copy remains untouched. */
+#jaye-intro-v1 .jaye-v5-phrase--two{
+  left:12vw;right:0;padding:clamp(20px,3.2vh,36px) 6vw;
+  color:#eeeae1;background:#111111;
+  border-left:clamp(7px,.9vw,13px) solid #c94b37;
+  border-top:1px solid rgba(238,234,225,.62);
+  border-bottom:1px solid rgba(238,234,225,.62);
+  clip-path:inset(0 0 0 100%);
 }
-@keyframes jayeB9TitleLock{
-  0%{transform:translateY(-50%) scaleY(.96)}
-  72%{transform:translateY(-50%) scaleY(1.018)}
-  100%{transform:translateY(-50%) scaleY(1)}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-phrase--two{
+  animation:jayeV10PlateRight .58s cubic-bezier(.78,0,.16,1) 4.60s both,
+            jayeV10PlateExitRight .44s cubic-bezier(.72,0,.22,1) 6.05s both;
 }
-@keyframes jayeB9RailDown{to{transform:scaleY(1)}}
-@keyframes jayeB9RailAcross{to{transform:scaleX(1)}}
-@keyframes jayeB9Exit{0%{clip-path:inset(0);visibility:visible}100%{clip-path:inset(0 0 100% 0);visibility:hidden}}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-phrase--two b:first-child{
+  animation:jayeV10TypeRight .66s cubic-bezier(.72,0,.16,1) 4.77s both;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-phrase--two b:last-child{
+  animation:jayeV10TypeLeft .70s cubic-bezier(.72,0,.16,1) 4.94s both;
+}
+
+/* The seam becomes a single physical cut, then the original two wipes complete the hand-off. */
+#jaye-intro-v1 .jaye-v5-blade{
+  width:clamp(3px,.34vw,6px);background:#c94b37;
+  transform-origin:center;will-change:transform,opacity;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-blade{
+  animation:jayeV10Blade 1.68s cubic-bezier(.16,1,.3,1) 5.65s both!important;
+}
+#jaye-intro-v1 .jaye-v5-wipe--ivory{background:#eeeae1;}
+#jaye-intro-v1 .jaye-v5-wipe--black{background:#080808;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wipe--ivory{
+  animation:jayeV5Wipe .62s cubic-bezier(.76,0,.24,1) 6.86s both;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wipe--black{
+  animation:jayeV5Wipe .57s cubic-bezier(.76,0,.24,1) 7.49s both;
+}
+
+/* The final frame is a registration boundary, not a futuristic HUD. */
+#jaye-intro-v1 .jaye-v5-final-stage{z-index:6;pointer-events:none;}
+#jaye-intro-v1 .jaye-v6-final-frame{
+  display:block!important;left:10vw;right:10vw;top:24%;height:49%;
+  border:1px solid rgba(238,234,225,.28);
+  border-left:clamp(5px,.65vw,9px) solid #c94b37;
+  opacity:0;transform:translateY(16px) scaleX(.88);
+  transform-origin:center;transform-style:flat;
+}
+#jaye-intro-v1 .jaye-v6-final-frame::before{
+  content:"";position:absolute;inset:7% 4%;
+  border:1px solid rgba(238,234,225,.10);
+}
+#jaye-intro-v1 .jaye-v6-final-frame::after{
+  content:"";position:absolute;left:50%;top:-5%;bottom:-5%;width:1px;
+  background:rgba(201,75,55,.72);transform:scaleY(.72);
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v6-final-frame{
+  animation:jayeV10Frame 3.25s cubic-bezier(.16,1,.3,1) 7.43s both;
+}
+#jaye-intro-v1 .jaye-v5-wordmark-echo{
+  display:block!important;color:transparent;
+  -webkit-text-stroke:1px rgba(238,234,225,.25);
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark-echo{
+  animation:jayeV10Echo 1.55s cubic-bezier(.16,1,.3,1) 7.92s both;
+}
+#jaye-intro-v1 .jaye-v5-wordmark{
+  top:44%;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;
+  font-weight:900;letter-spacing:-.105em;
+  font-size:clamp(90px,22vw,330px);color:#eeeae1;
+}
+#jaye-intro-v1 .jaye-v5-wordmark>span{
+  opacity:1;clip-path:inset(0);transform:none;filter:none;will-change:auto;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark{
+  animation:jayeV10Wordmark .66s cubic-bezier(.82,0,.18,1) 7.98s both;
+  transform-origin:50% 50%;will-change:transform,opacity,clip-path;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(-n+4){animation:none;}
+#jaye-intro-v1 .jaye-v5-wordmark small{
+  color:#c94b37;font-family:Arial,Helvetica,sans-serif;
+  font-size:clamp(8px,1vw,12px);font-weight:800;letter-spacing:.22em;
+}
+#jaye-intro-v1 .jaye-v5-final-rule{
+  height:2px;background:rgba(238,234,225,.8);
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-final-rule{
+  animation:jayeV10FinalRule .78s cubic-bezier(.16,1,.3,1) 8.90s both;
+}
+#jaye-intro-v1 .jaye-v5-final-tag{
+  color:rgba(238,234,225,.66);font:700 9px/1.2 Arial,Helvetica,sans-serif;
+  letter-spacing:.19em;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-final-tag{
+  animation:jayeV10Tag .48s cubic-bezier(.16,1,.3,1) 9.18s both;
+}
+
+/* The title sweep is now a narrow ink-registration pass, not a glossy shine. */
+#jaye-intro-v1 .jaye-v6-title-sweep{
+  display:block!important;left:29%;top:36%;width:clamp(5px,.55vw,9px);
+  min-width:0;max-width:none;height:34%;opacity:0;
+  background:linear-gradient(180deg,transparent,rgba(201,75,55,.28) 18%,#c94b37 50%,rgba(201,75,55,.28) 82%,transparent);
+  mix-blend-mode:normal;transform:translateX(-160%) skewX(-8deg);z-index:4;
+}
+#jaye-intro-v1.jaye-intro-play .jaye-v6-title-sweep{
+  animation:jayeV10Roll 1.12s cubic-bezier(.16,1,.3,1) 9.08s both;
+}
+
+/* The progress rule is retained as part of the printed composition. */
+#jaye-intro-v1 .jaye-v5-progress{
+  display:block;left:0;right:0;bottom:0;height:2px;z-index:9;
+  background:rgba(238,234,225,.13);
+}
+#jaye-intro-v1 .jaye-v5-progress>span{height:2px;background:#c94b37;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-progress>span{
+  animation:jayeV5Progress 10.72s linear .04s both;
+}
+
+@keyframes jayeV10Register{
+  0%{transform:scaleX(0);transform-origin:left center}
+  48%{transform:scaleX(1);transform-origin:left center}
+  63%{transform:scaleX(1);transform-origin:right center}
+  100%{transform:scaleX(0);transform-origin:right center}
+}
+@keyframes jayeV10RegisterText{
+  from{clip-path:inset(0 100% 0 0);letter-spacing:.44em;transform:translateX(-.5vw)}
+  to{clip-path:inset(0);letter-spacing:.19em;transform:translateX(0)}
+}
+@keyframes jayeV10PlateLeft{
+  0%{opacity:0;clip-path:inset(0 100% 0 0)}
+  100%{opacity:1;clip-path:inset(0)}
+}
+@keyframes jayeV10PlateRight{
+  0%{opacity:0;clip-path:inset(0 0 0 100%)}
+  100%{opacity:1;clip-path:inset(0)}
+}
+@keyframes jayeV10PlateExitLeft{
+  0%{opacity:1;clip-path:inset(0)}
+  100%{opacity:0;clip-path:inset(0 100% 0 0)}
+}
+@keyframes jayeV10PlateExitRight{
+  0%{opacity:1;clip-path:inset(0)}
+  100%{opacity:0;clip-path:inset(0 0 0 100%)}
+}
+@keyframes jayeV10TypeLeft{
+  0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-8vw,0,0) scaleX(.91)}
+  72%{opacity:1;clip-path:inset(0);transform:translate3d(.8vw,0,0) scaleX(1.015)}
+  100%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,0) scaleX(1)}
+}
+@keyframes jayeV10TypeRight{
+  0%{opacity:0;clip-path:inset(0 0 0 100%);transform:translate3d(8vw,0,0) scaleX(.91)}
+  72%{opacity:1;clip-path:inset(0);transform:translate3d(-.8vw,0,0) scaleX(1.015)}
+  100%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,0) scaleX(1)}
+}
+@keyframes jayeV10Blade{
+  0%{opacity:0;transform:translate(-50%,-50%) rotate(28deg) scaleY(.02)}
+  12%{opacity:1;transform:translate(-50%,-50%) rotate(28deg) scaleY(.02)}
+  48%{opacity:1;transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}
+  62%{opacity:1;transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}
+  100%{opacity:0;transform:translate(150vw,-50%) rotate(28deg) scaleY(.18)}
+}
+@keyframes jayeV10Frame{
+  0%{opacity:0;transform:translateY(16px) scaleX(.88)}
+  42%{opacity:.34;transform:translateY(0) scaleX(1.015)}
+  68%{opacity:.28;transform:translateY(0) scaleX(1)}
+  100%{opacity:.28;transform:translateY(0) scaleX(1)}
+}
+@keyframes jayeV10Echo{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(1.02)}
+  28%{opacity:.28}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.15)}
+}
+@keyframes jayeV10Wordmark{
+  0%{opacity:0;clip-path:inset(0 50% 0 50%);transform:scaleX(.90) scaleY(.94)}
+  14%{opacity:1;clip-path:inset(0 43% 0 43%);transform:scaleX(.93) scaleY(.96)}
+  72%{opacity:1;clip-path:inset(0);transform:scaleX(1.022) scaleY(1.012)}
+  86%{opacity:1;clip-path:inset(0);transform:scaleX(.997) scaleY(.998)}
+  100%{opacity:1;clip-path:inset(0);transform:scale(1)}
+}
+@keyframes jayeV10FinalRule{
+  0%{transform:scaleX(0)}
+  70%{transform:scaleX(1.01)}
+  100%{transform:scaleX(1)}
+}
+@keyframes jayeV10Tag{to{opacity:1;clip-path:inset(0)}}
+@keyframes jayeV10Roll{
+  0%{opacity:0;transform:translateX(-160%) skewX(-8deg)}
+  12%{opacity:.95}
+  58%{opacity:.55}
+  100%{opacity:0;transform:translateX(900%) skewX(-8deg)}
+}
+
 @media(max-width:600px){
-  #jaye-intro-v1 .jaye-b9-title{font-size:clamp(124px,40vw,250px);top:48%}
-  #jaye-intro-v1 .jaye-b9-slice{padding-left:4.4vw}
-  #jaye-intro-v1 .jaye-b9-side-rail{width:clamp(14px,3.6vw,24px)}
-  #jaye-intro-v1 .jaye-b9-foot-rail{height:clamp(12px,3vh,20px)}
+  #jaye-intro-v1 .jaye-v5-strip{height:13%;top:43.5%;padding:0 5vw;}
+  #jaye-intro-v1 .jaye-v5-strip span{font-size:clamp(9px,2.4vw,13px);letter-spacing:.14em;}
+  #jaye-intro-v1 .jaye-v5-phrase{
+    left:0;right:0;padding:18px 5vw;font-size:clamp(29px,8vw,48px);
+    letter-spacing:-.075em;line-height:.86;
+  }
+  #jaye-intro-v1 .jaye-v5-phrase--one{border-left:6px solid #c94b37;}
+  #jaye-intro-v1 .jaye-v5-phrase--two{border-left:6px solid #c94b37;}
+  #jaye-intro-v1 .jaye-v6-final-frame{left:6vw;right:6vw;top:25%;height:47%;}
+  #jaye-intro-v1 .jaye-v5-wordmark,#jaye-intro-v1 .jaye-v5-wordmark-echo{
+    font-size:clamp(70px,21vw,124px);
+  }
+  #jaye-intro-v1 .jaye-v5-wordmark small{
+    position:absolute;left:50%;top:calc(100% + 12px);transform:translateX(-50%);
+    margin:0;font-size:7px;letter-spacing:.17em;writing-mode:horizontal-tb;white-space:nowrap;
+  }
+  #jaye-intro-v1 .jaye-v5-final-rule{bottom:29%;}
+  #jaye-intro-v1 .jaye-v5-final-tag{
+    left:6vw;right:6vw;bottom:calc(29% - 25px);font-size:7px;letter-spacing:.11em;
+    white-space:normal;
+  }
+  #jaye-intro-v1 .jaye-v6-title-sweep{left:18%;top:37%;height:29%;}
+}
+@media(max-width:360px){
+  #jaye-intro-v1 .jaye-v5-phrase{font-size:clamp(27px,7.9vw,32px);padding:16px 4.5vw;}
 }
 @media(prefers-reduced-motion:reduce){
-  #jaye-intro-v1 .jaye-b9-stage{display:none!important}
-  #jaye-intro-v1 .jaye-v5-sequence{display:none!important}
+  #jaye-intro-v1 .jaye-v6-final-frame,
+  #jaye-intro-v1 .jaye-v6-title-sweep{display:none!important}
 }
+</style>
+<style id="jaye-intro-peak-light-v7">
+/* Peak-light layer: one Canvas 2D overlay synced to the existing intro clock. Decorative only. */
+#jaye-intro-v1 .jaye-peak-light{position:absolute;inset:0;width:100%;height:100%;z-index:6;pointer-events:none;mix-blend-mode:screen;opacity:1;transition:opacity .5s ease}
+#jaye-intro-v1.jaye-intro-exit .jaye-peak-light{opacity:0}
+@media(prefers-reduced-motion:reduce){#jaye-intro-v1 .jaye-peak-light{display:none}}
 </style>
 <script id="jaye-intro-controller-v2">
 (function(){
@@ -2393,11 +2604,66 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
     requestAnimationFrame(function(){requestAnimationFrame(function(){
       if(closed)return;
       layer.classList.add('jaye-intro-play');
-      timer=window.setTimeout(closeIntro,6350);
+      timer=window.setTimeout(closeIntro,10760);
     });});
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',beginIntro,{once:true});
   else beginIntro();
+})();
+</script>
+<script id="jaye-intro-peak-light-v7">
+(function(){
+  'use strict';
+  var layer=document.getElementById('jaye-intro-v1');
+  if(!layer||layer.dataset.peakLight==='true')return;
+  layer.dataset.peakLight='true';
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var scene=layer.querySelector('.jaye-v5-sequence')||layer.querySelector('.jaye-intro-scene')||layer;
+  var cv=document.createElement('canvas');cv.className='jaye-peak-light';cv.setAttribute('aria-hidden','true');
+  var cx=null;try{cx=cv.getContext('2d');}catch(err){}
+  if(!cx)return;
+  var W=0,H=0,dpr=1,raf=0,t0=0,mo=null,done=false,exiting=false,i;
+  var small=Math.min(window.innerWidth,window.innerHeight)<600;
+  var NS=small?44:88,NM=small?16:32,streaks=[],motes=[];
+  for(i=0;i<NS;i++)streaks.push({a:Math.random()*6.2832,r:.05+Math.random()*.18,l:.05+Math.random()*.16,s:.55+Math.random()*.9,o:.25+Math.random()*.6});
+  for(i=0;i<NM;i++)motes.push({x:Math.random(),y:Math.random(),v:.004+Math.random()*.012,z:1+Math.random()*1.4,p:Math.random()});
+  function clamp(v){return v<0?0:v>1?1:v;}
+  function ss(a,b,t){t=clamp((t-a)/(b-a));return t*t*(3-2*t);}
+  function size(){dpr=Math.min(window.devicePixelRatio||1,1.5);W=layer.clientWidth||window.innerWidth;H=layer.clientHeight||window.innerHeight;cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cx.setTransform(dpr,0,0,dpr,0,0);}
+  function frame(now){
+    raf=0;if(done)return;
+    if(!layer.isConnected){stop();return;}
+    var t=(now-t0)/1000,mx=W*.5,my=H*.5,R=Math.hypot(mx,my),k,p,m,s,r0,r1,ca,sn;
+    cx.clearRect(0,0,W,H);
+    /* Orientation (quiet motes) and settle (slow drift into idle). */
+    var ma=ss(.3,1.2,t)*(1-ss(2.6,3.4,t))*.22+ss(7.9,8.8,t)*(1-ss(9.8,10.5,t))*.5;
+    if(ma>.003){cx.fillStyle='#efeee9';
+      for(k=0;k<NM;k++){m=motes[k];cx.globalAlpha=ma*(.55+.45*Math.sin(t*1.3+m.p*6.28));cx.fillRect(m.x*W,(((m.y-t*m.v)%1)+1)%1*H,m.z,m.z);}}
+    /* Anticipation to acceleration: streaks converge outward, cubic ease-in, cut at the wipe. */
+    var e=clamp((t-5)/1.9),sa=Math.pow(e,1.6)*(1-ss(6.9,7.4,t));
+    if(sa>.003){cx.strokeStyle='#efeee9';cx.lineWidth=1;p=e*e*e;
+      for(k=0;k<NS;k++){s=streaks[k];ca=Math.cos(s.a);sn=Math.sin(s.a);
+        r1=R*(s.r+p*s.s*1.1);r0=Math.max(R*s.r*.6,r1-R*s.l*(.2+p*2.4));
+        cx.globalAlpha=sa*s.o*.55;cx.beginPath();cx.moveTo(mx+ca*r0,my+sn*r0);cx.lineTo(mx+ca*r1,my+sn*r1);cx.stroke();}}
+    /* Peak: a short bloom landing on the ivory wipe (about 6.85s). */
+    var f=Math.max(0,1-Math.abs(t-6.85)/.5);f*=f;
+    if(f>.01){var g=cx.createRadialGradient(mx,my,0,mx,my,R*.7);
+      g.addColorStop(0,'rgba(243,242,239,'+(f*.5).toFixed(3)+')');g.addColorStop(.35,'rgba(243,242,239,'+(f*.14).toFixed(3)+')');g.addColorStop(1,'rgba(243,242,239,0)');
+      cx.globalAlpha=1;cx.fillStyle=g;cx.fillRect(0,0,W,H);}
+    raf=requestAnimationFrame(frame);
+  }
+  function start(){if(raf||done)return;if(!cv.parentNode){size();scene.insertBefore(cv,scene.firstChild);}if(!t0)t0=performance.now();raf=requestAnimationFrame(frame);}
+  function onVis(){if(document.hidden){if(raf){cancelAnimationFrame(raf);raf=0;}}else if(!done&&t0&&!raf){raf=requestAnimationFrame(frame);}}
+  function stop(){if(done)return;done=true;if(raf)cancelAnimationFrame(raf);raf=0;if(mo)mo.disconnect();
+    window.removeEventListener('resize',size);document.removeEventListener('visibilitychange',onVis);
+    if(cv.parentNode)cv.parentNode.removeChild(cv);cv.width=cv.height=0;}
+  function sync(){
+    if(layer.classList.contains('jaye-intro-exit')){if(!exiting){exiting=true;window.setTimeout(stop,600);}return;}
+    if(layer.classList.contains('jaye-intro-play'))start();
+  }
+  mo=new MutationObserver(sync);mo.observe(layer,{attributes:true,attributeFilter:['class']});
+  window.addEventListener('resize',size,{passive:true});document.addEventListener('visibilitychange',onVis);
+  sync();
 })();
 </script>
 
