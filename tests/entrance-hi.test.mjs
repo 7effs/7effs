@@ -34,6 +34,11 @@ test('the complete authored sequence and every original phrase remain present', 
     'jaye-v5-final-rule', 'MEMORY / ART / EVERYTHING THAT REMAINS',
     'jaye-v6-final-frame', 'jaye-v6-title-sweep', 'jaye-v5-progress'
   ]) assert.ok(sequence.includes(text), 'missing preserved entrance element: ' + text)
+  assert.ok(html.includes('<div class="jaye-intro-depth"'))
+  assert.ok(html.includes('<div class="jaye-intro-ghost"'))
+  assert.ok(html.includes('<p class="jaye-intro-phrase jaye-intro-phrase--one jaye-sig">'))
+  assert.ok(html.includes('<p class="jaye-intro-phrase jaye-intro-phrase--two jaye-sig">'))
+  assert.ok(v5.includes('.jaye-intro-scene > :not(.jaye-v5-sequence){display:none!important}'))
   assert.ok(!html.includes('jaye-b9') && !html.includes('jayeB9'), 'the stripped four-slice experiment is removed')
 })
 
