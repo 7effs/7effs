@@ -21,31 +21,50 @@ jobs:
         if: github.ref == 'refs/heads/safety/test-baseline-2026-11-26'
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg optipng python3-pil
+          sudo apt-get install -y ffmpeg libjpeg-turbo-progs optipng python3-pil
       - name: Conservatively optimize the two approved assets
         if: github.ref == 'refs/heads/safety/test-baseline-2026-11-26'
         run: |
           set -euo pipefail
 
-          echo "Demi PNG: lossless optimization with pixel equality verification"
-          original_png_bytes=$(stat -c%s demi.png)
-          cp demi.png "$RUNNER_TEMP/demi.png"
-          optipng -o7 "$RUNNER_TEMP/demi.png"
+          echo "Demi asset: detect its actual format, then optimize without changing decoded pixels"
           python3 - <<'PY'
+          import os, shutil, subprocess
           from PIL import Image
-          with Image.open("demi.png") as original, Image.open(__import__("os").environ["RUNNER_TEMP"] + "/demi.png") as optimized:
-              assert original.size == optimized.size, "PNG dimensions changed"
-              assert original.mode == optimized.mode, "PNG color mode changed"
-              assert original.tobytes() == optimized.tobytes(), "PNG pixel data changed"
-          print("PNG verification passed: dimensions, mode, and every decoded pixel are identical")
+
+          source = "demi.png"
+          temp_dir = os.environ["RUNNER_TEMP"]
+          before = os.path.getsize(source)
+          with Image.open(source) as original:
+              image_format = original.format
+              original_size = original.size
+              original_mode = original.mode
+              original_pixels = original.tobytes()
+          print(f"demi.png contains {image_format} data; dimensions={original_size}, mode={original_mode}, bytes={before}")
+
+          if image_format == "JPEG":
+              candidate = os.path.join(temp_dir, "demi-lossless.jpg")
+              subprocess.run(["jpegtran", "-optimize", "-copy", "all", "-outfile", candidate, source], check=True)
+          elif image_format == "PNG":
+              candidate = os.path.join(temp_dir, "demi-lossless.png")
+              shutil.copy2(source, candidate)
+              subprocess.run(["optipng", "-o7", candidate], check=True)
+          else:
+              raise RuntimeError(f"Unsupported image format for lossless optimization: {image_format}")
+
+          with Image.open(candidate) as optimized:
+              assert optimized.format == image_format, "Image format changed"
+              assert optimized.size == original_size, "Image dimensions changed"
+              assert optimized.mode == original_mode, "Image mode changed"
+              assert optimized.tobytes() == original_pixels, "Decoded image pixels changed"
+
+          after = os.path.getsize(candidate)
+          if after < before:
+              shutil.copy2(candidate, source)
+              print(f"Image accepted: {before} -> {after} bytes; decoded pixels are exactly identical")
+          else:
+              print(f"Image unchanged: no size reduction ({before} bytes)")
           PY
-          optimized_png_bytes=$(stat -c%s "$RUNNER_TEMP/demi.png")
-          if (( optimized_png_bytes < original_png_bytes )); then
-            cp "$RUNNER_TEMP/demi.png" demi.png
-            echo "Demi PNG: $original_png_bytes -> $optimized_png_bytes bytes"
-          else
-            echo "Demi PNG: no size reduction; original retained ($original_png_bytes bytes)"
-          fi
 
           echo "Glimpse song1: inspect first; re-encode only if source average bitrate exceeds 288 kbps"
           python3 - <<'PY'
@@ -120,7 +139,7 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "assets: optimize Demi PNG and Glimpse track safely"
+            git commit -m "assets: optimize Demi image and Glimpse track safely"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           else
             echo "No approved asset produced a worthwhile verified reduction"
