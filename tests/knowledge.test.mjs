@@ -94,8 +94,9 @@ test('personal sections are described in the third person', () => {
 })
 
 test('site-specific claims match the page text', () => {
-  const must = ['Enter the Parent Space', 'Read the room', 'Generate whisper', 'Contradiction Lab', 'Counterexample Terminal', 'Pattern & Sequence', 'Logic & Deduction', 'Unsupported attribution', 'The story stays', 'Made by @cvechz', 'NO FEED. NO ALGORITHM']
+  const must = ['Enter the Parent Space', 'Read the room', 'Generate whisper', 'Contradiction Lab', 'Counterexample Terminal', 'Pattern & Sequence', 'Logic & Deduction', 'Unsupported attribution', 'The story stays', 'Made by @cvechz']
   for (const s of must) assert.ok(html.includes(s) || html.toLowerCase().includes(s.toLowerCase()), `page does not contain "${s}"`)
+  assert.doesNotMatch(html, /NO FEED\.\s*NO ALGORITHM/i, 'removed tagline stays absent')
 })
 
 test('the Archive has no chapter display titles; the eight sections, their order and the knowledge agree', () => {

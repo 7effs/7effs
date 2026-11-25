@@ -3,13 +3,7 @@ name: Build Strobi Widget
 'on':
   workflow_dispatch:
   push:
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "strobi.avatar.json"
-      - "package.json"
-      - "vite.widget.config.ts"
-      - ".github/workflows/build-strobi.yml"
+  pull_request:
 
 jobs:
   build:
