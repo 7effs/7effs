@@ -17,6 +17,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Setup Go for pinned lossless MP3 repacker
+        if: github.ref == 'refs/heads/safety/test-baseline-2026-11-26'
+        uses: actions/setup-go@v6
+        with:
+          go-version: "1.26.5"
       - name: Install media inspection tools
         if: github.ref == 'refs/heads/safety/test-baseline-2026-11-26'
         run: |
@@ -27,108 +32,93 @@ jobs:
         run: |
           set -euo pipefail
 
-          echo "Demi asset: detect its actual format, then optimize without changing decoded pixels"
+          echo "Demi image: try progressive JPEG optimization, preserving decoded pixels"
           python3 - <<'PY'
           import os, shutil, subprocess
           from PIL import Image
 
           source = "demi.png"
-          temp_dir = os.environ["RUNNER_TEMP"]
+          candidate = os.path.join(os.environ["RUNNER_TEMP"], "demi-progressive.jpg")
           before = os.path.getsize(source)
           with Image.open(source) as original:
-              image_format = original.format
-              original_size = original.size
-              original_mode = original.mode
-              original_pixels = original.tobytes()
-          print(f"demi.png contains {image_format} data; dimensions={original_size}, mode={original_mode}, bytes={before}")
-
+              image_format, dimensions, mode, pixels = original.format, original.size, original.mode, original.tobytes()
+          print(f"demi.png contains {image_format} data; dimensions={dimensions}, mode={mode}, bytes={before}")
           if image_format == "JPEG":
-              candidate = os.path.join(temp_dir, "demi-lossless.jpg")
-              subprocess.run(["jpegtran", "-optimize", "-copy", "all", "-outfile", candidate, source], check=True)
+              subprocess.run(["jpegtran", "-optimize", "-progressive", "-copy", "all", "-outfile", candidate, source], check=True)
           elif image_format == "PNG":
-              candidate = os.path.join(temp_dir, "demi-lossless.png")
+              candidate = os.path.join(os.environ["RUNNER_TEMP"], "demi-lossless.png")
               shutil.copy2(source, candidate)
               subprocess.run(["optipng", "-o7", candidate], check=True)
           else:
-              raise RuntimeError(f"Unsupported image format for lossless optimization: {image_format}")
-
+              raise RuntimeError(f"Unsupported image format: {image_format}")
           with Image.open(candidate) as optimized:
-              assert optimized.format == image_format, "Image format changed"
-              assert optimized.size == original_size, "Image dimensions changed"
-              assert optimized.mode == original_mode, "Image mode changed"
-              assert optimized.tobytes() == original_pixels, "Decoded image pixels changed"
-
+              assert optimized.format == image_format
+              assert optimized.size == dimensions
+              assert optimized.mode == mode
+              assert optimized.tobytes() == pixels, "Decoded pixels differ"
           after = os.path.getsize(candidate)
           if after < before:
               shutil.copy2(candidate, source)
-              print(f"Image accepted: {before} -> {after} bytes; decoded pixels are exactly identical")
+              print(f"Image accepted: {before} -> {after} bytes; decoded pixels are identical")
           else:
               print(f"Image unchanged: no size reduction ({before} bytes)")
           PY
 
-          echo "Glimpse song1: inspect first; re-encode only if source average bitrate exceeds 288 kbps"
+          echo "Glimpse song1: try pinned lossless MP3 repacking and compare decoded PCM"
+          go install github.com/W-Floyd/go-mp3packer/cmd/mp3packer@f063f91dcf9221e284842900323920864520f801
           python3 - <<'PY'
-          import json, os, shutil, subprocess
+          import filecmp, json, os, subprocess
           source = "glimpse/song1.mp3"
-          candidate = os.environ["RUNNER_TEMP"] + "/song1-256k.mp3"
+          candidate = os.path.join(os.environ["RUNNER_TEMP"], "song1-lossless.mp3")
+          original_bytes = os.path.getsize(source)
 
           def probe(path):
-              raw = subprocess.check_output([
+              data = json.loads(subprocess.check_output([
                   "ffprobe", "-v", "error", "-show_entries",
-                  "format=duration,bit_rate:stream=codec_type,codec_name,sample_rate,channels,bit_rate",
+                  "format=duration:format_tags:stream=codec_name,sample_rate,channels,codec_type",
                   "-of", "json", path
-              ], text=True)
-              data = json.loads(raw)
+              ], text=True))
               audio = next((s for s in data.get("streams", []) if s.get("codec_type") == "audio"), None)
               if not audio:
                   raise RuntimeError("No audio stream found")
-              bitrate = int(data.get("format", {}).get("bit_rate") or audio.get("bit_rate") or 0)
-              duration = float(data["format"]["duration"])
-              return data, audio, bitrate, duration
+              return data, audio, float(data["format"]["duration"])
 
-          original_data, original_audio, original_bitrate, original_duration = probe(source)
-          original_bytes = os.path.getsize(source)
-          print(f"Source: {original_bytes} bytes, {original_bitrate} bps average, "
-                f"{original_duration:.3f}s, {original_audio.get('sample_rate')} Hz, "
-                f"{original_audio.get('channels')} channel(s), codec={original_audio.get('codec_name')}")
+          original_data, original_audio, original_duration = probe(source)
+          print(f"Source: {original_bytes} bytes, {original_duration:.3f}s, "
+                f"{original_audio.get('sample_rate')} Hz, {original_audio.get('channels')} channel(s)")
+          subprocess.run(["mp3packer", "-q", source, candidate], check=True)
+          candidate_data, candidate_audio, candidate_duration = probe(candidate)
 
-          if original_audio.get("codec_name") != "mp3" or original_bitrate <= 288000:
-              print("MP3 unchanged: source is not above the conservative 288 kbps threshold")
+          same_stream = (
+              candidate_audio.get("codec_name") == original_audio.get("codec_name") == "mp3"
+              and candidate_audio.get("sample_rate") == original_audio.get("sample_rate")
+              and candidate_audio.get("channels") == original_audio.get("channels")
+          )
+          same_duration = abs(candidate_duration - original_duration) <= 0.01
+          same_tags = original_data.get("format", {}).get("tags", {}) == candidate_data.get("format", {}).get("tags", {})
+
+          def decode(path, output):
+              subprocess.run([
+                  "ffmpeg", "-hide_banner", "-v", "error", "-y", "-i", path,
+                  "-map", "0:a:0", "-f", "s32le", "-acodec", "pcm_s32le",
+                  "-ar", str(original_audio["sample_rate"]), "-ac", str(original_audio["channels"]),
+                  output
+              ], check=True)
+
+          original_pcm = os.path.join(os.environ["RUNNER_TEMP"], "song1-original.pcm")
+          candidate_pcm = os.path.join(os.environ["RUNNER_TEMP"], "song1-candidate.pcm")
+          decode(source, original_pcm)
+          decode(candidate, candidate_pcm)
+          identical_pcm = filecmp.cmp(original_pcm, candidate_pcm, shallow=False)
+          candidate_bytes = os.path.getsize(candidate)
+          print(f"Candidate: {candidate_bytes} bytes; same_stream={same_stream}, "
+                f"same_duration={same_duration}, same_tags={same_tags}, identical_decoded_pcm={identical_pcm}")
+          if (same_stream and same_duration and same_tags and identical_pcm
+                  and candidate_bytes < original_bytes):
+              os.replace(candidate, source)
+              print(f"MP3 accepted: {original_bytes} -> {candidate_bytes} bytes; decoded PCM is byte-identical")
           else:
-              command = [
-                  "ffmpeg", "-hide_banner", "-v", "error", "-y", "-i", source,
-                  "-map", "0:a:0", "-map", "0:v?", "-map_metadata", "0", "-map_chapters", "0",
-                  "-c:a", "libmp3lame", "-b:a", "256k", "-c:v", "copy",
-                  "-id3v2_version", "3", "-write_id3v1", "1", candidate
-              ]
-              subprocess.run(command, check=True)
-              candidate_data, candidate_audio, candidate_bitrate, candidate_duration = probe(candidate)
-              candidate_bytes = os.path.getsize(candidate)
-              original_types = sorted(s.get("codec_type", "") for s in original_data.get("streams", []))
-              candidate_types = sorted(s.get("codec_type", "") for s in candidate_data.get("streams", []))
-              same_audio_format = (
-                  candidate_audio.get("sample_rate") == original_audio.get("sample_rate")
-                  and candidate_audio.get("channels") == original_audio.get("channels")
-                  and candidate_audio.get("codec_name") == "mp3"
-              )
-              duration_ok = abs(candidate_duration - original_duration) <= 0.10
-              streams_ok = original_types == candidate_types
-
-              for path in (source, candidate):
-                  subprocess.run([
-                      "ffmpeg", "-hide_banner", "-v", "error", "-i", path,
-                      "-map", "0:a:0", "-f", "null", "-"
-                  ], check=True)
-
-              print(f"Candidate: {candidate_bytes} bytes, {candidate_bitrate} bps average, "
-                    f"{candidate_duration:.3f}s, stream types={candidate_types}")
-              if (same_audio_format and duration_ok and streams_ok
-                      and candidate_bytes <= original_bytes * 0.95):
-                  shutil.copy2(candidate, source)
-                  print(f"MP3 accepted: {original_bytes} -> {candidate_bytes} bytes; "
-                        "full decode, duration, sample rate, channels, and stream checks passed")
-              else:
-                  print("MP3 unchanged: candidate did not meet every conservative validation threshold")
+              print("MP3 unchanged: lossless candidate did not pass every check or was not smaller")
           PY
 
       - name: Commit optimized assets to safety branch
@@ -139,10 +129,10 @@ jobs:
           if ! git diff --cached --quiet; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -m "assets: optimize Demi image and Glimpse track safely"
+            git commit -m "assets: losslessly optimize Demi image and Glimpse audio"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           else
-            echo "No approved asset produced a worthwhile verified reduction"
+            echo "No verified lossless size reduction; original assets retained"
           fi
 
       - name: Install packages
