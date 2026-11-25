@@ -1895,11 +1895,6 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 /* Slash carries the cut from the phrases to the final wordmark. */
 #jaye-intro-v1 .jaye-v5-blade{position:absolute;z-index:5;left:50%;top:50%;display:block;width:clamp(4px,.55vw,8px);height:145vh;background:#f3f2ef;transform:translate(-50%,-50%) rotate(28deg) scaleY(0);transform-origin:center;will-change:transform}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-blade{animation:jayeV5BladeSequence 1.44s cubic-bezier(.16,1,.3,1) 5.92s both}
-#jaye-intro-v1 .jaye-v5-wipe{position:absolute;inset:0;display:block;transform:translateY(105%);will-change:transform;pointer-events:none}
-#jaye-intro-v1 .jaye-v5-wipe--ivory{z-index:7;background:#efeee9}
-#jaye-intro-v1 .jaye-v5-wipe--black{z-index:8;background:#050505}
-#jaye-intro-v1.jaye-intro-play .jaye-v5-wipe--ivory{animation:jayeV5Wipe .62s cubic-bezier(.76,0,.24,1) 6.86s both}
-#jaye-intro-v1.jaye-intro-play .jaye-v5-wipe--black{animation:jayeV5Wipe .57s cubic-bezier(.76,0,.24,1) 7.49s both}
 
 /* Final title: a low-contrast echo gives depth; the solid letters stay crisp. */
 #jaye-intro-v1 .jaye-v5-final-stage{position:absolute;inset:0;z-index:6;opacity:1;pointer-events:none}
@@ -1930,7 +1925,6 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 @keyframes jayeV5LineIn{0%{opacity:0;transform:translate3d(0,112%,0) rotateX(8deg);clip-path:inset(0 0 18% 0);filter:blur(5px)}72%{opacity:1;transform:translate3d(0,-1.5%,0) rotateX(0);clip-path:inset(0);filter:blur(0)}100%{opacity:1;transform:translate3d(0,0,0) rotateX(0);clip-path:inset(0);filter:blur(0)}}
 @keyframes jayeV5PhraseExit{to{opacity:0;transform:translateY(-54%) scale(.99);filter:blur(2px)}}
 @keyframes jayeV5BladeSequence{0%{transform:translate(-50%,-50%) rotate(28deg) scaleY(0)}46%{transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}52%{transform:translate(-50%,-50%) rotate(28deg) scaleY(1)}100%{transform:translate(150vw,-50%) rotate(28deg) scaleY(.25)}}
-@keyframes jayeV5Wipe{from{transform:translateY(105%)}to{transform:translateY(-105%)}}
 @keyframes jayeV5FinalEcho{0%{opacity:0;transform:translate(-50%,-50%) scale(1.035)}28%{opacity:.28}100%{opacity:0;transform:translate(-50%,-50%) scale(1.19)}}
 @keyframes jayeV5FinalLetter{0%{opacity:0;clip-path:inset(0 50% 0 50%);transform:translate3d(0,.11em,-120px) scale(.88);filter:blur(4px)}68%{opacity:1;clip-path:inset(0);transform:translate3d(0,-.012em,12px) scale(1.018);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,0) scale(1);filter:blur(0)}}
 @keyframes jayeV5FinalRule{0%{transform:scaleX(0)}70%{transform:scaleX(1.01)}100%{transform:scaleX(1)}}
@@ -1971,10 +1965,10 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 #jaye-intro-v1 .jaye-v6-final-frame::after{content:"";position:absolute;left:50%;top:-5%;bottom:-5%;width:1px;background:rgba(243,242,239,.08);transform:scaleY(.65);}
 #jaye-intro-v1.jaye-intro-play .jaye-v6-final-frame{animation:jayeV6FinalFrame 3.25s cubic-bezier(.16,1,.3,1) 7.43s both;}
 /* The four letters have distinct entry axes; the logo assembles like a constructed object. */
-#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(1){animation:jayeV6LetterJ .76s cubic-bezier(.16,1,.3,1) 7.98s both;}
-#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(2){animation:jayeV6LetterA .76s cubic-bezier(.16,1,.3,1) 8.12s both;}
-#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(3){animation:jayeV6LetterY .76s cubic-bezier(.16,1,.3,1) 8.26s both;}
-#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(4){animation:jayeV6LetterE .76s cubic-bezier(.16,1,.3,1) 8.40s both;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(1){--v9-at:7.98s;animation:jayeV9Lock .52s linear var(--v9-at) both;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(2){--v9-at:8.12s;animation:jayeV9Lock .52s linear var(--v9-at) both;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(3){--v9-at:8.26s;animation:jayeV9Lock .52s linear var(--v9-at) both;}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(4){--v9-at:8.40s;animation:jayeV9Lock .52s linear var(--v9-at) both;}
 /* A restrained reflective pass scans the aligned type only once. */
 #jaye-intro-v1 .jaye-v6-title-sweep{position:absolute;left:29%;top:36%;width:7vw;max-width:102px;min-width:34px;height:34%;display:block;opacity:0;pointer-events:none;transform:translateX(-160%) skewX(-16deg);background:linear-gradient(90deg,transparent,rgba(243,242,239,.09) 22%,rgba(243,242,239,.46) 50%,rgba(243,242,239,.10) 76%,transparent);mix-blend-mode:screen;z-index:4;}
 #jaye-intro-v1.jaye-intro-play .jaye-v6-title-sweep{animation:jayeV6TitleSweep 1.34s cubic-bezier(.16,1,.3,1) 9.08s both;}
@@ -1982,10 +1976,6 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 @keyframes jayeV6PhraseLeft{0%{opacity:0;clip-path:inset(0 100% 0 0);transform:translate3d(-7vw,0,160px) rotateY(18deg);filter:blur(5px)}65%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,18px) rotateY(0);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,0) rotateY(0);filter:blur(0)}}
 @keyframes jayeV6PhraseRight{0%{opacity:0;clip-path:inset(0 0 0 100%);transform:translate3d(7vw,0,160px) rotateY(-18deg);filter:blur(5px)}65%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,18px) rotateY(0);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:translate3d(0,0,0) rotateY(0);filter:blur(0)}}
 @keyframes jayeV6FinalFrame{0%{opacity:0;transform:perspective(1100px) translateZ(-850px) rotateY(-21deg) scale(.74)}42%{opacity:.34;transform:perspective(1100px) translateZ(-100px) rotateY(5deg) scale(1.02)}68%{opacity:.24;transform:perspective(1100px) translateZ(20px) rotateY(0) scale(1)}100%{opacity:.14;transform:perspective(1100px) translateZ(0) rotateY(0) scale(1)}}
-@keyframes jayeV6LetterJ{0%{opacity:0;clip-path:inset(100% 0 0 0);transform:perspective(800px) translate3d(-.15em,.08em,-180px) rotateY(-54deg);filter:blur(5px)}62%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,-.015em,18px) rotateY(5deg);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0) rotateY(0);filter:blur(0)}}
-@keyframes jayeV6LetterA{0%{opacity:0;clip-path:inset(0 0 100% 0);transform:perspective(800px) translate3d(0,.18em,-240px) rotateX(-58deg);filter:blur(5px)}64%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,-.01em,14px) rotateX(6deg);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0) rotateX(0);filter:blur(0)}}
-@keyframes jayeV6LetterY{0%{opacity:0;clip-path:inset(0 50% 0 50%);transform:perspective(800px) translate3d(0,-.12em,-200px) rotateX(52deg);filter:blur(5px)}64%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,.012em,22px) rotateX(-6deg);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0) rotateX(0);filter:blur(0)}}
-@keyframes jayeV6LetterE{0%{opacity:0;clip-path:inset(0 0 0 100%);transform:perspective(800px) translate3d(.18em,0,-260px) rotateY(65deg);filter:blur(5px)}64%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(-.012em,0,12px) rotateY(-5deg);filter:blur(0)}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0) rotateY(0);filter:blur(0)}}
 @keyframes jayeV6TitleSweep{0%{opacity:0;transform:translateX(-160%) skewX(-16deg)}12%{opacity:.9}58%{opacity:.36}100%{opacity:0;transform:translateX(520%) skewX(-16deg)}}
 @media(max-width:600px){
   #jaye-intro-v1 .jaye-v6-final-frame{left:6vw;right:6vw;top:27%;height:43%;}
@@ -2019,6 +2009,63 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 /* the clip box is padded so the dot of the i and the strokes of the H are never cut at rest */
 @keyframes jayeV8H{0%{opacity:0;clip-path:inset(-12% 100% -12% -12%);transform:translate3d(-12vw,0,0)}6%{opacity:1;clip-path:inset(-12% 100% -12% -12%);transform:translate3d(-12vw,0,0)}66%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(.9%,0,0)}82%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(-.35%,0,0)}100%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(0,0,0)}}
 @keyframes jayeV8i{0%{opacity:0;clip-path:inset(100% -12% -12% -12%);transform:translate3d(0,7%,0)}8%{opacity:1;clip-path:inset(100% -12% -12% -12%);transform:translate3d(0,7%,0)}70%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(0,-1.4%,0)}86%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(0,.4%,0)}100%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(0,0,0)}}
+</style>
+
+<style id="jaye-intro-monolith-v9">
+/* Seconds 6-9 of the opening: the monolith. It replaces the two sweeping wipes (ivory 6.86 s, black 7.49 s), which carried the cut from the phrases to the title.
+   A hairline seam draws at the centre line, six poured-concrete slabs slam up from the floor one after another, hold as one wall, then part from the seam,
+   centre pair first, and leave the stage clear for the J of the title at 7.98 s. A heavy plinth is laid under the title and thins to the 1px rule that
+   draws at 8.9 s. Material, not effect: ivory-grey tones, form-tie recesses, grain. No text, no filters, no new libraries. Only transform and opacity animate.
+   Everything is scoped to the welcome overlay and finishes by 8.88 s (the title letters, the rule, the tag and the title sweep are untouched).
+   Timeline (s from play start): seam 6.52-7.90 | slabs rise 6.86-7.45 (0.05 s apart, left to right) | hold | parting 7.58-8.12 (centre first) | plinth 8.04-8.88 */
+#jaye-intro-v1 .jaye-v9-monolith{position:absolute;inset:0;z-index:7;overflow:hidden;pointer-events:none;--v9-ease:cubic-bezier(.7,0,.12,1);--v9-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .15 0 0 0 0 .13 0 0 0 .42 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+#jaye-intro-v1 .jaye-v9-seam{position:absolute;left:50%;top:0;bottom:0;width:1px;margin-left:-.5px;background:#f3f2ef;opacity:0;transform:scaleY(0);transform-origin:center}
+#jaye-intro-v1 .jaye-v9-slab{position:absolute;top:-2%;bottom:-2%;left:var(--x);width:var(--w);display:block}
+#jaye-intro-v1 .jaye-v9-slab::before{content:"";position:absolute;inset:0;transform:translateY(101%);background:radial-gradient(circle at 50% 50%,rgba(8,8,8,.55) 0 2px,rgba(8,8,8,.15) 2px 3.4px,transparent 3.6px) 0 0/50% 26vh,linear-gradient(180deg,rgba(255,255,255,.34),rgba(255,255,255,0) 24%,rgba(0,0,0,0) 58%,rgba(0,0,0,.16)),var(--v9-grain),var(--tone);box-shadow:inset 1px 0 0 rgba(255,255,255,.5),inset -1px 0 0 rgba(5,5,5,.85)}
+#jaye-intro-v1 .jaye-v9-s1{--x:0%;--w:16.5%;--tone:#e4e2db;--rise:6.86s;--exit:7.68s;--dir:-1}
+#jaye-intro-v1 .jaye-v9-s2{--x:16.5%;--w:18.5%;--tone:#ebe9e3;--rise:6.91s;--exit:7.63s;--dir:-1}
+#jaye-intro-v1 .jaye-v9-s3{--x:35%;--w:calc(15% - 2px);--tone:#dfddd5;--rise:6.96s;--exit:7.58s;--dir:-1}
+#jaye-intro-v1 .jaye-v9-s4{--x:calc(50% + 2px);--w:calc(15% - 2px);--tone:#e7e5de;--rise:7.01s;--exit:7.58s;--dir:1}
+#jaye-intro-v1 .jaye-v9-s5{--x:65%;--w:18.5%;--tone:#dedcd4;--rise:7.06s;--exit:7.63s;--dir:1}
+#jaye-intro-v1 .jaye-v9-s6{--x:83.5%;--w:16.5%;--tone:#e9e7e0;--rise:7.11s;--exit:7.68s;--dir:1}
+#jaye-intro-v1 .jaye-v9-plinth{position:absolute;left:7vw;right:7vw;bottom:25%;height:6px;background:#f3f2ef;opacity:0;transform:scaleX(0);transform-origin:50% 100%}
+#jaye-intro-v1.jaye-intro-play .jaye-v9-seam{animation:jayeV9Seam 1.38s var(--v9-ease) 6.52s both}
+#jaye-intro-v1.jaye-intro-play .jaye-v9-slab{will-change:transform;animation:jayeV9Part .44s var(--v9-ease) var(--exit) both}
+#jaye-intro-v1.jaye-intro-play .jaye-v9-slab::before{will-change:transform;animation:jayeV9Rise .34s cubic-bezier(.76,0,.24,1) var(--rise) both}
+#jaye-intro-v1.jaye-intro-play .jaye-v9-plinth{animation:jayeV9Plinth .84s var(--v9-ease) 8.04s both}
+/* the slab rises past the top by 0.9% and settles: it lands with weight. The slab is 4% taller than the stage, so the overshoot never shows an edge. */
+@keyframes jayeV9Rise{0%{transform:translateY(101%)}76%{transform:translateY(-.9%)}100%{transform:translateY(0)}}
+@keyframes jayeV9Part{0%{transform:translateX(0)}100%{transform:translateX(calc(var(--dir)*101vw));visibility:hidden}}
+@keyframes jayeV9Seam{0%{opacity:.8;transform:scaleY(0)}25%{opacity:.8;transform:scaleY(1)}77%{opacity:.8;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1)}}
+@keyframes jayeV9Plinth{0%{opacity:1;transform:scaleX(0) scaleY(1)}52%{opacity:1;transform:scaleX(1) scaleY(1)}68%{opacity:1;transform:scaleX(1) scaleY(1)}100%{opacity:0;transform:scaleX(1) scaleY(.17)}}
+@media(max-width:600px){
+  #jaye-intro-v1 .jaye-v9-plinth{bottom:29%}
+}
+</style>
+
+<style id="jaye-intro-title-pieces-v9">
+/* The title arrives in pieces (7.98-8.92 s). Each letter is cut into three courses, top, middle and bottom, at thirds of its cap height. The courses
+   are copies of the letter (generated content, so no wording is added) that slide in from alternating sides, misregistered, and lock one after
+   another with a hard stop; after a short hold the whole letter takes their place. The letter itself is unchanged: it is invisible while the pieces
+   work and ends in exactly the state it always had. Start times are the same as before (J 7.98, A 8.12, Y 8.26, E 8.40 s); each letter now
+   takes 0.52 s, so the last one is whole at 8.92 s. Crisp and flat: no blur, no tilt. Only transform and opacity animate. */
+#jaye-intro-v1 .jaye-v5-wordmark>span{position:relative;--cut1:37.5%;--cut2:63%}
+#jaye-intro-v1 .jaye-v5-wordmark>span:nth-child(1){--l:"J";--d:1}
+#jaye-intro-v1 .jaye-v5-wordmark>span:nth-child(2){--l:"A";--d:-1}
+#jaye-intro-v1 .jaye-v5-wordmark>span:nth-child(3){--l:"Y";--d:1}
+#jaye-intro-v1 .jaye-v5-wordmark>span:nth-child(4){--l:"E";--d:-1}
+#jaye-intro-v1 .jaye-v5-wordmark>span::before,#jaye-intro-v1 .jaye-v5-wordmark>span::after,#jaye-intro-v1 .jaye-v5-wordmark>span>i::before{content:var(--l);position:absolute;left:0;top:0;display:block;white-space:nowrap;color:#f4f3ef}
+#jaye-intro-v1 .jaye-v5-wordmark>span::before{clip-path:inset(0 0 calc(100% - var(--cut1)) 0);opacity:0}
+#jaye-intro-v1 .jaye-v5-wordmark>span::after{clip-path:inset(var(--cut2) 0 0 0);opacity:0}
+#jaye-intro-v1 .jaye-v5-wordmark>span>i{position:absolute;inset:0;display:block;font-style:normal;clip-path:inset(var(--cut1) 0 calc(100% - var(--cut2)) 0);opacity:0}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span::before{will-change:transform;animation:jayeV9PieceTop .52s cubic-bezier(.7,0,.12,1) var(--v9-at) both}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span>i{will-change:transform;animation:jayeV9PieceMid .52s cubic-bezier(.7,0,.12,1) var(--v9-at) both}
+#jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span::after{will-change:transform;animation:jayeV9PieceBase .52s cubic-bezier(.7,0,.12,1) var(--v9-at) both}
+/* the letter itself: hidden while the pieces work (transparent, not removed), then exactly its old resting state at the end of the 0.52 s, in the same instant the pieces go */
+@keyframes jayeV9Lock{0%,99.9%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0);filter:blur(0);color:transparent}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0);filter:blur(0);color:#f4f3ef}}
+@keyframes jayeV9PieceTop{0%{opacity:0;transform:translate3d(calc(var(--d)*-.4em),0,0)}1%{opacity:1;transform:translate3d(calc(var(--d)*-.4em),0,0)}56%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
+@keyframes jayeV9PieceMid{0%{opacity:0;transform:translate3d(calc(var(--d)*.28em),0,0)}1%{opacity:1;transform:translate3d(calc(var(--d)*.28em),0,0)}9%{opacity:1;transform:translate3d(calc(var(--d)*.28em),0,0)}64%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
+@keyframes jayeV9PieceBase{0%{opacity:0;transform:translate3d(calc(var(--d)*-.52em),0,0)}1%{opacity:1;transform:translate3d(calc(var(--d)*-.52em),0,0)}17%{opacity:1;transform:translate3d(calc(var(--d)*-.52em),0,0)}72%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
 </style>
 
 <style id="jaye-tornado-background-styles">
@@ -2144,7 +2191,7 @@ html.jaye-video-background-active #jaye-global-video-background{opacity:.72;visi
 html.jaye-video-background-active #jaye-tornado-background{opacity:0!important;visibility:hidden;transition:opacity .85s cubic-bezier(.2,.7,.2,1),visibility .85s}
 #jaye-background-switch{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));right:max(14px,env(safe-area-inset-right));transform:scale(.95);transform-origin:bottom right;z-index:10020;display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:0 12px;border:1px solid rgba(221,229,241,.24);border-radius:2px;background:rgba(5,8,14,.54);color:rgba(236,241,249,.82);font:500 9px/1.1 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;letter-spacing:.17em;text-transform:uppercase;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer;transition:background .3s,border-color .3s,color .3s,opacity .3s;}
 #jaye-background-switch::before{content:"";width:5px;height:5px;border-radius:50%;background:rgba(207,216,231,.62);box-shadow:0 0 9px rgba(207,216,231,.22);transition:background .3s,box-shadow .3s}
-#jaye-background-switch:hover,#jaye-background-switch:focus-visible{outline:none;border-color:rgba(231,237,247,.52);background:rgba(12,17,27,.78);color:#fff}
+#jaye-background-switch:hover,#jaye-background-switch:focus-visible{outline:none;border-color:rgba(231,237,247,.52);color:#fff}
 html.jaye-video-background-active #jaye-background-switch::before{background:#dce5f3;box-shadow:0 0 10px rgba(220,229,243,.72)}
 @media(max-width:600px){#jaye-global-video-background{object-position:center}#jaye-background-switch{bottom:max(10px,env(safe-area-inset-bottom));right:max(10px,env(safe-area-inset-right));min-height:31px;padding:0 9px;font-size:8px;letter-spacing:.13em}}
 @media(prefers-reduced-motion:reduce){#jaye-global-video-background,#jaye-tornado-background,#jaye-background-switch{transition:none!important}}
@@ -2209,12 +2256,16 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
     <p class="jaye-v5-phrase jaye-v5-phrase--two jaye-sig"><span><b>PΞӨPᒪΞ  </b></span><span><b> ﾠPᒪΛCΞS</b></span></p>
 
     <span class="jaye-v5-blade"></span>
-    <span class="jaye-v5-wipe jaye-v5-wipe--ivory"></span>
-    <span class="jaye-v5-wipe jaye-v5-wipe--black"></span>
+    <div class="jaye-v9-monolith" aria-hidden="true">
+      <span class="jaye-v9-seam"></span>
+      <span class="jaye-v9-slab jaye-v9-s1"></span><span class="jaye-v9-slab jaye-v9-s2"></span><span class="jaye-v9-slab jaye-v9-s3"></span>
+      <span class="jaye-v9-slab jaye-v9-s4"></span><span class="jaye-v9-slab jaye-v9-s5"></span><span class="jaye-v9-slab jaye-v9-s6"></span>
+      <span class="jaye-v9-plinth"></span>
+    </div>
 
     <div class="jaye-v5-final-stage">
       <span class="jaye-v5-wordmark-echo">JAYE</span>
-      <div class="jaye-v5-wordmark"><span>J</span><span>A</span><span>Y</span><span>E</span><small>AN OPEN INDEX</small></div>
+      <div class="jaye-v5-wordmark"><span>J<i></i></span><span>A<i></i></span><span>Y<i></i></span><span>E<i></i></span><small>AN OPEN INDEX</small></div>
       <span class="jaye-v5-final-rule"></span>
       <span class="jaye-v5-final-tag">MEMORY / ART / EVERYTHING THAT REMAINS</span>
       <span class="jaye-v6-final-frame" aria-hidden="true"></span>
@@ -3333,6 +3384,10 @@ html.jaye-image-background-active #jaye-tornado-background,html.jaye-image-backg
 /* Final requested adjustment only: make Demi 7% and Parent Space 15% more transparent. */
 #demiDestination.demi-destination{background-color:rgba(238,231,218,.93)!important}
 .parent-space-view:not([hidden]){background-color:rgba(7,9,13,.85)!important}
+/* That 15% is for the page's background layers (Saturn, video, photographs) to show through. It was also letting the page's own content, which stays painted
+   behind the fixed view, show through as ghost text (the Archive entry, the Evidence Archive and Anomaly Protocol sections). While Parent Space is open that
+   content is hidden: it is already inert, hiding keeps its layout and scroll position, and it returns the moment the view closes. */
+body.parent-space-open>main>:not(#parent-space-view){visibility:hidden}
 </style>
 <style id="jaye-interfaces-and-demi-impact-v21">
 /* V21: Upgrade BOTH requested areas — interfaces 02–09 and Demi Devi. No sizing, thumbnail, or width changes. */
@@ -4620,53 +4675,62 @@ html body main #postAI-impossible.postai-game-section > .postai-wrap:hover {
 /* Switch background: placement is unchanged (fixed, bottom-right, safe-area aware) and nothing about
    what it does is touched here. Only its proportions and surface are reworked: real width, height,
    padding, type, tracking and indicator sizes, NOT a transform, so the click target and layout box are
-   the size they look. The visible surface is ~15% smaller in each direction than before; an invisible
+   the size they look. The visible surface is ~15% smaller in each direction than before, and now a further 10% smaller (height, padding, gap, type, dot and ticks all x0.9); an invisible
    ::after pad restores a comfortable touch target (>= 45px tall) around it. */
 #jaye-background-switch{
   position:fixed; isolation:isolate; z-index:10020;
   right:max(14px,env(safe-area-inset-right)); bottom:max(14px,env(safe-area-inset-bottom)); left:auto; top:auto;
   transform:none;
-  box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; gap:7px;
-  height:27.5px; min-height:0; padding:0 11px 0 10px;
-  border:1px solid var(--jaye-edge); border-radius:5px;
+  box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center; gap:6.3px;
+  height:24.75px; min-height:0; padding:0 9.9px 0 9px;
+  border:1px solid var(--jaye-edge); border-radius:4.5px;
   /* Same micro-caps voice as Baew's "BAEW TIPS" label: monospace, tracked, uppercase. All three of its
      texts are 17 characters, so the button keeps one width in every state. */
-  font:600 8px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  font:600 7.2px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
   letter-spacing:.14em; text-transform:uppercase; white-space:nowrap;
   color:rgba(233,239,248,.9); text-shadow:none;
-  /* Smoked glass: a faint diagonal reflection, a soft top sheen, then a deep, nearly neutral tint. */
+  /* Smoked glass, now 95% opaque so the page behind it no longer muddies the label: two registration ticks (top-left and bottom-right, the same
+     precision marks the artefact drawings use) so it stays easy to spot, then the light sweep, a faint diagonal reflection, a soft top sheen
+     and a deep, nearly neutral tint. */
+  --jaye-switch-tick:rgba(240,246,255,.95);
   background:
+    linear-gradient(var(--jaye-switch-tick),var(--jaye-switch-tick)) 0 0/6.3px 1px no-repeat,
+    linear-gradient(var(--jaye-switch-tick),var(--jaye-switch-tick)) 0 0/1px 6.3px no-repeat,
+    linear-gradient(var(--jaye-switch-tick),var(--jaye-switch-tick)) 100% 100%/6.3px 1px no-repeat,
+    linear-gradient(var(--jaye-switch-tick),var(--jaye-switch-tick)) 100% 100%/1px 6.3px no-repeat,
     linear-gradient(112deg,transparent calc(var(--jaye-sweep) - 16%),rgba(222,232,247,.09) var(--jaye-sweep),transparent calc(var(--jaye-sweep) + 16%)) 0 0/100% 100% no-repeat,
     linear-gradient(112deg,transparent 0 38%,rgba(255,255,255,.075) 46%,transparent 54% 100%) 56% 0/240% 100% no-repeat,
     linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,0) 46%) 0 0/100% 100% no-repeat,
-    linear-gradient(135deg,rgba(24,28,38,.72),rgba(6,8,13,.84)) 0 0/100% 100% no-repeat;
+    linear-gradient(135deg,rgba(24,28,38,.95),rgba(6,8,13,.95)) 0 0/100% 100% no-repeat;
   /* The light sweep: a soft, cool band that crosses the glass once every 13s (about 4s of travel, then
      rest), at the same angle as the static reflection so it reads as the same light moving across it. */
   animation:jayeSwitchSweep 13s cubic-bezier(.45,0,.55,1) infinite;
   -webkit-backdrop-filter:blur(10px) saturate(1.08); backdrop-filter:blur(10px) saturate(1.08);
-  box-shadow:var(--jaye-highlight),inset 0 -10px 14px -12px rgba(0,0,0,.7),0 8px 20px -8px rgba(0,0,0,.7),0 1px 2px rgba(0,0,0,.45);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -10px 14px -12px rgba(0,0,0,.7),0 0 0 1px rgba(176,192,255,.16),0 0 16px -3px rgba(150,170,255,.34),0 8px 20px -8px rgba(0,0,0,.7),0 1px 2px rgba(0,0,0,.45);
   cursor:pointer; -webkit-tap-highlight-color:transparent;
   transition:border-color var(--jaye-ease),color var(--jaye-ease),box-shadow var(--jaye-ease),background-position .5s ease;
 }
 /* State indicator: a small core with a faint halo. Cool neutral at rest; in video mode it brightens and
    picks up the same soft violet as Baew's accent. */
 #jaye-background-switch::before{
-  content:""; flex:0 0 4px; width:4px; height:4px; border-radius:50%;
+  content:""; flex:0 0 3.6px; width:3.6px; height:3.6px; border-radius:50%;
   background:rgba(214,224,240,.62);
   box-shadow:0 0 0 2px rgba(214,224,240,.08),0 0 6px rgba(214,224,240,.16);
   transition:background var(--jaye-ease),box-shadow var(--jaye-ease);
 }
+@media(prefers-reduced-motion:no-preference){#jaye-background-switch::before{animation:jayeSwitchDot 3.2s ease-in-out infinite}}
+@keyframes jayeSwitchDot{0%,100%{opacity:.55}50%{opacity:1}}
 /* Invisible touch pad. It extends the hit area only (never paints), and clicks on it are clicks on the
    button, so the existing handler is untouched. */
-#jaye-background-switch::after{content:"";position:absolute;inset:-9px -6px;border-radius:9px;background:transparent}
+#jaye-background-switch::after{content:"";position:absolute;inset:-10.4px -6px;border-radius:9px;background:transparent}
 #jaye-background-switch:hover{
   border-color:var(--jaye-edge-strong); color:#fff;
-  background-position:0 0,70% 0,0 0,0 0;
-  box-shadow:var(--jaye-highlight),inset 0 -10px 14px -12px rgba(0,0,0,.6),0 8px 22px -8px rgba(0,0,0,.75),0 1px 2px rgba(0,0,0,.45);
+  background-position:0 0,0 0,100% 100%,100% 100%,0 0,70% 0,0 0,0 0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.4),inset 0 -10px 14px -12px rgba(0,0,0,.6),0 0 0 1px rgba(196,208,255,.34),0 0 20px -2px rgba(150,170,255,.52),0 8px 22px -8px rgba(0,0,0,.75),0 1px 2px rgba(0,0,0,.45);
 }
 #jaye-background-switch:focus-visible{
   outline:1px solid rgba(238,243,252,.92); outline-offset:3px;
-  border-color:var(--jaye-edge-strong); color:#fff; background-position:0 0,70% 0,0 0,0 0;
+  border-color:var(--jaye-edge-strong); color:#fff; background-position:0 0,0 0,100% 100%,100% 100%,0 0,70% 0,0 0,0 0;
 }
 #jaye-background-switch:active{
   box-shadow:inset 0 1px 3px rgba(0,0,0,.55),inset 0 -10px 14px -12px rgba(0,0,0,.5),0 4px 12px -6px rgba(0,0,0,.7);
@@ -4678,10 +4742,10 @@ html.jaye-video-background-active #jaye-background-switch::before{
 @media(max-width:600px){
   #jaye-background-switch{
     right:max(10px,env(safe-area-inset-right)); bottom:max(10px,env(safe-area-inset-bottom));
-    height:25px; padding:0 9px 0 8px; gap:6px; font-size:7.4px; letter-spacing:.09em; border-radius:4px;
+    height:22.5px; padding:0 8.1px 0 7.2px; gap:5.4px; font-size:6.66px; letter-spacing:.09em; border-radius:3.6px;
   }
-  #jaye-background-switch::before{flex-basis:3.5px;width:3.5px;height:3.5px}
-  #jaye-background-switch::after{inset:-10px -6px}
+  #jaye-background-switch::before{flex-basis:3.15px;width:3.15px;height:3.15px}
+  #jaye-background-switch::after{inset:-11.25px -6px}
 }
 /* Registered so the sweep position can be animated smoothly. Its resting value parks the band outside the
    button, which is also what reduced-motion visitors see (no sweep at all). */

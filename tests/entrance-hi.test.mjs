@@ -3,7 +3,8 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 
 // Guards for the opening sequence: the "Hi" scene is plain and anchored in the left third (a wall, the word, a plinth), and every
-// later scene (strip, phrases, cut, wipes, centred JAYE reveal) keeps its structure and timing.
+// later scene (strip, phrases, cut, centred JAYE reveal) keeps its structure and timing. The wipes that sat between the cut and the reveal are
+// replaced by the monolith (see entrance-monolith.test.mjs).
 const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8')
 const css = [...html.matchAll(/<style id="(?:jaye-intro-cinematic-peak-v[56])">([\s\S]*?)<\/style>/g)].map(m => m[1]).join('\n').replace(/\/\*[\s\S]*?\*\//g, '')
 const hi = (html.match(/<style id="jaye-intro-hi-v8">([\s\S]*?)<\/style>/)?.[1] ?? '').replace(/\/\*[\s\S]*?\*\//g, '')
@@ -60,9 +61,6 @@ test('later scenes keep their timing and the final reveal stays centred', () => 
     ['.jaye-v5-strip{animation:jayeV5StripSequence 1.1s', '2.34s'],
     ['.jaye-v5-phrase--one b:first-child{animation:jayeV6PhraseLeft .68s', '3.28s'],
     ['.jaye-v5-phrase--two b:last-child{animation:jayeV6PhraseLeft .72s', '4.94s'],
-    ['.jaye-v5-wipe--ivory{animation:jayeV5Wipe .62s', '6.86s'],
-    ['.jaye-v5-wipe--black{animation:jayeV5Wipe .57s', '7.49s'],
-    ['.jaye-v5-wordmark>span:nth-child(1){animation:jayeV6LetterJ .76s', '7.98s'],
     ['.jaye-v6-title-sweep{animation:jayeV6TitleSweep 1.34s', '9.08s'],
   ]
   for (const [a, delay] of timings) {
@@ -70,6 +68,7 @@ test('later scenes keep their timing and the final reveal stays centred', () => 
     assert.ok(i >= 0, a)
     assert.ok(css.slice(i, i + 140).includes(` ${delay} both`), `${a} keeps ${delay}`)
   }
+  assert.match(css, /\.jaye-v5-wordmark>span:nth-child\(1\)\{--v9-at:7\.98s;animation:jayeV9Lock \.52s linear var\(--v9-at\) both;\}/, 'the J still starts at 7.98 s (the title now arrives in pieces: entrance-title-pieces.test.mjs)')
   assert.match(rule('#jaye-intro-v1 .jaye-v5-wordmark'), /left:0;right:0;[^}]*justify-content:center/)
   assert.match(rule('#jaye-intro-v1 .jaye-v5-wordmark-echo'), /left:50%;top:45%/)
   assert.match(rule('#jaye-intro-v1 .jaye-v6-final-frame'), /left:11vw;right:11vw/)
