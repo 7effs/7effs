@@ -74,6 +74,18 @@ test('the pieces draw the letter, not new wording; they stay out of the page; on
   assert.doesNotMatch(css, /@media/, 'em-based, so one layout for desktop and phone')
 })
 
+test('the final lockup uses structural brutalism rather than a reflective sweep', () => {
+  assert.match(peak, /\\.jaye-v5-wordmark\\{[^}]*font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif[^}]*font-weight:900/)
+  assert.match(peak, /\\.jaye-v5-final-rule\\{[^}]*height:6px;background:#eee9de/)
+  assert.match(peak, /\\.jaye-v5-final-rule::before\\{[^}]*background:#d34a35/)
+  assert.match(peak, /\\.jaye-v5-final-tag\\{[^}]*background:#d34a35[^}]*font-family:ui-monospace/)
+  const sweep = rules(peak).find(x => x.sel === '#jaye-intro-v1 .jaye-v6-title-sweep')
+  assert.ok(sweep, 'the title strike remains a single, scoped element')
+  assert.match(sweep.body, /background:#d34a35/)
+  assert.doesNotMatch(sweep.body, /gradient|mix-blend/, 'a flat registration mark replaces the reflective light sweep')
+  assert.match(peak, /@keyframes jayeV6TitleSweep\\{[^}]*translate3d\\(70vw,0,0\\)/)
+})
+
 test('the title block sits after the monolith block and before the archive layer, and neighbours are untouched', () => {
   const at = (id) => html.indexOf(`<style id="${id}">`)
   assert.ok(at('jaye-intro-monolith-v9') > 0 && at('jaye-intro-monolith-v9') < at('jaye-intro-title-pieces-v9') && at('jaye-intro-title-pieces-v9') < at('jaye-tornado-background-styles'))
