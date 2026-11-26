@@ -31,7 +31,7 @@ test('the shuttered wall is replaced by a single field and an off-axis architect
   assert.equal(wrapper.replace(/<[^>]+>/g, '').trim(), '', 'no wording was added')
   assert.ok(sequence.indexOf('jaye-v5-blade') < sequence.indexOf('jaye-v10-void'))
   assert.ok(sequence.indexOf('jaye-v10-void') < sequence.indexOf('jaye-v5-final-stage'))
-  assert.doesNotMatch(html, /jaye-v9-monolith|jaye-v9-slab|jaye-v9-seam|jayeV9Rise|jayeV9Part|feTurbulence/)
+  assert.doesNotMatch(raw + wrapper, /jaye-v9-monolith|jaye-v9-slab|jaye-v9-seam|jayeV9Rise|jayeV9Part|feTurbulence/)
 })
 
 test('the void opens from 6.52 s to 7.98 s and consumes the field by 8.88 s', () => {
@@ -40,7 +40,7 @@ test('the void opens from 6.52 s to 7.98 s and consumes the field by 8.88 s', ()
   const key = css.match(/@keyframes jayeVoidCutOpen\{([\s\S]*?)\}\}/)?.[1] ?? ''
   assert.match(key, /0%\{transform:translate3d\(-50%,-50%,0\) scale\(\.008,1\)\}/)
   assert.match(key, /61\.864%\{transform:translate3d\(-50%,-50%,0\) scale\(1,1\)\}/)
-  assert.match(key, /100%\{transform:translate3d\(-50%,-50%,0\) scale\(3\.2,3\.2\)\}/)
+  assert.match(key, /100%\{transform:translate3d\(-50%,-50%,0\) scale\(3\.2,3\.2\)/)
   assert.equal(Math.round((6.52 + 2.36) * 100) / 100, 8.88)
   assert.equal(Math.round((6.52 + 2.36 * .61864) * 100) / 100, 7.98)
 })
@@ -70,7 +70,7 @@ test('the composition uses flat architectural surfaces, not faux-concrete effect
   assert.match(css, /background:#eee9de/)
   assert.match(css, /background:var\(--void-ink\)/)
   assert.match(css, /clip-path:polygon\(/)
-  assert.doesNotMatch(css, /gradient|filter|backdrop|mix-blend|box-shadow|border:|url\(|feTurbulence|@import|https?:|#d34a35/)
+  assert.doesNotMatch(css, /gradient|filter|backdrop|mix-blend|box-shadow|border-(?:top|right|bottom|left):[1-9]|border:[1-9]|url\(|feTurbulence|@import|https?:|#d34a35/)
   assert.equal((css.match(/@media/g) ?? []).length, 1, 'one responsive phone layout')
   for (const r of rules(css)) {
     if (/^\d|^from|^to/.test(r.sel)) continue

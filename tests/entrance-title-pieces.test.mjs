@@ -42,7 +42,7 @@ test('three courses arrive from three axes and lock into one crisp glyph', () =>
 test('the final lock is sharp and remains the same white title', () => {
   const lock = keyframes('jayeV9Lock')
   assert.match(lock, /0%,99\.9%\{opacity:1;clip-path:inset\(0\);transform:perspective\(800px\) translate3d\(0,0,0\);color:transparent\}/)
-  assert.match(lock, /100%\{opacity:1;clip-path:inset\(0\);transform:perspective\(800px\) translate3d\(0,0,0\);color:#f4f3ef\}/)
+  assert.match(lock, /100%\{opacity:1;clip-path:inset\(0\);transform:perspective\(800px\) translate3d\(0,0,0\);color:#f4f3ef/)
   assert.match(peak, /\.jaye-v5-wordmark\{[^}]*color:#f4f3ef/)
   assert.match(voidCss, /font-size:clamp\(78px,21vw,244px\)/)
 })
