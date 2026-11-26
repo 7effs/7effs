@@ -40,7 +40,7 @@ test('the void opens from 6.52 s to 7.98 s and consumes the field by 8.88 s', ()
   const key = css.match(/@keyframes jayeVoidCutOpen\{([\s\S]*?)\}\}/)?.[1] ?? ''
   assert.match(key, /0%\{transform:translate3d\(-50%,-50%,0\) scale\(\.008,1\)\}/)
   assert.match(key, /61\.864%\{transform:translate3d\(-50%,-50%,0\) scale\(1,1\)\}/)
-  assert.match(key, /100%\{transform:translate3d\(-50%,-50%,0\) scale\(3\.2,2\.45\)\}/)
+  assert.match(key, /100%\{transform:translate3d\(-50%,-50%,0\) scale\(3\.2,3\.2\)\}/)
   assert.equal(Math.round((6.52 + 2.36) * 100) / 100, 8.88)
   assert.equal(Math.round((6.52 + 2.36 * .61864) * 100) / 100, 7.98)
 })

@@ -1901,7 +1901,7 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 #jaye-intro-v1 .jaye-v5-wordmark-echo{position:absolute;left:50%;top:45%;display:block;white-space:nowrap;transform:translate(-50%,-50%) scale(1.035);font-size:clamp(78px,21vw,255px);font-weight:750;letter-spacing:-.105em;line-height:.9;color:transparent;-webkit-text-stroke:1px rgba(243,242,239,.24);opacity:0;will-change:transform,opacity}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark-echo{animation:jayeV5FinalEcho 1.55s cubic-bezier(.16,1,.3,1) 7.92s both}
 #jaye-intro-v1 .jaye-v5-wordmark{position:absolute;left:0;right:0;top:45%;display:flex;justify-content:center;align-items:baseline;gap:.015em;overflow:visible;padding:.08em 3vw .16em;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:clamp(78px,21vw,255px);font-weight:900;letter-spacing:-.075em;line-height:.84;color:#f4f3ef;white-space:nowrap}
-#jaye-intro-v1 .jaye-v5-wordmark>span{display:inline-block;opacity:0;clip-path:inset(0 50% 0 50%);transform:translate3d(0,.11em,-120px) scale(.88);filter:blur(4px);will-change:transform,opacity,clip-path,filter}
+#jaye-intro-v1 .jaye-v5-wordmark>span{display:inline-block;opacity:0;clip-path:inset(0 50% 0 50%);transform:translate3d(0,.11em,-120px) scale(.88);will-change:transform,opacity,clip-path}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(1){animation:jayeV5FinalLetter .72s cubic-bezier(.16,1,.3,1) 7.98s both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(2){animation:jayeV5FinalLetter .72s cubic-bezier(.16,1,.3,1) 8.12s both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(3){animation:jayeV5FinalLetter .72s cubic-bezier(.16,1,.3,1) 8.26s both}
@@ -2029,7 +2029,7 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 #jaye-intro-v1.jaye-intro-play .jaye-void-face--east,#jaye-intro-v1.jaye-intro-play .jaye-void-face--east-return{animation:jayeVoidFaceEast 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
 #jaye-intro-v1.jaye-intro-play .jaye-void-face--sill{animation:jayeVoidFaceSouth 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
 /* 6.52–7.98: the incision opens. 7.98–8.88: the void expands beyond the frame and takes the surface with it. */
-@keyframes jayeVoidCutOpen{0%{transform:translate3d(-50%,-50%,0) scale(.008,1)}61.864%{transform:translate3d(-50%,-50%,0) scale(1,1)}100%{transform:translate3d(-50%,-50%,0) scale(3.2,2.45)}}
+@keyframes jayeVoidCutOpen{0%{transform:translate3d(-50%,-50%,0) scale(.008,1)}61.864%{transform:translate3d(-50%,-50%,0) scale(1,1)}100%{transform:translate3d(-50%,-50%,0) scale(3.2,3.2)}}
 @keyframes jayeVoidFaceNorth{0%{opacity:0;transform:translateY(10vh)}24%{opacity:1;transform:translateY(0)}62%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-24vh)}}
 @keyframes jayeVoidFaceSouth{0%{opacity:0;transform:translateY(-10vh)}24%{opacity:1;transform:translateY(0)}62%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(24vh)}}
 @keyframes jayeVoidFaceWest{0%{opacity:0;transform:translateX(14vw)}24%{opacity:1;transform:translateX(0)}62%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(-28vw)}}
