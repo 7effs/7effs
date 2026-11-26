@@ -115,6 +115,11 @@ test('the slabs make one wall: contiguous bays across the whole width, a 4px par
   assert.equal(pct(bays[3].w) + pct(bays[4].w) + pct(bays[5].w), 50)
   const slab = rule('#jaye-intro-v1 .jaye-v9-slab')
   assert.match(slab, /top:-2%;bottom:-2%/, 'the 0.9% overshoot of the landing can never show an edge')
+  const surface = rule('#jaye-intro-v1 .jaye-v9-slab::before')
+  const seam = rule('#jaye-intro-v1 .jaye-v9-seam')
+  assert.match(surface, /repeating-linear-gradient\(0deg/, 'shuttered formwork lines expose the concrete construction')
+  assert.match(surface, /border-top:3px solid #171715;border-bottom:3px solid #171715/, 'the slab edges are hard and structural')
+  assert.match(seam, /width:4px;[^}]*background:#d34a35/, 'the central cut uses one flat oxide-red datum')
   assert.match(css, /@keyframes jayeV9Rise\{0%\{transform:translateY\(101%\)\}76%\{transform:translateY\(-\.9%\)\}100%\{transform:translateY\(0\)\}\}/)
   const dirs = [1, 2, 3, 4, 5, 6].map(n => rule(`#jaye-intro-v1 .jaye-v9-s${n}`).match(/--dir:(-?1)/)[1])
   assert.deepEqual(dirs, ['-1', '-1', '-1', '1', '1', '1'], 'the left three leave left, the right three leave right')
@@ -132,11 +137,11 @@ test('layers: above the final stage and the canvas light, below the progress lin
 test('the plinth lays itself on the line the rule draws on, and thins into it', () => {
   const plinth = rule('#jaye-intro-v1 .jaye-v9-plinth'), finalRule = rule('#jaye-intro-v1 .jaye-v5-final-rule', peak)
   assert.match(plinth, /left:7vw;right:7vw;bottom:25%/)
-  assert.match(finalRule, /left:7vw;right:7vw;bottom:25%;height:1px/)
+  assert.match(finalRule, /left:7vw;right:7vw;bottom:25%;height:6px/)
   assert.match(plinth, /transform-origin:50% 100%/, 'its lower edge stays on the line')
   assert.match(css, /@media\(max-width:600px\)\{\s*#jaye-intro-v1 \.jaye-v9-plinth\{bottom:29%\}\s*\}/)
   assert.match(peak, /@media\(max-width:600px\)\{[^@]*\.jaye-v5-final-rule\{bottom:29%\}/, 'the phone layout moves the rule to 29%, and the plinth follows')
-  assert.match(css, /@keyframes jayeV9Plinth\{[^@]*100%\{opacity:0;transform:scaleX\(1\) scaleY\(\.17\)\}\}/, 'it ends at about 1px of its 6px, faded out')
+  assert.match(css, /@keyframes jayeV9Plinth\{[^@]*100%\{opacity:0;transform:scaleX\(1\) scaleY\(\.6\)\}\}/, 'the concrete plinth reduces to the 6px rule thickness before leaving')
 })
 
 test('the scenes either side keep their timing: the title sweep, the rule, the tag, the echo, the final frame and the phrase exit', () => {
