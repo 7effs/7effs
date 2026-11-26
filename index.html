@@ -2014,7 +2014,9 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 
 <style id="jaye-intro-void-v10">
 /* THE VOID: one continuous architectural field, excavated by a single off-axis cut. The six faces are the cut's actual interior surfaces. */
-#jaye-intro-v1 .jaye-v10-void{position:absolute;inset:0;z-index:6;overflow:hidden;pointer-events:none;background:#eee9de;--void-ink:#07090d}
+#jaye-intro-v1 .jaye-v10-void{position:absolute;inset:0;z-index:6;overflow:hidden;pointer-events:none;background:#eee9de;opacity:0;--void-ink:#07090d}
+#jaye-intro-v1.jaye-intro-play .jaye-v10-void{animation:jayeVoidFieldReveal 2.36s linear 6.52s both}
+@keyframes jayeVoidFieldReveal{0%,10%{opacity:0}24%,62%{opacity:1}100%{opacity:0}}
 #jaye-intro-v1 .jaye-void-cut{position:absolute;left:50%;top:48%;width:min(72vw,1100px);height:68vh;max-height:820px;background:var(--void-ink);clip-path:polygon(0 0,100% 5%,87% 100%,0 91%);transform:translate3d(-50%,-50%,0) scale(.008,1);transform-origin:50% 50%;will-change:transform}
 #jaye-intro-v1 .jaye-void-face{position:absolute;display:block;opacity:0;will-change:transform,opacity}
 #jaye-intro-v1 .jaye-void-face--soffit{left:15vw;right:13vw;top:15vh;height:9vh;background:#9b9587;clip-path:polygon(0 0,100% 10%,86% 100%,12% 82%)}
