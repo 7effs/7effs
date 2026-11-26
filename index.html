@@ -1901,7 +1901,7 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 #jaye-intro-v1 .jaye-v5-wordmark-echo{position:absolute;left:50%;top:45%;display:block;white-space:nowrap;transform:translate(-50%,-50%) scale(1.035);font-size:clamp(78px,21vw,255px);font-weight:750;letter-spacing:-.105em;line-height:.9;color:transparent;-webkit-text-stroke:1px rgba(243,242,239,.24);opacity:0;will-change:transform,opacity}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark-echo{animation:jayeV5FinalEcho 1.55s cubic-bezier(.16,1,.3,1) 7.92s both}
 #jaye-intro-v1 .jaye-v5-wordmark{position:absolute;left:0;right:0;top:45%;display:flex;justify-content:center;align-items:baseline;gap:.015em;overflow:visible;padding:.08em 3vw .16em;font-family:Impact,Haettenschweiler,"Arial Narrow Bold",sans-serif;font-size:clamp(78px,21vw,255px);font-weight:900;letter-spacing:-.075em;line-height:.84;color:#f4f3ef;white-space:nowrap}
-#jaye-intro-v1 .jaye-v5-wordmark>span{display:inline-block;opacity:0;clip-path:inset(0 50% 0 50%);transform:translate3d(0,.11em,-120px) scale(.88);filter:blur(4px);will-change:transform,opacity,clip-path,filter}
+#jaye-intro-v1 .jaye-v5-wordmark>span{display:inline-block;opacity:0;clip-path:inset(0 50% 0 50%);transform:translate3d(0,.11em,-120px) scale(.88);will-change:transform,opacity,clip-path}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(1){animation:jayeV5FinalLetter .72s cubic-bezier(.16,1,.3,1) 7.98s both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(2){animation:jayeV5FinalLetter .72s cubic-bezier(.16,1,.3,1) 8.12s both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span:nth-child(3){animation:jayeV5FinalLetter .72s cubic-bezier(.16,1,.3,1) 8.26s both}
@@ -1984,7 +1984,7 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
   #jaye-intro-v1 .jaye-v5-wordmark small{position:absolute;left:50%;top:calc(100% + 12px);transform:translateX(-50%);margin:0;font-size:7px;letter-spacing:.19em;writing-mode:horizontal-tb;white-space:nowrap;}
   #jaye-intro-v1 .jaye-v6-title-sweep{left:12%;width:4px;top:38%;height:28%;}
 }
-@media(prefers-reduced-motion:reduce){#jaye-intro-v1 .jaye-v6-final-frame,#jaye-intro-v1 .jaye-v6-title-sweep{display:none!important}}
+@media(prefers-reduced-motion:reduce){#jaye-intro-v1 .jaye-v6-final-frame{display:none!important}}
 </style>
 
 <style id="jaye-intro-hi-v8">
@@ -2012,33 +2012,52 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 @keyframes jayeV8i{0%{opacity:0;clip-path:inset(100% -12% -12% -12%);transform:translate3d(0,7%,0)}8%{opacity:1;clip-path:inset(100% -12% -12% -12%);transform:translate3d(0,7%,0)}70%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(0,-1.4%,0)}86%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(0,.4%,0)}100%{opacity:1;clip-path:inset(-12% -12% -12% -12%);transform:translate3d(0,0,0)}}
 </style>
 
-<style id="jaye-intro-monolith-v9">
-/* Structural brutalism, not a decorative wipe: six shuttered concrete planes rise as one civic-scale wall, split from the centre, and leave a cast plinth behind. */
-#jaye-intro-v1 .jaye-v9-monolith{position:absolute;inset:0;z-index:7;overflow:hidden;pointer-events:none;--v9-ease:cubic-bezier(.78,0,.16,1);--v9-grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .16 0 0 0 0 .15 0 0 0 0 .13 0 0 0 .42 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
-#jaye-intro-v1 .jaye-v9-seam{position:absolute;left:50%;top:0;bottom:0;width:4px;margin-left:-2px;background:#d34a35;opacity:0;transform:scaleY(0);transform-origin:center}
-#jaye-intro-v1 .jaye-v9-slab{position:absolute;top:-2%;bottom:-2%;left:var(--x);width:var(--w);display:block}
-#jaye-intro-v1 .jaye-v9-slab::before{content:"";position:absolute;inset:0;transform:translateY(101%);background:linear-gradient(90deg,#171715 0 3px,transparent 3px calc(100% - 3px),#171715 calc(100% - 3px)),repeating-linear-gradient(0deg,rgba(17,17,15,.14) 0 1px,transparent 1px 20px),repeating-linear-gradient(90deg,transparent 0 24%,rgba(17,17,15,.08) 24% 24.5%,transparent 24.5% 100%),radial-gradient(circle,#171715 0 3px,#aaa69b 3px 5px,transparent 5px 7px) 22% 25%/28% 28vh no-repeat,radial-gradient(circle,#171715 0 3px,#aaa69b 3px 5px,transparent 5px 7px) 78% 75%/28% 28vh no-repeat,var(--v9-grain),var(--tone);border-top:3px solid #171715;border-bottom:3px solid #171715;box-shadow:inset 3px 0 0 #171715,inset -3px 0 0 #171715}
-#jaye-intro-v1 .jaye-v9-s1{--x:0%;--w:16.5%;--tone:#c9c5b9;--rise:6.86s;--exit:7.68s;--dir:-1}
-#jaye-intro-v1 .jaye-v9-s2{--x:16.5%;--w:18.5%;--tone:#d8d3c7;--rise:6.91s;--exit:7.63s;--dir:-1}
-#jaye-intro-v1 .jaye-v9-s3{--x:35%;--w:calc(15% - 2px);--tone:#b9b5aa;--rise:6.96s;--exit:7.58s;--dir:-1}
-#jaye-intro-v1 .jaye-v9-s4{--x:calc(50% + 2px);--w:calc(15% - 2px);--tone:#d2cdc1;--rise:7.01s;--exit:7.58s;--dir:1}
-#jaye-intro-v1 .jaye-v9-s5{--x:65%;--w:18.5%;--tone:#c1bdb2;--rise:7.06s;--exit:7.63s;--dir:1}
-#jaye-intro-v1 .jaye-v9-s6{--x:83.5%;--w:16.5%;--tone:#ded9cd;--rise:7.11s;--exit:7.68s;--dir:1}
-#jaye-intro-v1 .jaye-v9-plinth{position:absolute;left:7vw;right:7vw;bottom:25%;height:10px;background:#e8e3d7;border-top:3px solid #171715;border-bottom:2px solid #171715;opacity:0;transform:scaleX(0);transform-origin:50% 100%}
-#jaye-intro-v1.jaye-intro-play .jaye-v9-seam{animation:jayeV9Seam 1.38s var(--v9-ease) 6.52s both}
-#jaye-intro-v1.jaye-intro-play .jaye-v9-slab{will-change:transform;animation:jayeV9Part .44s var(--v9-ease) var(--exit) both}
-#jaye-intro-v1.jaye-intro-play .jaye-v9-slab::before{will-change:transform;animation:jayeV9Rise .34s cubic-bezier(.76,0,.24,1) var(--rise) both}
-#jaye-intro-v1.jaye-intro-play .jaye-v9-plinth{animation:jayeV9Plinth .84s var(--v9-ease) 8.04s both}
-/* The wall rises past its line, locks, then the centre bays split first. The plinth reduces to the weight of the final rule. */
-@keyframes jayeV9Rise{0%{transform:translateY(101%)}76%{transform:translateY(-.9%)}100%{transform:translateY(0)}}
-@keyframes jayeV9Part{0%{transform:translateX(0)}100%{transform:translateX(calc(var(--dir)*101vw));visibility:hidden}}
-@keyframes jayeV9Seam{0%{opacity:.8;transform:scaleY(0)}25%{opacity:.8;transform:scaleY(1)}77%{opacity:.8;transform:scaleY(1)}100%{opacity:0;transform:scaleY(1)}}
-@keyframes jayeV9Plinth{0%{opacity:1;transform:scaleX(0) scaleY(1)}52%{opacity:1;transform:scaleX(1) scaleY(1)}68%{opacity:1;transform:scaleX(1) scaleY(1)}100%{opacity:0;transform:scaleX(1) scaleY(.6)}}
-@media(max-width:600px){#jaye-intro-v1 .jaye-v9-plinth{bottom:29%}}
+<style id="jaye-intro-void-v10">
+/* THE VOID: one continuous architectural field, excavated by a single off-axis cut. The six faces are the cut's actual interior surfaces. */
+#jaye-intro-v1 .jaye-v10-void{position:absolute;inset:0;z-index:6;overflow:hidden;pointer-events:none;background:#eee9de;--void-ink:#07090d}
+#jaye-intro-v1 .jaye-void-cut{position:absolute;left:50%;top:48%;width:min(72vw,1100px);height:68vh;max-height:820px;background:var(--void-ink);clip-path:polygon(0 0,100% 5%,87% 100%,0 91%);transform:translate3d(-50%,-50%,0) scale(.008,1);transform-origin:50% 50%;will-change:transform}
+#jaye-intro-v1 .jaye-void-face{position:absolute;display:block;opacity:0;will-change:transform,opacity}
+#jaye-intro-v1 .jaye-void-face--soffit{left:15vw;right:13vw;top:15vh;height:9vh;background:#9b9587;clip-path:polygon(0 0,100% 10%,86% 100%,12% 82%)}
+#jaye-intro-v1 .jaye-void-face--west{left:12vw;top:22vh;width:10vw;height:56vh;background:#b7ae99;clip-path:polygon(0 0,100% 12%,78% 100%,0 92%)}
+#jaye-intro-v1 .jaye-void-face--east{right:12vw;top:20vh;width:10vw;height:58vh;background:#737468;clip-path:polygon(22% 0,100% 8%,100% 100%,0 88%)}
+#jaye-intro-v1 .jaye-void-face--west-return{left:20vw;top:28vh;width:5vw;height:43vh;background:#41483f;clip-path:polygon(0 0,100% 15%,100% 100%,0 84%)}
+#jaye-intro-v1 .jaye-void-face--east-return{right:20vw;top:27vh;width:5vw;height:44vh;background:#c4baa4;clip-path:polygon(0 15%,100% 0,100% 84%,0 100%)}
+#jaye-intro-v1 .jaye-void-face--sill{left:13vw;right:14vw;bottom:13vh;height:8vh;background:#62645a;clip-path:polygon(10% 0,90% 0,100% 100%,0 88%)}
+#jaye-intro-v1.jaye-intro-play .jaye-void-cut{animation:jayeVoidCutOpen 2.36s cubic-bezier(.76,0,.18,1) 6.52s both}
+#jaye-intro-v1.jaye-intro-play .jaye-void-face--soffit{animation:jayeVoidFaceNorth 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
+#jaye-intro-v1.jaye-intro-play .jaye-void-face--west{animation:jayeVoidFaceWest 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
+#jaye-intro-v1.jaye-intro-play .jaye-void-face--west-return{animation:jayeVoidFaceWest 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
+#jaye-intro-v1.jaye-intro-play .jaye-void-face--east{animation:jayeVoidFaceEast 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
+#jaye-intro-v1.jaye-intro-play .jaye-void-face--east-return{animation:jayeVoidFaceEast 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
+#jaye-intro-v1.jaye-intro-play .jaye-void-face--sill{animation:jayeVoidFaceSouth 2.36s cubic-bezier(.7,0,.2,1) 6.52s both}
+/* 6.52–7.98: the incision opens. 7.98–8.88: the void expands beyond the frame and takes the surface with it. */
+@keyframes jayeVoidCutOpen{0%{transform:translate3d(-50%,-50%,0) scale(.008,1)}61.864%{transform:translate3d(-50%,-50%,0) scale(1,1)}100%{transform:translate3d(-50%,-50%,0) scale(3.2,3.2)}}
+@keyframes jayeVoidFaceNorth{0%{opacity:0;transform:translateY(10vh)}24%{opacity:1;transform:translateY(0)}62%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(-24vh)}}
+@keyframes jayeVoidFaceSouth{0%{opacity:0;transform:translateY(-10vh)}24%{opacity:1;transform:translateY(0)}62%{opacity:1;transform:translateY(0)}100%{opacity:0;transform:translateY(24vh)}}
+@keyframes jayeVoidFaceWest{0%{opacity:0;transform:translateX(14vw)}24%{opacity:1;transform:translateX(0)}62%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(-28vw)}}
+@keyframes jayeVoidFaceEast{0%{opacity:0;transform:translateX(-14vw)}24%{opacity:1;transform:translateX(0)}62%{opacity:1;transform:translateX(0)}100%{opacity:0;transform:translateX(28vw)}}
+#jaye-intro-v1 .jaye-v5-wordmark,#jaye-intro-v1 .jaye-v5-wordmark-echo{font-size:clamp(78px,21vw,244px)}
+#jaye-intro-v1 .jaye-v5-wordmark small{color:#b8b2a5}
+#jaye-intro-v1 .jaye-v5-final-rule{left:13vw;right:13vw;height:2px;background:#eee9de;transform-origin:50% 50%}
+#jaye-intro-v1 .jaye-v5-final-rule::before{display:none}
+#jaye-intro-v1 .jaye-v5-final-tag{left:13vw;bottom:calc(25% - 27px);padding:5px 8px 4px;border:0;background:#eee9de;color:#07090d;font-size:8px;letter-spacing:.12em}
+#jaye-intro-v1 .jaye-v6-title-sweep{left:13vw;top:37%;width:2px;height:28%;background:#eee9de;z-index:8;display:block}
+@media(max-width:600px){
+#jaye-intro-v1 .jaye-void-cut{width:96vw;height:64vh;top:47%}
+#jaye-intro-v1 .jaye-void-face--soffit{left:5vw;right:5vw;top:15vh;height:8vh}
+#jaye-intro-v1 .jaye-void-face--west{left:4vw;top:21vh;width:13vw;height:57vh}
+#jaye-intro-v1 .jaye-void-face--east{right:4vw;top:20vh;width:13vw;height:58vh}
+#jaye-intro-v1 .jaye-void-face--west-return{left:15vw;top:27vh;width:6vw;height:44vh}
+#jaye-intro-v1 .jaye-void-face--east-return{right:15vw;top:26vh;width:6vw;height:45vh}
+#jaye-intro-v1 .jaye-void-face--sill{left:5vw;right:5vw;bottom:14vh;height:7vh}
+#jaye-intro-v1 .jaye-v5-final-rule{left:5vw;right:5vw;bottom:29%}
+#jaye-intro-v1 .jaye-v5-final-tag{left:5vw;bottom:calc(29% - 24px);font-size:7px;letter-spacing:.07em;padding:5px 6px 4px}
+#jaye-intro-v1 .jaye-v6-title-sweep{left:8vw;top:39%;height:24%}
+}
 </style>
 
 <style id="jaye-intro-title-pieces-v9">
-/* The wordmark is assembled like a piece of civic lettering: three hard-cut courses per glyph, driven in from opposing axes and locked to one baseline. */
+/* JAYE is excavated in three courses: the cap descends, the countercourse slides across, and the base rises into one sharp glyph. */
 #jaye-intro-v1 .jaye-v5-wordmark>span{position:relative;--cut1:37.5%;--cut2:63%}
 #jaye-intro-v1 .jaye-v5-wordmark>span:nth-child(1){--l:"J";--d:1}
 #jaye-intro-v1 .jaye-v5-wordmark>span:nth-child(2){--l:"A";--d:-1}
@@ -2051,11 +2070,10 @@ html.jaye-intro-active body > :not(#jaye-intro-v1){visibility:hidden!important}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span::before{will-change:transform;animation:jayeV9PieceTop .52s cubic-bezier(.7,0,.12,1) var(--v9-at) both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span>i{will-change:transform;animation:jayeV9PieceMid .52s cubic-bezier(.7,0,.12,1) var(--v9-at) both}
 #jaye-intro-v1.jaye-intro-play .jaye-v5-wordmark>span::after{will-change:transform;animation:jayeV9PieceBase .52s cubic-bezier(.7,0,.12,1) var(--v9-at) both}
-/* The complete glyph takes over in the same frame the separate courses disappear. */
-@keyframes jayeV9Lock{0%,99.9%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0);filter:blur(0);color:transparent}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0);filter:blur(0);color:#f4f3ef}}
-@keyframes jayeV9PieceTop{0%{opacity:0;transform:translate3d(calc(var(--d)*-.72em),-.12em,0)}1%{opacity:1;transform:translate3d(calc(var(--d)*-.72em),-.12em,0)}56%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
-@keyframes jayeV9PieceMid{0%{opacity:0;transform:translate3d(calc(var(--d)*.54em),.14em,0)}1%{opacity:1;transform:translate3d(calc(var(--d)*.54em),.14em,0)}9%{opacity:1;transform:translate3d(calc(var(--d)*.54em),.14em,0)}64%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
-@keyframes jayeV9PieceBase{0%{opacity:0;transform:translate3d(calc(var(--d)*-.9em),.08em,0)}1%{opacity:1;transform:translate3d(calc(var(--d)*-.9em),.08em,0)}17%{opacity:1;transform:translate3d(calc(var(--d)*-.9em),.08em,0)}72%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
+@keyframes jayeV9Lock{0%,99.9%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0);color:transparent}100%{opacity:1;clip-path:inset(0);transform:perspective(800px) translate3d(0,0,0);color:#f4f3ef}}
+@keyframes jayeV9PieceTop{0%{opacity:0;transform:translate3d(0,-.82em,0)}1%{opacity:1;transform:translate3d(0,-.82em,0)}56%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
+@keyframes jayeV9PieceMid{0%{opacity:0;transform:translate3d(calc(var(--d)*.78em),0,0)}1%{opacity:1;transform:translate3d(calc(var(--d)*.78em),0,0)}9%{opacity:1;transform:translate3d(calc(var(--d)*.78em),0,0)}64%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
+@keyframes jayeV9PieceBase{0%{opacity:0;transform:translate3d(0,.88em,0)}1%{opacity:1;transform:translate3d(0,.88em,0)}17%{opacity:1;transform:translate3d(0,.88em,0)}72%{opacity:1;transform:translate3d(0,0,0)}99.9%{opacity:1;transform:translate3d(0,0,0)}100%{opacity:0;transform:translate3d(0,0,0)}}
 </style>
 
 <style id="jaye-tornado-background-styles">
@@ -2246,11 +2264,14 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
     <p class="jaye-v5-phrase jaye-v5-phrase--two jaye-sig"><span><b>PΞӨPᒪΞ  </b></span><span><b> ﾠPᒪΛCΞS</b></span></p>
 
     <span class="jaye-v5-blade"></span>
-    <div class="jaye-v9-monolith" aria-hidden="true">
-      <span class="jaye-v9-seam"></span>
-      <span class="jaye-v9-slab jaye-v9-s1"></span><span class="jaye-v9-slab jaye-v9-s2"></span><span class="jaye-v9-slab jaye-v9-s3"></span>
-      <span class="jaye-v9-slab jaye-v9-s4"></span><span class="jaye-v9-slab jaye-v9-s5"></span><span class="jaye-v9-slab jaye-v9-s6"></span>
-      <span class="jaye-v9-plinth"></span>
+    <div class="jaye-v10-void" aria-hidden="true">
+      <span class="jaye-void-cut"></span>
+      <span class="jaye-void-face jaye-void-face--soffit"></span>
+      <span class="jaye-void-face jaye-void-face--west"></span>
+      <span class="jaye-void-face jaye-void-face--east"></span>
+      <span class="jaye-void-face jaye-void-face--west-return"></span>
+      <span class="jaye-void-face jaye-void-face--east-return"></span>
+      <span class="jaye-void-face jaye-void-face--sill"></span>
     </div>
 
     <div class="jaye-v5-final-stage">
