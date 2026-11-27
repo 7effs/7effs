@@ -810,7 +810,7 @@ body{background-color:var(--obsidian-void);color:var(--frost-white)}
 .glimpse-room-titleline{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:clamp(28px,5vw,56px) 0 23px}.glimpse-room-copy{min-width:0}.glimpse-room-copy .glimpse-heading{margin:0;color:var(--glimpse-paper);font:500 clamp(4.3rem,11vw,9rem)/.8 Georgia,'Times New Roman',serif;letter-spacing:-.09em}.glimpse-heading-period{color:var(--glimpse-brass)}.glimpse-room-subtitle{margin:19px 0 0;color:var(--glimpse-muted);font:italic clamp(.95rem,1.7vw,1.18rem)/1.5 Georgia,serif;letter-spacing:.005em}
 .glimpse-vinyl-orbit{position:relative;flex:0 0 clamp(100px,17vw,174px);width:clamp(100px,17vw,174px);aspect-ratio:1;display:grid;place-items:center;margin-right:clamp(5px,3vw,32px)}.glimpse-vinyl-disc{position:relative;width:88%;aspect-ratio:1;border-radius:50%;background:repeating-radial-gradient(circle at center,#1a1210 0 2px,#38231c 2.7px 3.2px,#100b0a 3.8px 5px);border:1px solid rgba(240,226,203,.24);box-shadow:0 12px 26px #090605, inset 0 0 0 5px rgba(255,255,255,.018);animation:glimpseRecordSpin 14s linear infinite}.glimpse-vinyl-disc::before{content:"";position:absolute;inset:13%;border:1px solid rgba(215,168,106,.2);border-radius:50%}.glimpse-vinyl-label{position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle at 36% 32%,#e9c58d,#a75b35 54%,#54251e 100%);border:3px solid #21110e;box-shadow:0 0 0 1px rgba(240,226,203,.2)}.glimpse-vinyl-label::after{content:"";position:absolute;left:calc(50% - 2px);top:calc(50% - 2px);width:4px;height:4px;border-radius:50%;background:#1b0e0c}.glimpse-vinyl-arm{position:absolute;z-index:2;top:2%;right:9%;width:3px;height:43%;border-radius:4px;background:linear-gradient(90deg,#80634c,#f0d6a5,#795a42);transform:rotate(-22deg);transform-origin:top center;box-shadow:0 0 0 1px rgba(0,0,0,.2)}.glimpse-vinyl-arm::after{content:"";position:absolute;bottom:-2px;left:-3px;width:9px;height:13px;border-radius:2px;background:#c69a63;transform:rotate(24deg)}
 .glimpse-room-rule{display:flex;align-items:center;gap:16px;padding:13px 0;border-top:1px solid rgba(215,168,106,.25);border-bottom:1px solid rgba(215,168,106,.2);color:rgba(215,168,106,.72);font-size:.48rem;letter-spacing:.16em}.glimpse-room-rule>span:last-child{white-space:nowrap}.glimpse-wave{height:40px;flex:1;display:flex;align-items:center;justify-content:center;gap:3px;overflow:hidden}.glimpse-wave i{display:block;width:2px;max-height:100%;height:var(--bar);border-radius:2px;background:linear-gradient(180deg,#f1d6a3,#9b5535);opacity:.68;transform-origin:center;animation:glimpseWave 1.15s ease-in-out infinite alternate;animation-delay:calc(var(--bar)*-23ms)}
-#glimpse .glimpse-tracks{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:19px}#glimpse .glimpse-track{min-height:126px;gap:15px;padding:14px;border:1px solid rgba(215,168,106,.23);border-radius:2px;background:linear-gradient(130deg,rgba(74,38,29,.7),rgba(23,14,12,.96));color:var(--glimpse-paper);box-shadow:inset 0 1px rgba(255,226,183,.06);transition:transform .25s,border-color .25s,background .25s,box-shadow .25s}#glimpse .glimpse-track::before{height:2px;background:linear-gradient(90deg,var(--glimpse-brass),rgba(215,168,106,0) 78%);opacity:.55}#glimpse .glimpse-track:hover,#glimpse .glimpse-track:focus-visible{transform:translateY(-3px);border-color:rgba(215,168,106,.68);background:linear-gradient(130deg,rgba(99,49,34,.82),rgba(28,15,13,.98));box-shadow:0 12px 25px rgba(0,0,0,.2),inset 0 1px rgba(255,226,183,.12)}#glimpse .glimpse-thumbnail,#glimpse .glimpse-art-fallback{flex:0 0 78px;width:78px;height:78px;border:1px solid rgba(215,168,106,.34);background-color:#21120f;filter:sepia(.32) saturate(.78)}#glimpse .glimpse-track-name{color:var(--glimpse-paper);font:500 clamp(1.08rem,2vw,1.38rem)/1.1 Georgia,serif;letter-spacing:-.025em}#glimpse .glimpse-track-state{color:rgba(240,226,203,.56);font-size:.52rem;letter-spacing:.13em}#glimpse .glimpse-play{flex:0 0 39px;width:39px;height:39px;border:1px solid rgba(215,168,106,.44);border-radius:50%;color:var(--glimpse-brass);font-size:.68rem;transition:background .2s,transform .2s}#glimpse .glimpse-track:hover .glimpse-play{background:rgba(215,168,106,.15);transform:scale(1.06)}#glimpse .glimpse-track.is-active{border-color:rgba(230,182,110,.9);background:linear-gradient(130deg,rgba(113,54,35,.75),rgba(30,15,13,.98));box-shadow:0 0 0 1px rgba(215,168,106,.1),inset 0 0 32px rgba(215,168,106,.035)}#glimpse .glimpse-track.is-active .glimpse-play{background:var(--glimpse-brass);color:#21110d}#glimpse .glimpse-track.is-active .glimpse-track-state{color:#e2b878}#glimpse .glimpse-note{position:relative;z-index:1;margin:18px 0 0;color:rgba(240,226,203,.53);font-size:.61rem;letter-spacing:.04em;line-height:1.7}#glimpse .glimpse-note::before{content:"  ";color:var(--glimpse-brass)}
+#glimpse .glimpse-tracks{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px;margin-top:19px}#glimpse .glimpse-track{min-height:126px;gap:15px;padding:14px;border:1px solid rgba(215,168,106,.23);border-radius:2px;background:linear-gradient(130deg,rgba(74,38,29,.7),rgba(23,14,12,.96));color:var(--glimpse-paper);box-shadow:inset 0 1px rgba(255,226,183,.06);transition:transform .25s,border-color .25s,background .25s,box-shadow .25s}#glimpse .glimpse-track::before{height:2px;background:linear-gradient(90deg,var(--glimpse-brass),rgba(215,168,106,0) 78%);opacity:.55}#glimpse .glimpse-track:hover,#glimpse .glimpse-track:focus-visible{transform:translateY(-3px);border-color:rgba(215,168,106,.68);background:linear-gradient(130deg,rgba(99,49,34,.82),rgba(28,15,13,.98));box-shadow:0 12px 25px rgba(0,0,0,.2),inset 0 1px rgba(255,226,183,.12)}#glimpse .glimpse-thumbnail,#glimpse .glimpse-art-fallback{flex:0 0 78px;width:78px;height:78px;border:1px solid rgba(215,168,106,.34);background-color:#21120f;filter:sepia(.32) saturate(.78)}#glimpse .glimpse-track-name{color:var(--glimpse-paper);font:500 clamp(1.08rem,2vw,1.38rem)/1.1 Georgia,serif;letter-spacing:-.025em}#glimpse .glimpse-track-state{color:rgba(240,226,203,.56);font-size:.52rem;letter-spacing:.13em}#glimpse .glimpse-play{flex:0 0 39px;width:39px;height:39px;border:1px solid rgba(215,168,106,.44);border-radius:50%;color:var(--glimpse-brass);font-size:.68rem;transition:background .2s,transform .2s}#glimpse .glimpse-track:hover .glimpse-play{background:rgba(215,168,106,.15);transform:scale(1.06)}#glimpse .glimpse-track.is-active{border-color:rgba(230,182,110,.9);background:linear-gradient(130deg,rgba(113,54,35,.75),rgba(30,15,13,.98));box-shadow:0 0 0 1px rgba(215,168,106,.1),inset 0 0 32px rgba(215,168,106,.035)}#glimpse .glimpse-track.is-active .glimpse-play{background:var(--glimpse-brass);color:#21110d}#glimpse .glimpse-track.is-active .glimpse-track-state{color:#e2b878}#glimpse .glimpse-note{position:relative;z-index:1;margin:18px 0 0;color:rgba(240,226,203,.53);font-size:.61rem;letter-spacing:.04em;line-height:1.7}
 @keyframes glimpseRecordSpin{to{transform:rotate(360deg)}}@keyframes glimpseWave{from{transform:scaleY(.35);opacity:.34}to{transform:scaleY(1);opacity:.9}}@keyframes glimpseSignal{0%,100%{opacity:.6}50%{opacity:1;box-shadow:0 0 0 5px rgba(230,182,110,.06),0 0 17px rgba(230,182,110,.95)}}
 @media(max-width:760px){#glimpse.glimpse-section{width:calc(100% + 38px);margin-left:-19px;margin-right:-19px;padding:27px 17px;border-left:0;border-right:0}.glimpse-room-titleline{padding:35px 0 21px;gap:6px}.glimpse-room-copy .glimpse-heading{font-size:clamp(4rem,16vw,6.2rem)}.glimpse-vinyl-orbit{flex-basis:clamp(82px,24vw,112px);width:clamp(82px,24vw,112px);margin-right:0}.glimpse-room-subtitle{max-width:240px;font-size:.92rem}.glimpse-room-index{font-size:.46rem;letter-spacing:.12em}.glimpse-room-index>span:last-child{font-size:.4rem;letter-spacing:.09em}#glimpse .glimpse-tracks{grid-template-columns:minmax(0,1fr);gap:9px;margin-top:14px}#glimpse .glimpse-track{min-height:91px;padding:11px 10px;gap:12px}#glimpse .glimpse-thumbnail,#glimpse .glimpse-art-fallback{flex-basis:59px;width:59px;height:59px}#glimpse .glimpse-track-name{font-size:1.08rem}#glimpse .glimpse-play{flex-basis:35px;width:35px;height:35px}.glimpse-room-rule{gap:9px}.glimpse-room-rule>span{font-size:.4rem;letter-spacing:.11em}.glimpse-wave{height:30px;gap:2px}}
 @media(max-width:370px){.glimpse-vinyl-orbit{flex-basis:72px;width:72px}.glimpse-room-index>span:last-child{display:none}.glimpse-room-copy .glimpse-heading{font-size:3.8rem}}
@@ -2246,7 +2246,7 @@ html.jaye-video-background-active #jaye-background-switch::before{background:#dc
 <div id="jaye-intro-v1" aria-label="Jaye archive opening sequence">
   <div class="jaye-intro-grain" aria-hidden="true"></div>
   <div class="jaye-intro-index" aria-hidden="true">J / EFFS — DIGITAL ARCHIVE</div>
-  <button class="jaye-intro-skip" type="button" aria-label="Skip opening and enter archive">ENTER ARCHIVE </button>
+  <button class="jaye-intro-skip" type="button" aria-label="Skip opening and enter archive">ENTER ARCHIVE</button>
   <div class="jaye-intro-scene" aria-hidden="true">
   <div class="jaye-v5-sequence" aria-hidden="true">
     <div class="jaye-v5-depth" aria-hidden="true">
@@ -5238,7 +5238,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 </style>
 <main>
 <nav aria-label="Social link" class="glimpse-contact">
-<a aria-label="Open Instagram profile" href="https://www.instagram.com/cvechz" rel="noopener noreferrer" target="_blank"><span aria-hidden="true" class="contact-icon">◎</span><span>Je</span><span aria-hidden="true" class="contact-arrow"></span></a>
+<a aria-label="Open Instagram profile" href="https://www.instagram.com/cvechz" rel="noopener noreferrer" target="_blank"><span aria-hidden="true" class="contact-icon">◎</span><span>Je</span></a>
 </nav>
 <header aria-labelledby="jaye-wordmark" class="hero hero-section artifact-hero" id="archive-home">
 <div aria-hidden="true" class="hero-coordinate-line"><span>FIELD ARCHIVE</span><i></i><span>07 / 09</span><i></i><span>LIVE RECORD</span></div>
@@ -5288,17 +5288,17 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <a aria-label="Open Talk to Effs’s Cat chat" class="cat-chat-mini hero-chat-entry" href="#nodeAISection">
 <span aria-hidden="true" class="cat-chat-mini-mark"></span>
 <span class="cat-chat-mini-copy"><span class="entry-eyebrow">01 / CHAT</span><strong>Cat AI</strong><small>Ask anything.</small></span>
-<span aria-hidden="true" class="cat-chat-mini-arrow"></span>
+
 <span aria-hidden="true" class="entry-rim-signal"></span>
 </a>
 <a class="archive-entry" href="#postAI-impossible" aria-label="Jump to Experimental Worlds challenge">
 <span aria-hidden="true" class="archive-entry-icon"><svg fill="none" viewBox="0 0 64 64"><path d="M32 5 57 19V45L32 59 7 45V19Z" stroke="currentColor" stroke-width="1.4"/><path d="M32 5V31L57 19M32 31 7 19M32 31V59M32 31 48 40 32 50 16 40Z" stroke="#C4CBD4" stroke-opacity=".85" stroke-width="1.2"/><circle cx="32" cy="31" r="3" fill="#EDF2FA"/></svg></span>
 <span class="archive-entry-copy"><small>02 / PLAY</small><strong>Experimental Worlds</strong><span>Logic · Patterns · Puzzles</span></span>
-<span aria-hidden="true" class="archive-entry-arrow"></span>
+
 </a>
 </div>
 
-<div aria-hidden="true" class="hero-floorline"><span></span><span>SCROLL TO ENTER</span><span></span></div>
+<div aria-hidden="true" class="hero-floorline"><span></span><span>SCROLL TO ENTER</span></div>
 </header>
 <section aria-label="Choose an archive interface" class="archive-interface-launcher archive-portal-v3" id="archiveInterfaces">
 <div class="portal-masthead"><span><i></i> CONTINUE THE ARCHIVE</span><span>THRESHOLD / 01</span><span></span></div>
@@ -5545,7 +5545,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <span>EXIT</span><b>RETURN AVAILABLE</b>
 </div>
 </div>
-<button class="demi-enter" id="demiEnter" type="button"><span aria-hidden="true" class="enter-pulse"></span> <span class="enter-label">ENTER MEMORY SYSTEM</span> <span aria-hidden="true" class="enter-arrow"></span></button>
+<button class="demi-enter" id="demiEnter" type="button"><span aria-hidden="true" class="enter-pulse"></span> <span class="enter-label">ENTER MEMORY SYSTEM</span> </button>
 <div class="demi-gate-foot">
 <span class="demi-signal-state"><i aria-hidden="true"></i> SIGNAL STABLE <b>·</b> READY TO OPEN</span>
 <button aria-pressed="false" class="demi-orbit-toggle" id="demiOrbitToggle" type="button">PAUSE ORBITS <span aria-hidden="true">Ⅱ</span></button>
@@ -5844,7 +5844,7 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <span class="parent-interface-title">Enter the Parent Space</span>
 <span class="parent-interface-description">Two systems. One dedicated workspace.</span>
 </span>
-<span aria-hidden="true" class="parent-interface-arrow"></span>
+
 </span>
 <span class="parent-interface-entry-meta">
 
@@ -5918,8 +5918,8 @@ html.jaye-intro-active .jaye-readout,body.parent-space-open .jaye-readout,body.d
 <span class="parent-atlas-legend">EVIDENCE AND INTERPRETATION</span>
 </div>
 <nav aria-label="Parent Space modules" class="parent-space-nav">
-<button aria-current="location" class="parent-space-jump is-current" data-parent-jump="#postAI-signal-room" type="button"><span class="parent-jump-index">12</span><span class="parent-jump-copy"><small>STAGE ONE / SOURCE</small><strong>Evidence Archive</strong><em>Inspect the record</em></span><span aria-hidden="true" class="parent-jump-arrow"></span></button>
-<button class="parent-space-jump" data-parent-jump="#postAI-second-reading" type="button"><span class="parent-jump-index">13</span><span class="parent-jump-copy"><small>STAGE TWO / REASONING</small><strong>Inference Engine</strong><em>Test the claim</em></span><span aria-hidden="true" class="parent-jump-arrow"></span></button>
+<button aria-current="location" class="parent-space-jump is-current" data-parent-jump="#postAI-signal-room" type="button"><span class="parent-jump-index">12</span><span class="parent-jump-copy"><small>STAGE ONE / SOURCE</small><strong>Evidence Archive</strong><em>Inspect the record</em></span></button>
+<button class="parent-space-jump" data-parent-jump="#postAI-second-reading" type="button"><span class="parent-jump-index">13</span><span class="parent-jump-copy"><small>STAGE TWO / REASONING</small><strong>Inference Engine</strong><em>Test the claim</em></span></button>
 </nav>
 </section>
 <div class="parent-space-sections">
@@ -8281,7 +8281,7 @@ applyShared(safeRead('jarchive:language:sections-12-13:v1'));applyAnomaly(safeRe
 
 <div id="jaye-image-background-layer" aria-hidden="true"></div>
 <button id="jaye-image-background-nudge" type="button" aria-label="Explore more backgrounds" aria-controls="jaye-image-background-panel">
-  <span class="jaye-image-nudge-icon" aria-hidden="true">▧</span><span>More backgrounds</span><span class="jaye-image-nudge-arrow" aria-hidden="true"></span>
+  <span class="jaye-image-nudge-icon" aria-hidden="true">▧</span><span>More backgrounds</span>
 </button>
 <div id="jaye-image-background-panel" role="dialog" aria-label="Choose an image background" aria-modal="false">
   <div class="jaye-image-panel-head"><span>Pick 🧚</span><button id="jaye-image-panel-close" type="button" aria-label="Close image backgrounds">×</button></div>
